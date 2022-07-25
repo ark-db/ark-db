@@ -1,5 +1,5 @@
 <script>
-    import skalter from "./skalter.jpg"
+    import src from "./skalter.jpg"
     export let status;
     export let message;
 </script>
@@ -9,8 +9,15 @@
 </h1>
 
 <figure>
-    <img src={skalter} alt="Fallen Skalter">
-    <figcaption>Illustration by KuroTofu - <a href="https://twitter.com/Kuro_Tofu/status/1454254316710096899">source</a></figcaption>
+    <img {src} alt="Fallen Skalter">
+    <figcaption>
+        Illustration by KuroTofu - 
+        <a href="https://twitter.com/Kuro_Tofu/status/1454254316710096899"
+           target="_blank"
+           rel="noreferrer">
+           source
+        </a>
+    </figcaption>
 </figure>
 
 <style>
