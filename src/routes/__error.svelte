@@ -10,7 +10,7 @@
   </script>
   
   <script>
-    import ErrorScreen from "$lib/components/ErrorScreen.svelte";
+    import ErrorScreen from "$lib/components/screens/ErrorScreen.svelte";
     export let status;
     export let message;
   </script>
