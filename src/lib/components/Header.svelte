@@ -13,12 +13,12 @@
     <nav>
         <ul>
             <li class:active={$page.url.pathname === '/'}>
-                <a sveltekit:prefetch href="/">
+                <a href="/">
                     Home
                 </a>
             </li>
 			<li class:active={$page.url.pathname === '/planner'}>
-				<a sveltekit:prefetch href="/planner">
+				<a href="/planner">
                     Upgrade Planner
                 </a>
 			</li>
