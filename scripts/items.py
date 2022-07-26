@@ -1,19 +1,17 @@
 import requests
 from collections import defaultdict, Counter
+from itertools import chain
 import pprint
 
-VALID_ITEMS = (
-    "30011", "30021", "30031", "30041", "30051", "30061", # t1 mats
-    "30012", "30022", "30032", "30042", "30052", "30062", # t2 mats
-    "30013", "30023", "30033", "30043", "30053", "30063", "30073", "30083", "30093", "30103", "31013", "31023", "31033", "31043", "31053", # t3 mats
-    "30014", "30024", "30034", "30044", "30054", "30064", "30074", "30084", "30094", "30104", "31014", "31024", "31034", "31044", "31054", # t4 mats
-    "30115", "30125", "30135", "30145", # t5 mats
-    "3301", "3302", "3303", # skillbooks
-    "mod_unlock_token", "mod_update_token_1", "mod_update_token_2", # module mats
-)
-
-T4_MATERIALS = ("30014", "30024", "30034", "30044", "30054", "30064", "30074", "30084", "30094", "30104", "31014", "31024", "31034", "31044", "31054")
-T5_MATERIALS = ("30115", "30125", "30135", "30145")
+VALID_ITEMS = {
+    "t1": ["30011", "30021", "30031", "30041", "30051", "30061"],
+    "t2": ["30012", "30022", "30032", "30042", "30052", "30062"],
+    "t3": ["30013", "30023", "30033", "30043", "30053", "30063", "30073", "30083", "30093", "30103", "31013", "31023", "31033", "31043", "31053"],
+    "t4": ["30014", "30024", "30034", "30044", "30054", "30064", "30074", "30084", "30094", "30104", "31014", "31024", "31034", "31044", "31054"],
+    "t5": ["30115", "30125", "30135", "30145"],
+    "skill": ["3301", "3302", "3303"],
+    "module": ["mod_unlock_token", "mod_update_token_1", "mod_update_token_2"],
+}
 
 cn_items = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/item_table.json")
@@ -40,7 +38,7 @@ def get_item_name(item_id):
     return item["name"]
 
 for item, data in cn_items.items():
-    if item in VALID_ITEMS:
+    if item in chain.from_iterable(VALID_ITEMS.values()):
         item_data[item] = {"itemId": data["itemId"],
                            "name": get_item_name(item),
                            "rarity": data["rarity"],
@@ -52,12 +50,12 @@ item_id_to_recipe_cost = {recipes[recipe_id]["itemId"]: recipes[recipe_id]["cost
 
 recipe_data = defaultdict(list)
 
-for item_id in T4_MATERIALS:
+for item_id in VALID_ITEMS["t4"]:
     recipe = item_id_to_recipe_cost[item_id]
     for mat in recipe:
         recipe_data[item_id].append({"id": mat["id"], "count": mat["count"]})
 
-for item_id in T5_MATERIALS:
+for item_id in VALID_ITEMS["t5"]:
     recipe = item_id_to_recipe_cost[item_id]
     costs = Counter()
     for mat in recipe:
