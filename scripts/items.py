@@ -44,11 +44,13 @@ def get_item_name(item_id):
 
 for item_id, item_info in cn_items.items():
     if item_id in chain.from_iterable(VALID_ITEMS.values()):
-        item_data[item_id] = {"itemId": item_info["itemId"],
-                              "name": get_item_name(item_id),
-                              "rarity": item_info["rarity"],
-                              "iconId": item_info["iconId"],
-                              "sortId": item_info["sortId"]}
+        item_data[item_id] = {
+            "itemId": item_info["itemId"],
+            "name": get_item_name(item_id),
+            "rarity": item_info["rarity"],
+            "iconId": item_info["iconId"],
+            "sortId": item_info["sortId"],
+        }
 
 composition_data = defaultdict(list)
 
