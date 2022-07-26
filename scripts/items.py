@@ -66,11 +66,12 @@ for item_id in VALID_ITEMS["t5"]:
     composition_data[item_id] = [{"id": k, "count": v} for k, v in costs.items()]
 
 for item_id, item_info in item_data.items():
-    item_info.update({"asT3": composition_data.get(item_id, [])})
     image_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{item_info['iconId']}.png"
     img_data = requests.get(image_url).content
     with open(f"./src/lib/data/images/items/{item_id}.png", "wb") as f:
         f.write(img_data)
+    item_info.update({"asT3": composition_data.get(item_id, [])})
+    del item_info["iconId"]
 
 with open("./src/lib/data/items.json", "w") as f:
     json.dump(item_data, f)
