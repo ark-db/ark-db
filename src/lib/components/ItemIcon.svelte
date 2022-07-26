@@ -3,8 +3,8 @@
     export let itemId;
 
     let itemSrc = new URL(`../data/images/items/${itemId}.png`, import.meta.url).href;
-    let name = items[itemId].name;
-    let bgSrc = new URL(`../data/images/bg/${items[itemId].rarity}.png`, import.meta.url).href;
+    let { name, rarity } = items[itemId];
+    let bgSrc = new URL(`../data/images/bg/${rarity}.png`, import.meta.url).href;
 </script>
 
 <img src={bgSrc} alt="background" />
