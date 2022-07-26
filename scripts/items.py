@@ -13,6 +13,7 @@ VALID_ITEMS = {
     "module": ["mod_unlock_token", "mod_update_token_1", "mod_update_token_2"],
     "chip": ["3211", "3221", "3231", "3241", "3251", "3261", "3271", "3281"],
     "dualchip": ["3213", "3223", "3233", "3243", "3253", "3263", "3273", "3283"],
+    "currency": ["4001"],
 }
 
 cn_items = (
@@ -66,7 +67,6 @@ for item_id in VALID_ITEMS["t5"]:
 
 for item_id, item_info in item_data.items():
     item_info.update({"asT3": composition_data.get(item_id, [])})
-
     image_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{item_info['iconId']}.png"
     img_data = requests.get(image_url).content
     with open(f"./src/lib/data/images/items/{item_id}.png", "wb") as f:
