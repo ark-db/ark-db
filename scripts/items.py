@@ -1,6 +1,7 @@
 import requests
 from collections import defaultdict, Counter
 from itertools import chain
+import json
 
 VALID_ITEMS = {
     "t1": ["30011", "30021", "30031", "30041", "30051", "30061"],
@@ -65,3 +66,6 @@ for item_id in VALID_ITEMS["t5"]:
 
 for item in item_data:
     item_data[item].update({"asT3": composition_data.get(item, [])})
+
+with open('./src/lib/data/items.json', 'w') as f:
+    json.dump(item_data, f)
