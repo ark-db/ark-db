@@ -30,11 +30,14 @@ def is_operator(char_info):
            and char_info["profession"] != "TRAP" \
            and not char_info["isNotObtainable"]
 
+def format_cost(cost):
+    return [{k: v for k, v in mat.items() if k != "type"} for mat in cost]
+
 for char_id, char_info in chars.items():
     if is_operator(char_info):
         char_data[char_id] = {
             "charId": char_id,
             "name": name_changes.get(char_id, char_info["appellation"]),
-            "elite": [[{k: v for k, v in mat.items() if k != "type"} for mat in phase["evolveCost"]] for phase in char_info["phases"][1:]],
-            "skill": [[{k: v for k, v in mat.items() if k != "type"} for mat in level["lvlUpCost"]] for level in char_info["allSkillLvlup"]],
+            "elite": [format_cost(phase["evolveCost"]) for phase in char_info["phases"][1:]],
+            "skill": [format_cost(level["lvlUpCost"]) for level in char_info["allSkillLvlup"]],
         }
