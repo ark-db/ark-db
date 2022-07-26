@@ -1,6 +1,6 @@
 <script>
     export let itemId;
-    let url = `./images/items/${itemId}.png`
+    let src = new URL(`../data/images/items/${itemId}.png`, import.meta.url).href
 </script>
 
-<img src={url} alt="item" />
+<img {src} alt="item" />
