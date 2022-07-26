@@ -40,4 +40,5 @@ for char_id, char_info in chars.items():
             "name": name_changes.get(char_id, char_info["appellation"]),
             "elite": [format_cost(phase["evolveCost"]) for phase in char_info["phases"][1:]],
             "skill": [format_cost(level["lvlUpCost"]) for level in char_info["allSkillLvlup"]],
+            "mastery": [[format_cost(mastery["levelUpCost"]) for mastery in skill["levelUpCostCond"]] for skill in char_info["skills"]],
         }
