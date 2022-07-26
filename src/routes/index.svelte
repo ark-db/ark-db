@@ -1,6 +1,6 @@
 <svelte:head>
-  <title>ArkDB</title>
-  <meta name="description" content="Utility website for Arknights players" />
+    <title>ArkDB</title>
+    <meta name="description" content="Utility website for Arknights players" />
 </svelte:head>
 
 <h1>Welcome to SvelteKit</h1>

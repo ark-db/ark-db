@@ -7,12 +7,12 @@
             }
         };
     }
-  </script>
+</script>
   
-  <script>
+<script>
     import ErrorScreen from "$lib/components/screens/ErrorScreen.svelte";
     export let status;
     export let message;
-  </script>
+</script>
   
 <ErrorScreen {status} {message} />
