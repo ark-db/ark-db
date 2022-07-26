@@ -1,5 +1,5 @@
 import requests
-import pandas as pd
+from collections import defaultdict
 
 VALID_ITEMS = (
     "30011", "30021", "30031", "30041", "30051", "30061", # t1 mats
@@ -23,27 +23,19 @@ en_items = (
             ["items"]
 )
 
-recipes = (
-    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
-            .json()
-            ["workshopFormulas"]
-)
+item_data = defaultdict(dict)
 
-item_id_to_recipe_cost = {recipes[recipe_id]["itemId"]: recipes[recipe_id]["costs"] for recipe_id in recipes}
+def get_item_name(item_id):
+    item = en_items.get(item_id, cn_items[item_id])
+    return item["name"]
 
-en_names = (
-    pd.DataFrame(en_items)
-      .filter(["name"], axis=0)
-)
+for item, data in cn_items.items():
+    if item in VALID_ITEMS:
+        item_data[item] = {"itemId": data["itemId"],
+                           "name": get_item_name(item),
+                           "rarity": data["rarity"],
+                           "iconId": data["iconId"],
+                           "sortId": data["sortId"]}
 
-def replace_names(df, names):
-    df.loc["name"] = names.loc["name"]
-    df.loc["name", ['mod_update_token_1', 'mod_update_token_2']] = ["数据增补条", "数据增补仪"]
-    return df
-
-item_data = (
-    pd.DataFrame(cn_items)
-      .filter(VALID_ITEMS)
-      .filter(["itemId", "name", "rarity", "iconId", "sortId"], axis=0)
-      .pipe(replace_names, en_names)
-)
+import pprint
+pprint.pprint(item_data)
