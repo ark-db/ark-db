@@ -18,13 +18,24 @@ cn_items = (
 )
 
 en_items = (
-    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/item_table.json")
+    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/item_table.json")
     .json()
     ["items"]
 )
+
+en_names = (
+    pd.DataFrame(en_items)
+      .filter(["itemId", "name"], axis=0)
+)
+
+def replace_names(df, names):
+    df.loc["name"] = names.loc["name"]
+    df.loc["name", ['mod_update_token_1', 'mod_update_token_2']] = ["数据增补条", "数据增补仪"]
+    return df
 
 item_data = (
     pd.DataFrame(cn_items)
       .filter(VALID_ITEMS)
       .filter(["itemId", "name", "rarity", "iconId", "sortId"], axis=0)
+      .pipe(replace_names, en_names)
 )
