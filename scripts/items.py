@@ -23,11 +23,13 @@ en_items = (
             ["items"]
 )
 
-workshop_formulas = (
+recipes = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
             .json()
             ["workshopFormulas"]
 )
+
+item_id_to_recipe_cost = {recipes[recipe_id]["itemId"]: recipes[recipe_id]["costs"] for recipe_id in recipes}
 
 en_names = (
     pd.DataFrame(en_items)
