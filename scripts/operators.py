@@ -35,5 +35,6 @@ for char_id, char_info in chars.items():
         char_data[char_id] = {
             "charId": char_id,
             "name": name_changes.get(char_id, char_info["appellation"]),
-            "elite": [[{k: v for k, v in mat.items() if k != "type"} for mat in phase["evolveCost"]] for phase in char_info["phases"][1:]]
+            "elite": [[{k: v for k, v in mat.items() if k != "type"} for mat in phase["evolveCost"]] for phase in char_info["phases"][1:]],
+            "skill": [[{k: v for k, v in mat.items() if k != "type"} for mat in level["lvlUpCost"]] for level in char_info["allSkillLvlup"]],
         }
