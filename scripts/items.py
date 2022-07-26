@@ -13,14 +13,20 @@ VALID_ITEMS = (
 
 cn_items = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/item_table.json")
-    .json()
-    ["items"]
+            .json()
+            ["items"]
 )
 
 en_items = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/item_table.json")
-    .json()
-    ["items"]
+            .json()
+            ["items"]
+)
+
+workshop_formulas = (
+    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
+            .json()
+            ["workshopFormulas"]
 )
 
 en_names = (
