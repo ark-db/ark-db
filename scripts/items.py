@@ -1,7 +1,6 @@
 import requests
 from collections import defaultdict, Counter
 from itertools import chain
-import pprint
 
 VALID_ITEMS = {
     "t1": ["30011", "30021", "30031", "30041", "30051", "30061"],
@@ -33,42 +32,36 @@ recipes = (
             ["workshopFormulas"]
 )
 
+item_id_to_recipe_cost = {recipes[recipe_id]["itemId"]: recipes[recipe_id]["costs"] for recipe_id in recipes}
+
 item_data = defaultdict(dict)
 
 def get_item_name(item_id):
-    item = en_items.get(item_id, cn_items[item_id])
-    return item["name"]
+    item_info = en_items.get(item_id, cn_items[item_id])
+    return item_info["name"]
 
-for item, data in cn_items.items():
-    if item in chain.from_iterable(VALID_ITEMS.values()):
-        item_data[item] = {"itemId": data["itemId"],
-                           "name": get_item_name(item),
-                           "rarity": data["rarity"],
-                           "iconId": data["iconId"],
-                           "sortId": data["sortId"]}
+for item_id, item_info in cn_items.items():
+    if item_id in chain.from_iterable(VALID_ITEMS.values()):
+        item_data[item_id] = {"itemId": item_info["itemId"],
+                           "name": get_item_name(item_id),
+                           "rarity": item_info["rarity"],
+                           "iconId": item_info["iconId"],
+                           "sortId": item_info["sortId"]}
 
-
-item_id_to_recipe_cost = {recipes[recipe_id]["itemId"]: recipes[recipe_id]["costs"] for recipe_id in recipes}
-
-recipe_data = defaultdict(list)
+composition_data = defaultdict(list)
 
 for item_id in VALID_ITEMS["t4"]:
     recipe = item_id_to_recipe_cost[item_id]
     for mat in recipe:
-        recipe_data[item_id].append({"id": mat["id"], "count": mat["count"]})
+        composition_data[item_id].append({"id": mat["id"], "count": mat["count"]})
 
 for item_id in VALID_ITEMS["t5"]:
     recipe = item_id_to_recipe_cost[item_id]
     costs = Counter()
     for mat in recipe:
-        for submat in recipe_data[mat["id"]]:
+        for submat in composition_data[mat["id"]]:
             costs.update({submat["id"]: submat["count"]*mat["count"]})
-
-    recipe_data[item_id] = [{"id": k, "count": v} for k, v in dict(costs).items()]
-
-
+    composition_data[item_id] = [{"id": k, "count": v} for k, v in costs.items()]
 
 for item in item_data:
-    item_data[item].update({"asT3": recipe_data.get(item, [])})
-
-pprint.pprint(item_data)
+    item_data[item].update({"asT3": composition_data.get(item, [])})
