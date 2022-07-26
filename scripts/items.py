@@ -38,15 +38,11 @@ item_id_to_recipe_cost = {recipes[recipe_id]["itemId"]: recipes[recipe_id]["cost
 
 item_data = defaultdict(dict)
 
-def get_item_name(item_id):
-    item_info = en_items.get(item_id, cn_items[item_id])
-    return item_info["name"]
-
 for item_id, item_info in cn_items.items():
     if item_id in chain.from_iterable(VALID_ITEMS.values()):
         item_data[item_id] = {
             "itemId": item_info["itemId"],
-            "name": get_item_name(item_id),
+            "name": en_items.get(item_id, cn_items[item_id])["name"],
             "rarity": item_info["rarity"],
             "iconId": item_info["iconId"],
             "sortId": item_info["sortId"],
