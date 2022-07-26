@@ -1,5 +1,6 @@
 import requests
-from collections import defaultdict
+from collections import defaultdict, Counter
+import pprint
 
 VALID_ITEMS = (
     "30011", "30021", "30031", "30041", "30051", "30061", # t1 mats
@@ -11,6 +12,9 @@ VALID_ITEMS = (
     "mod_unlock_token", "mod_update_token_1", "mod_update_token_2", # module mats
 )
 
+T4_MATERIALS = ("30014", "30024", "30034", "30044", "30054", "30064", "30074", "30084", "30094", "30104", "31014", "31024", "31034", "31044", "31054")
+T5_MATERIALS = ("30115", "30125", "30135", "30145")
+
 cn_items = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/item_table.json")
             .json()
@@ -21,6 +25,12 @@ en_items = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/item_table.json")
             .json()
             ["items"]
+)
+
+recipes = (
+    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
+            .json()
+            ["workshopFormulas"]
 )
 
 item_data = defaultdict(dict)
@@ -37,5 +47,28 @@ for item, data in cn_items.items():
                            "iconId": data["iconId"],
                            "sortId": data["sortId"]}
 
-import pprint
+
+item_id_to_recipe_cost = {recipes[recipe_id]["itemId"]: recipes[recipe_id]["costs"] for recipe_id in recipes}
+
+recipe_data = defaultdict(list)
+
+for item_id in T4_MATERIALS:
+    recipe = item_id_to_recipe_cost[item_id]
+    for mat in recipe:
+        recipe_data[item_id].append({"id": mat["id"], "count": mat["count"]})
+
+for item_id in T5_MATERIALS:
+    recipe = item_id_to_recipe_cost[item_id]
+    costs = Counter()
+    for mat in recipe:
+        for submat in recipe_data[mat["id"]]:
+            costs.update({submat["id"]: submat["count"]*mat["count"]})
+
+    recipe_data[item_id] = [{"id": k, "count": v} for k, v in dict(costs).items()]
+
+
+
+for item in item_data:
+    item_data[item].update({"asT3": recipe_data.get(item, [])})
+
 pprint.pprint(item_data)
