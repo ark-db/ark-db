@@ -25,7 +25,7 @@ en_items = (
 
 en_names = (
     pd.DataFrame(en_items)
-      .filter(["itemId", "name"], axis=0)
+      .filter(["name"], axis=0)
 )
 
 def replace_names(df, names):
