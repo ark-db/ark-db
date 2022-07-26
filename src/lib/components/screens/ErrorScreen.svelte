@@ -21,11 +21,7 @@
 </figure>
 
 <style>
-    h1 {
-        text-align: center;
-    }
-
-    figure {
+    h1, figure {
         text-align: center;
     }
 </style>
