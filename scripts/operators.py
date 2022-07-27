@@ -41,7 +41,7 @@ def format_cost(cost):
     return [{k: v for k, v in mat.items() if k != "type"} for mat in cost]
 
 for char_id, char_info in chars.items():
-    if is_operator(char_info):
+    if is_operator(char_info) and char_info["rarity"] > 1:
         for skill in char_info["skills"]:
             skill_ids.add(skill["skillId"])
         module_ids = modules["charEquip"].get(char_id, [])[1:]
@@ -53,6 +53,7 @@ for char_id, char_info in chars.items():
             "mastery": [[format_cost(mastery["levelUpCost"]) for mastery in skill["levelUpCostCond"]] for skill in char_info["skills"]],
             "module": [[format_cost(cost) for cost in modules["equipDict"][module_id]["itemCost"].values()] for module_id in module_ids],
         }
+        
         icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/avatars/{char_id}.png"
         icon_data = requests.get(icon_url).content
         with open(f"./src/lib/images/operators/{char_id}.png", "wb") as f:
