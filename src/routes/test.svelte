@@ -27,6 +27,6 @@
         align-items: center;
     }
     .heading h1 {
-        margin-left: 1em;
+        margin-left: 0.75em;
     }
 </style>
