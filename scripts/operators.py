@@ -54,7 +54,7 @@ for char_id, char_info in chars.items():
             "mastery": [[format_cost(mastery["levelUpCost"]) for mastery in skill["levelUpCostCond"]] for skill in char_info["skills"]],
             "module": [[format_cost(cost) for cost in modules["equipDict"][module_id]["itemCost"].values()] for module_id in module_ids],
         }
-        '''
+
         icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/avatars/{char_id}.png"
         icon_data = requests.get(icon_url).content
         with open(f"./src/lib/images/operators/{char_id}.png", "wb") as f:
@@ -71,6 +71,6 @@ for skill_id in skill_ids:
     skill_icon_data = requests.get(skill_icon_url).content
     with open(f"./src/lib/images/skills/{skill_id}.png", "wb") as f:
         f.write(skill_icon_data)
-'''
+
 with open("./src/lib/data/operators.json", "w") as f:
     json.dump(char_data, f)
