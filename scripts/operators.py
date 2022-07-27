@@ -52,13 +52,13 @@ for char_id, char_info in chars.items():
         }
         icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/avatars/{char_id}.png"
         icon_data = requests.get(icon_url).content
-        with open(f"./src/lib/data/images/operators/{char_id}.png", "wb") as f:
+        with open(f"./src/lib/images/operators/{char_id}.png", "wb") as f:
             f.write(icon_data)
 
         for module_id in module_ids:
             module_icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/equip/icon/{module_id}.png"
             module_icon_data = requests.get(module_icon_url).content
-            with open(f"./src/lib/data/images/modules/{module_id}.png", "wb") as f:
+            with open(f"./src/lib/images/modules/{module_id}.png", "wb") as f:
                 f.write(module_icon_data)
 
 with open("./src/lib/data/operators.json", "w") as f:

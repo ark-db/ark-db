@@ -48,7 +48,7 @@ for item_id, item_info in cn_items.items():
         }  
         image_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{item_info['iconId']}.png"
         img_data = requests.get(image_url).content
-        with open(f"./src/lib/data/images/items/{item_id}.png", "wb") as f:
+        with open(f"./src/lib/images/items/{item_id}.png", "wb") as f:
             f.write(img_data)
 
 composition_data = defaultdict(list)

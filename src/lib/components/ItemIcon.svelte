@@ -2,9 +2,9 @@
     import items from "../data/items.json";
     export let itemId;
 
-    let itemSrc = new URL(`../data/images/items/${itemId}.png`, import.meta.url).href;
+    let itemSrc = new URL(`../images/items/${itemId}.png`, import.meta.url).href;
     let { name, rarity } = items[itemId];
-    let bgSrc = new URL(`../data/images/bg/${rarity}.png`, import.meta.url).href;
+    let bgSrc = new URL(`../images/bg/${rarity}.png`, import.meta.url).href;
 </script>
 
 <img src={bgSrc} alt="background" />
