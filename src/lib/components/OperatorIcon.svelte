@@ -11,6 +11,8 @@
     img {
         border-width: 5px;
         border-style: solid;
+        width: 100%;
+        max-width: 100px;
     }
     img.\36 {
         border-color: #ed702d;
