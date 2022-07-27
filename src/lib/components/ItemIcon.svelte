@@ -4,7 +4,7 @@
 
     let itemSrc = new URL(`../images/items/${itemId}.png`, import.meta.url).href;
     let { name, rarity } = items[itemId];
-    let bgSrc = new URL(`../images/bg/${rarity}.png`, import.meta.url).href;
+    let bgSrc = new URL(`../images/rarities/${rarity}.png`, import.meta.url).href;
 </script>
 
 <img src={bgSrc} alt="background" />
