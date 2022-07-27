@@ -21,4 +21,12 @@
         background-color: rgb(235, 238, 244);
         padding: 10px;
     }
+    .heading {
+        margin: 20px;
+        display: flex;
+        align-items: center;
+    }
+    .heading h1 {
+        margin-left: 1em;
+    }
 </style>
