@@ -4,6 +4,26 @@
 
     const data = Object.values(operators)
     const extract = (id) => id.name;
+    const stripTags = (str) => {
+        return str.replace( /(<([^>]+)>)/ig, '');
+    }
+    let selected = "";
 </script>
   
-<Typeahead {data} {extract} />
+<Typeahead
+    hideLabel={true}
+    placeholder={"Search for operators..."}
+    {data}
+    {extract}
+    inputAfterSelect="clear"
+    let:value
+    let:result
+    on:select={({ detail }) => selected = detail.selected}
+>
+    <svelte:fragment slot="no-results">
+        No results found for "{value}"
+    </svelte:fragment>
+    {stripTags(result.string)}
+</Typeahead>
+
+<p>{selected}</p>
