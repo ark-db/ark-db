@@ -6,21 +6,17 @@
 <header>
     <div class="logo">
         <a href="/">
-            <img src={logo} alt="ArkDB">
-        </a>
+			<img src={logo} alt="ArkDB">
+		</a>
     </div>
 
     <nav>
         <ul>
             <li class:active={$page.url.pathname === '/'}>
-                <a href="/">
-                    Home
-                </a>
+                <a href="/">Home</a>
             </li>
 			<li class:active={$page.url.pathname === '/planner'}>
-				<a href="/planner">
-                    Upgrade Planner
-                </a>
+				<a href="/planner">Upgrade Planner</a>
 			</li>
         </ul>
     </nav>
