@@ -10,7 +10,15 @@
     {#if $selectedChar.charId}
         <div class="heading">
             <OperatorIcon {selectedChar} />
-            <p>{$selectedChar.name}</p>
+            <h1>{$selectedChar.name}</h1>
         </div>
     {/if}
 </div>
+
+<style>
+    .select {
+        margin-top: 10px;
+        background-color: rgb(235, 238, 244);
+        padding: 10px;
+    }
+</style>
