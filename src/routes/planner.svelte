@@ -12,7 +12,7 @@
 
 <div class="select">
     <SearchBar {selectedChar} />
-    {#if $selectedChar.charId}
+    {#if $selectedChar}
         <div class="heading">
             <OperatorIcon {...$selectedChar} />
             <h1>{$selectedChar.name}</h1>
