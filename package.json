@@ -12,6 +12,7 @@
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"svelte": "^3.44.0",
+		"svelte-typeahead": "^4.2.4",
 		"vite": "^3.0.0"
 	},
 	"type": "module"
