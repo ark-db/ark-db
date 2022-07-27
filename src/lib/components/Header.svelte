@@ -1,6 +1,6 @@
 <script>
     import { page } from '$app/stores';
-    let logo = "./favicon.svg"
+    const logo = "./favicon.svg"
 </script>
 
 <header>
