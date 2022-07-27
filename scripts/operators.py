@@ -18,6 +18,12 @@ modules = (
             .json()
 )
 
+elite_lmd_costs = (
+    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/gamedata_const.json")
+            .json()
+            ["evolveGoldCost"]
+)
+
 name_changes = {
     "char_118_yuki": "Shirayuki",
     "char_196_sunbr": "Gummy",
@@ -38,7 +44,9 @@ def is_operator(char_info):
            and not char_info["isNotObtainable"]
 
 def format_cost(cost):
-    return [{k: v for k, v in mat.items() if k != "type"} for mat in cost]
+    if cost:
+        return [{k: v for k, v in mat.items() if k != "type"} for mat in cost]
+    return []
 
 for char_id, char_info in chars.items():
     if is_operator(char_info) and char_info["rarity"] > 1:
@@ -49,7 +57,8 @@ for char_id, char_info in chars.items():
             "charId": char_id,
             "name": name_changes.get(char_id, char_info["appellation"]),
             "rarity": char_info["rarity"] + 1,
-            "elite": [format_cost(phase["evolveCost"]) for phase in char_info["phases"][1:]],
+            "elite": [format_cost(phase["evolveCost"]) + [{"id": "4001", "count": elite_lmd_costs[char_info["rarity"]][i]}]
+                      for i, phase in enumerate(char_info["phases"][1:])],
             "skill": [format_cost(level["lvlUpCost"]) for level in char_info["allSkillLvlup"]],
             "mastery": [{"skillId": skill["skillId"], 
                          "costs": [format_cost(mastery["levelUpCost"]) for mastery in skill["levelUpCostCond"]],} 
