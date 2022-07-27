@@ -1,14 +1,13 @@
 <script>
     import Typeahead from "svelte-typeahead";
     import operators from "../data/operators.json";
+    export let selectedChar;
 
     const data = Object.values(operators)
     const extract = (id) => id.name;
     const stripTags = (str) => {
         return str.replace( /(<([^>]+)>)/ig, '');
     }
-
-    export let selectedChar;
     const sendCharInfo = (data) => {
         $selectedChar.charId = data.charId;
         $selectedChar.name = data.name;
