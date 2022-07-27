@@ -46,10 +46,10 @@ for item_id, item_info in cn_items.items():
             "rarity": item_info["rarity"],
             "sortId": item_info["sortId"],
         }  
-        image_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{item_info['iconId']}.png"
-        img_data = requests.get(image_url).content
+        icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{item_info['iconId']}.png"
+        icon_data = requests.get(icon_url).content
         with open(f"./src/lib/images/items/{item_id}.png", "wb") as f:
-            f.write(img_data)
+            f.write(icon_data)
 
 composition_data = defaultdict(list)
 
