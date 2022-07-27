@@ -30,6 +30,7 @@ name_changes = {
 chars.update(patch_chars)
 
 char_data = defaultdict(dict)
+skill_ids = set()
 
 def is_operator(char_info):
     return char_info["profession"] != "TOKEN" \
@@ -41,6 +42,8 @@ def format_cost(cost):
 
 for char_id, char_info in chars.items():
     if is_operator(char_info):
+        for skill in char_info["skills"]:
+            skill_ids.add(skill["skillId"])
         module_ids = modules["charEquip"].get(char_id, [])[1:]
         char_data[char_id] = {
             "charId": char_id,
@@ -60,6 +63,12 @@ for char_id, char_info in chars.items():
             module_icon_data = requests.get(module_icon_url).content
             with open(f"./src/lib/images/modules/{module_id}.png", "wb") as f:
                 f.write(module_icon_data)
+
+for skill_id in skill_ids:
+    skill_icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/skills/skill_icon_{skill_id}.png"
+    skill_icon_data = requests.get(skill_icon_url).content
+    with open(f"./src/lib/images/skills/{skill_id}.png", "wb") as f:
+        f.write(skill_icon_data)
 
 with open("./src/lib/data/operators.json", "w") as f:
     json.dump(char_data, f)
