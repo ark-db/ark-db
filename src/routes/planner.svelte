@@ -4,18 +4,34 @@
 </svelte:head>
 
 <script>
-    import ItemIcon from "$lib/components/ItemIcon.svelte";
+    import { writable } from 'svelte/store';
+    import SearchBar from "$lib/components/SearchBar.svelte";
+    import OperatorIcon from "../lib/components/OperatorIcon.svelte";
+    const selectedChar = writable({charId: "", name: ""});
 </script>
 
-<div class="center">
-    <ItemIcon itemId={"4001"} />
+<div class="select">
+    <SearchBar {selectedChar} />
+    {#if $selectedChar.charId}
+        <div class="heading">
+            <OperatorIcon {selectedChar} />
+            <h1>{$selectedChar.name}</h1>
+        </div>
+    {/if}
 </div>
 
 <style>
-    .center {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+    .select {
+        margin-top: 10px;
+        background-color: rgb(235, 238, 244);
+        padding: 10px;
+    }
+    .heading {
+        margin: 20px;
+        display: flex;
+        align-items: center;
+    }
+    .heading h1 {
+        margin-left: 0.75em;
     }
 </style>
