@@ -1,8 +1,8 @@
 <script>
-    import operators from "../data/operators.json";
-    export let selectedChar;
-    $: src = new URL(`../images/operators/${$selectedChar.charId}.png`, import.meta.url).href;
-    $: ({ name, rarity } = operators[$selectedChar.charId]);
+    export let charId;
+    export let name;
+    export let rarity;
+    $: src = new URL(`../images/operators/${charId}.png`, import.meta.url).href;
 </script>
 
 <img class="{rarity}" {src} alt={name} />
