@@ -1,5 +1,6 @@
 import requests
 from collections import defaultdict
+import json
 
 chars = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/character_table.json")
@@ -49,3 +50,6 @@ for char_id, char_info in chars.items():
             "mastery": [[format_cost(mastery["levelUpCost"]) for mastery in skill["levelUpCostCond"]] for skill in char_info["skills"]],
             "module": [[format_cost(cost) for cost in modules["equipDict"][module_id]["itemCost"].values()] for module_id in module_ids],
         }
+
+with open("./src/lib/data/operators.json", "w") as f:
+    json.dump(char_data, f)
