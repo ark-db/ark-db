@@ -1,4 +1,5 @@
 <script>
+    import { createEventDispatcher } from 'svelte';
     import Typeahead from "svelte-typeahead";
     import operators from "../data/operators.json";
 
@@ -7,7 +8,13 @@
     const stripTags = (str) => {
         return str.replace( /(<([^>]+)>)/ig, '');
     }
-    let selected = "";
+    const dispatch = createEventDispatcher();
+    const sendCharId = (data) => {
+        let { charId } = data;
+		dispatch("message", {
+			charId
+		});
+	}
 </script>
   
 <Typeahead
@@ -18,12 +25,10 @@
     inputAfterSelect="clear"
     let:value
     let:result
-    on:select={({ detail }) => selected = detail.selected}
+    on:select={({ detail }) => sendCharId(detail.original)}
 >
     <svelte:fragment slot="no-results">
         No results found for "{value}"
     </svelte:fragment>
     {stripTags(result.string)}
 </Typeahead>
-
-<p>{selected}</p>
