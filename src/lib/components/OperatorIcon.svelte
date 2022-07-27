@@ -2,7 +2,7 @@
     export let charId;
     export let name;
     export let rarity;
-    $: src = new URL(`../images/operators/${charId}.png`, import.meta.url).href;
+    $: src = `./src/lib/images/operators/${charId}.png`;
 </script>
 
 <img class="{rarity}" {src} alt={name} />
