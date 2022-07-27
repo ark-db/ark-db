@@ -5,18 +5,16 @@
 
 <script>
     import { writable } from 'svelte/store';
-    import operators from "$lib/data/operators.json";
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
-    const selectedChar = writable({charId: "", name: ""});
-    $: selectedCharInfo = operators[$selectedChar.charId];
+    const selectedChar = writable("");
 </script>
 
 <div class="select">
     <SearchBar {selectedChar} />
     {#if $selectedChar.charId}
         <div class="heading">
-            <OperatorIcon {...selectedCharInfo} />
+            <OperatorIcon {...$selectedChar} />
             <h1>{$selectedChar.name}</h1>
         </div>
     {/if}

@@ -8,10 +8,6 @@
     const stripTags = (str) => {
         return str.replace( /(<([^>]+)>)/ig, '');
     }
-    const sendCharInfo = (data) => {
-        $selectedChar.charId = data.charId;
-        $selectedChar.name = data.name;
-    }
 </script>
   
 <Typeahead
@@ -22,7 +18,7 @@
     inputAfterSelect="clear"
     let:value
     let:result
-    on:select={({ detail }) => sendCharInfo(detail.original)}
+    on:select={({ detail }) => $selectedChar = detail.original}
 >
     <svelte:fragment slot="no-results">
         No results found for "{value}"
