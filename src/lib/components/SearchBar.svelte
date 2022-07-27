@@ -9,8 +9,9 @@
     }
 
     export let selectedChar;
-    const sendCharId = (data) => {
-        $selectedChar = data.charId;
+    const sendCharInfo = (data) => {
+        $selectedChar.charId = data.charId;
+        $selectedChar.name = data.name;
     }
 </script>
   
@@ -22,7 +23,7 @@
     inputAfterSelect="clear"
     let:value
     let:result
-    on:select={({ detail }) => sendCharId(detail.original)}
+    on:select={({ detail }) => sendCharInfo(detail.original)}
 >
     <svelte:fragment slot="no-results">
         No results found for "{value}"
