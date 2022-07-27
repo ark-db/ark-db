@@ -1,13 +1,11 @@
 <script>
+    import { writable } from 'svelte/store';
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "../lib/components/OperatorIcon.svelte";
-    let charId = "";
-    function handleMessage(event) {
-		charId = event.detail.charId;
-	}
+    const selectedChar = writable("")
 </script>
 
-<SearchBar on:message={handleMessage} />
-{#if charId}
-    <OperatorIcon bind:charId={charId} />
+<SearchBar {selectedChar} />
+{#if $selectedChar}
+    <OperatorIcon {selectedChar} />
 {/if}

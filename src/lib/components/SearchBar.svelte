@@ -1,5 +1,4 @@
 <script>
-    import { createEventDispatcher } from 'svelte';
     import Typeahead from "svelte-typeahead";
     import operators from "../data/operators.json";
 
@@ -8,13 +7,11 @@
     const stripTags = (str) => {
         return str.replace( /(<([^>]+)>)/ig, '');
     }
-    const dispatch = createEventDispatcher();
+
+    export let selectedChar;
     const sendCharId = (data) => {
-        let { charId } = data;
-		dispatch("message", {
-			charId
-		});
-	}
+        $selectedChar = data.charId;
+    }
 </script>
   
 <Typeahead
