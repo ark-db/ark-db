@@ -10,6 +10,9 @@
     import UpgradeSelect from "$lib/components/UpgradeSelect.svelte";
     const selectedChar = writable("");
     $: ({ elite, skill, mastery, modules } = $selectedChar);
+    const handleClick = () => {
+        console.log("Click!")
+    }
 </script>
 
 <div class="top">
@@ -27,6 +30,20 @@
             <OperatorIcon {...$selectedChar} />
             <h1>{$selectedChar.name}</h1>
         </div>
+    </div>
+    <div class="quickselect">
+        {#if elite.length > 1}
+            <UpgradeSelect text="All promotions" />
+        {/if}
+        <UpgradeSelect text="All skill levels" />
+        {#if mastery.length > 1}
+            {#each mastery as _, skill}
+                <UpgradeSelect text={`All skill ${skill+1} masteries`} />
+            {/each}
+        {/if}
+        {#each modules as mod}
+            <UpgradeSelect text={`All ${mod.type} stages`} />
+        {/each}
     </div>
     <div class="upgrades">
         <div class="upgrade">
@@ -80,7 +97,8 @@
         background-color: rgb(235, 238, 244);
         display: flex;
         flex-flow: row wrap;
-        align-items: flex-start;
+        align-items: center;
+        gap: 1em;
     }
     .banner .card {
         display: flex;
@@ -91,6 +109,17 @@
     }
     .banner .card h1 {
         text-align: center;
+    }
+
+    .quickselect {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: rgb(235, 238, 244);
+        display: flex;
+        flex-flow: row wrap;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 0.5em 0.5em;
     }
 
     .upgrades {
