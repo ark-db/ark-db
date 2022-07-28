@@ -7,69 +7,105 @@
     import { writable } from 'svelte/store';
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
+    import UpgradeSelect from "$lib/components/UpgradeSelect.svelte";
     const selectedChar = writable("");
     $: ({ elite, skill, mastery, modules } = $selectedChar);
 </script>
 
-<div class="select">
-    <SearchBar {selectedChar} />
-    {#if $selectedChar}
-        <div class="heading">
+<div class="top">
+    <div class="search">
+        <SearchBar {selectedChar} />
+    </div>
+    <div class="settings">
+        <p>There's nothing here yet!</p>
+    </div>
+</div>
+
+{#if $selectedChar}
+    <div class="banner">
+        <div class="card">
             <OperatorIcon {...$selectedChar} />
             <h1>{$selectedChar.name}</h1>
         </div>
-        {#each elite as cost, rank}
-            <div class="check elite">
-                <input type="checkbox">
-                <p>Elite {rank+1}</p>
-            </div>
-        {/each}
-        {#each skill as cost, level}
-            <div class="check skill">
-                <input type="checkbox">
-                <p>Skill Level {level+2}</p>
-            </div>
-        {/each}
-        {#each mastery as skill, skill_num}
-            {#each skill.costs as cost, rank}
-                <div class="check mastery">
-                    <input type="checkbox">
-                    <p>Skill {skill_num+1} Mastery {rank+1}</p>
-                </div>
+    </div>
+    <div class="upgrades">
+        <div class="upgrade">
+            {#each elite as costs, rank}
+                <UpgradeSelect text={`Elite ${rank+1}`} />
             {/each}
-        {/each}
-        {#each modules as mod}
-            {#each mod.costs as cost, stage}
-                <div class="check module">
-                    <input type="checkbox">
-                    <p>{mod.type} Stage {stage+1}</p>
-                </div>
+        </div>
+        <div class="upgrade">
+            {#each skill as costs, level}
+                <UpgradeSelect text={`Skill Level ${level+2}`} />
             {/each}
-        {/each}
-    {/if}
-</div>
+        </div>
+        <div class="upgrade">
+            {#each mastery as masteries, skill}
+                {#each masteries.costs as costs, rank}
+                    <UpgradeSelect text={`Skill ${skill+1} Mastery ${rank+1}`} />
+                {/each}
+            {/each}
+        </div>
+        <div class="upgrade">
+            {#each modules as mod}
+                {#each mod.costs as costs, stage}
+                    <UpgradeSelect text={`${mod.type} Stage ${stage+1}`} />
+                {/each}
+            {/each}
+        </div>
+    </div>
+{/if}
 
 <style>
-    .select {
-        margin-top: 10px;
+    .top {
+        margin: 10px 0px 10px 0px;
+        padding: 5px 10px 5px 10px;
         background-color: rgb(235, 238, 244);
-        padding: 10px;
-    }
-    .heading {
-        margin: 20px;
         display: flex;
+        flex-flow: row wrap;
         align-items: center;
     }
-    .heading h1 {
-        margin-left: 0.75em;
+    .top .settings p {
+        text-align: center;
     }
-    .check {
-        margin: 5px;
-        padding: 10px;
-        background-color: rgb(192, 192, 192);
+    .top .settings {
+        flex-grow: 1;
         display: flex;
+        justify-content: center;
+    }
+
+    .banner {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: rgb(235, 238, 244);
+        display: flex;
+        flex-flow: row wrap;
+        align-items: flex-start;
+    }
+    .banner .card {
+        display: flex;
+        flex-flow: row wrap;
         align-items: center;
+        justify-content: center;
+        column-gap: 1em;
+    }
+    .banner .card h1 {
+        text-align: center;
+    }
+
+    .upgrades {
+        padding: 10px;
+        background-color: rgb(235, 238, 244);
+        display: flex;
+        flex-flow: row wrap;
+        align-items: flex-start;
+        column-gap: 5%;
+        row-gap: 1em;
+    }
+    .upgrade {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
         gap: 0.5em;
-        max-height: 10px;
     }
 </style>
