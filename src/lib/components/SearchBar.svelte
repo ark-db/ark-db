@@ -12,7 +12,7 @@
   
 <Typeahead
     hideLabel={true}
-    placeholder={"Search for operators..."}
+    placeholder={"Search operators..."}
     {data}
     {extract}
     inputAfterSelect="clear"
