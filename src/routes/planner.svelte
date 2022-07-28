@@ -24,6 +24,12 @@
                 <p>Elite {rank+1}</p>
             </div>
         {/each}
+        {#each skill as cost, level}
+            <div class="check skill">
+                <input type="checkbox">
+                <p>Skill Level {level+2}</p>
+            </div>
+        {/each}
     {/if}
 </div>
 
