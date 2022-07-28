@@ -30,6 +30,14 @@
                 <p>Skill Level {level+2}</p>
             </div>
         {/each}
+        {#each mastery as skill, skill_num}
+            {#each skill.costs as cost, rank}
+                <div class="check mastery">
+                    <input type="checkbox">
+                    <p>Skill {skill_num+1} Mastery {rank+1}</p>
+                </div>
+            {/each}
+        {/each}
     {/if}
 </div>
 
