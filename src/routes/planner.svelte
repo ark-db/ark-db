@@ -7,12 +7,8 @@
     import { writable } from 'svelte/store';
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
-    import UpgradeSelect from "$lib/components/UpgradeSelect.svelte";
     const selectedChar = writable("");
     $: ({ elite, skill, mastery, modules } = $selectedChar);
-    const handleClick = () => {
-        console.log("Click!")
-    }
 </script>
 
 <div class="top">
@@ -33,40 +29,64 @@
     </div>
     <div class="quickselect">
         {#if elite.length > 1}
-            <UpgradeSelect text="All promotions" />
+            <label>
+                <input type="checkbox">
+                {"All promotions"}
+            </label>
         {/if}
-        <UpgradeSelect text="All skill levels" />
+        <label>
+            <input type="checkbox">
+            {"All skill levels"}
+        </label>
         {#if mastery.length > 1}
             {#each mastery as _, skill}
-                <UpgradeSelect text={`All skill ${skill+1} masteries`} />
+                <label>
+                    <input type="checkbox">
+                    {`All skill ${skill+1} masteries`}
+                </label>
             {/each}
         {/if}
         {#each modules as mod}
-            <UpgradeSelect text={`All ${mod.type} stages`} />
+            <label>
+                <input type="checkbox">
+                {`All ${mod.type} stages`}
+            </label>
         {/each}
     </div>
     <div class="upgrades">
         <div class="upgrade">
             {#each elite as costs, rank}
-                <UpgradeSelect text={`Elite ${rank+1}`} />
+                <label>
+                    <input type="checkbox">
+                    {`Elite ${rank+1}`}
+                </label>
             {/each}
         </div>
         <div class="upgrade">
             {#each skill as costs, level}
-                <UpgradeSelect text={`Skill Level ${level+2}`} />
+                <label>
+                    <input type="checkbox">
+                    {`Skill Level ${level+2}`}
+                </label>
             {/each}
         </div>
         {#each mastery as masteries, skill}
             <div class="upgrade">
                 {#each masteries.costs as costs, rank}
-                    <UpgradeSelect text={`Skill ${skill+1} Mastery ${rank+1}`} />
+                    <label>
+                        <input type="checkbox">
+                        {`Skill ${skill+1} Mastery ${rank+1}`}
+                    </label>
                 {/each}
             </div>
         {/each}
         {#each modules as mod}
             <div class="upgrade">
                 {#each mod.costs as costs, stage}
-                    <UpgradeSelect text={`${mod.type} Stage ${stage+1}`} />
+                    <label>
+                        <input type="checkbox">
+                        {`${mod.type} Stage ${stage+1}`}
+                    </label>
                 {/each}
             </div>
         {/each}
@@ -74,6 +94,10 @@
 {/if}
 
 <style>
+    input[type=checkbox] {
+        transform: scale(1.5);
+    }
+
     .top {
         margin: 10px 0px 10px 0px;
         padding: 5px 10px 5px 10px;
@@ -109,6 +133,14 @@
     }
     .banner .card h1 {
         text-align: center;
+    }
+
+    .quickselect label, .upgrades label {
+        padding: 1em;
+        background-color: rgb(215, 218, 224);
+    }
+    .quickselect input, .upgrades input {
+        margin-right: 0.5em;
     }
 
     .quickselect {
