@@ -4,13 +4,12 @@
 </svelte:head>
 
 <script>
-    import { writable } from 'svelte/store';
+    import { selectedChar, activeUpgrade } from "./stores.js"
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSelect from "$lib/components/UpgradeSelect.svelte";
-    const selectedChar = writable("");
+    
     $: ({ elite, skill, mastery, modules } = $selectedChar);
-    const activeUpgrade = writable("");
 </script>
 
 <div class="top">
