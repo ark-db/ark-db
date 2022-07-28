@@ -7,8 +7,10 @@
     import { writable } from 'svelte/store';
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
+    import UpgradeSelect from "$lib/components/UpgradeSelect.svelte";
     const selectedChar = writable("");
     $: ({ elite, skill, mastery, modules } = $selectedChar);
+    const activeUpgrade = writable("");
 </script>
 
 <div class="top">
@@ -26,67 +28,84 @@
             <OperatorIcon {...$selectedChar} />
             <h1>{$selectedChar.name}</h1>
         </div>
+        {#if $activeUpgrade}
+            <div class="tooltip">
+                <img src={$activeUpgrade} alt="Upgrade icon" />
+            </div>
+        {/if}
     </div>
     <div class="quickselect">
         {#if elite.length > 1}
-            <label>
-                <input type="checkbox">
-                {"All promotions"}
-            </label>
+            <UpgradeSelect
+                text="All promotions"
+                type="elite"
+                {activeUpgrade}
+            />
         {/if}
-        <label>
-            <input type="checkbox">
-            {"All skill levels"}
-        </label>
+        <UpgradeSelect
+            text="All skill levels"
+            type="skill"
+            {activeUpgrade}
+        />
         {#if mastery.length > 1}
-            {#each mastery as _, skill}
-                <label>
-                    <input type="checkbox">
-                    {`All skill ${skill+1} masteries`}
-                </label>
+            {#each mastery as skill, num}
+                <UpgradeSelect
+                    text={`All skill ${num+1} masteries`}
+                    type="mastery"
+                    id={skill.skillId}
+                    {activeUpgrade}
+                />
             {/each}
         {/if}
         {#each modules as mod}
-            <label>
-                <input type="checkbox">
-                {`All ${mod.type} stages`}
-            </label>
+            <UpgradeSelect
+                text={`All ${mod.type} stages`}
+                type="module"
+                id={mod.moduleId}
+                {activeUpgrade}
+            />
         {/each}
     </div>
     <div class="upgrades">
         <div class="upgrade">
             {#each elite as costs, rank}
-                <label>
-                    <input type="checkbox">
-                    {`Elite ${rank+1}`}
-                </label>
+                <UpgradeSelect
+                    text={`Elite ${rank+1}`}
+                    type="elite"
+                    {activeUpgrade}
+                />
             {/each}
         </div>
         <div class="upgrade">
             {#each skill as costs, level}
-                <label>
-                    <input type="checkbox">
-                    {`Skill Level ${level+2}`}
-                </label>
+                <UpgradeSelect
+                    text={`Skill Level ${level+2}`}
+                    type="skill"
+                    {activeUpgrade}
+                />
             {/each}
         </div>
-        {#each mastery as masteries, skill}
+        {#each mastery as skill, num}
             <div class="upgrade">
-                {#each masteries.costs as costs, rank}
-                    <label>
-                        <input type="checkbox">
-                        {`Skill ${skill+1} Mastery ${rank+1}`}
-                    </label>
+                {#each skill.costs as costs, rank}
+                    <UpgradeSelect
+                        text={`Skill ${num+1} Mastery ${rank+1}`}
+                        type="mastery"
+                        id={skill.skillId}
+                        {activeUpgrade}
+                    />
                 {/each}
             </div>
         {/each}
         {#each modules as mod}
             <div class="upgrade">
                 {#each mod.costs as costs, stage}
-                    <label>
-                        <input type="checkbox">
-                        {`${mod.type} Stage ${stage+1}`}
-                    </label>
+                    <UpgradeSelect
+                        text={`${mod.type} Stage ${stage+1}`}
+                        type="module"
+                        id={mod.moduleId}
+                        {activeUpgrade}
+                    />
                 {/each}
             </div>
         {/each}
@@ -94,9 +113,7 @@
 {/if}
 
 <style>
-    input[type=checkbox] {
-        transform: scale(1.5);
-    }
+
 
     .top {
         margin: 10px 0px 10px 0px;
@@ -122,6 +139,7 @@
         display: flex;
         flex-flow: row wrap;
         align-items: center;
+        justify-content: space-between;
         gap: 1em;
     }
     .banner .card {
@@ -134,13 +152,10 @@
     .banner .card h1 {
         text-align: center;
     }
-
-    .quickselect label, .upgrades label {
-        padding: 1em;
-        background-color: rgb(215, 218, 224);
-    }
-    .quickselect input, .upgrades input {
-        margin-right: 0.5em;
+    .banner .tooltip img {
+        width: 100%;
+        max-width: 80px;
+        min-width: 80px;
     }
 
     .quickselect {
