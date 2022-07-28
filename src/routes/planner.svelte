@@ -39,20 +39,20 @@
                 <UpgradeSelect text={`Skill Level ${level+2}`} />
             {/each}
         </div>
-        <div class="upgrade">
-            {#each mastery as masteries, skill}
+        {#each mastery as masteries, skill}
+            <div class="upgrade">
                 {#each masteries.costs as costs, rank}
                     <UpgradeSelect text={`Skill ${skill+1} Mastery ${rank+1}`} />
                 {/each}
-            {/each}
-        </div>
-        <div class="upgrade">
-            {#each modules as mod}
+            </div>
+        {/each}
+        {#each modules as mod}
+            <div class="upgrade">
                 {#each mod.costs as costs, stage}
                     <UpgradeSelect text={`${mod.type} Stage ${stage+1}`} />
                 {/each}
-            {/each}
-        </div>
+            </div>
+        {/each}
     </div>
 {/if}
 
@@ -99,8 +99,7 @@
         display: flex;
         flex-flow: row wrap;
         align-items: flex-start;
-        column-gap: 5%;
-        row-gap: 1em;
+        gap: 2em 1%;
     }
     .upgrade {
         flex-grow: 1;

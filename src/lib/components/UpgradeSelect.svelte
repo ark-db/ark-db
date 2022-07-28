@@ -9,7 +9,7 @@
 
 <style>
     .select {
-        padding-left: 1em;
+        padding: 0 0.75em 0 1em;
         background-color: rgb(215, 218, 224);
         display: flex;
         align-items: center;
