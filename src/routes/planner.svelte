@@ -3,11 +3,14 @@
     <meta name="description" content="Arknights operator upgrade cost calculator and planner" />
 </svelte:head>
 
+<svelte:window bind:innerWidth={innerWidth} />
+
 <script>
     import { selectedChar, activeCategory } from "./stores.js"
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
+    let innerWidth;
 </script>
 
 <div class="top">
@@ -29,7 +32,7 @@
             />
             <h1>{$selectedChar.name}</h1>
         </div>
-        {#if $activeCategory}
+        {#if $activeCategory && innerWidth > 700}
             <div class="tooltip">
                 <img src={$activeCategory} alt="Upgrade icon" />
             </div>
@@ -74,7 +77,6 @@
         flex-flow: row wrap;
         align-items: center;
         justify-content: space-between;
-        gap: 1em;
     }
     .banner .card {
         display: flex;
