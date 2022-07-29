@@ -6,7 +6,7 @@
 <svelte:window bind:innerWidth={innerWidth} />
 
 <script>
-    import { selectedChar, activeCategory } from "./stores.js"
+    import { selectedChar, activeCategory, allUpgrades } from "./stores.js"
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
@@ -32,7 +32,7 @@
             />
             <h1>{$selectedChar.name}</h1>
         </div>
-        {#if $activeCategory && innerWidth > 700}
+        {#if $activeCategory && innerWidth >= 700}
             <div class="tooltip">
                 <img src={$activeCategory} alt="Upgrade icon" />
             </div>
@@ -42,7 +42,7 @@
         {#each $selectedChar.upgrades as category}
             {#if category.data.length > 0}
                 <div class="series">
-                    <UpgradeSeries {category} {activeCategory} />
+                    <UpgradeSeries {category} {activeCategory} {allUpgrades} />
                 </div>
             {/if}
         {/each}

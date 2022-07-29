@@ -1,6 +1,7 @@
 <script>
     export let category;
     export let activeCategory;
+    export let allUpgrades;
 
     $: names = category.data.map(upgrade => upgrade.name);
     let selectedNames = new Set();
