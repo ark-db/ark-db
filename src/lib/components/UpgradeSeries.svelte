@@ -34,22 +34,30 @@
     };
 </script>
 
-<div class={category.data.length > 0 ? "visible" : "invisible"} on:mouseenter={setActiveCategory} on:mouseleave={unsetActiveCategory}>
+<ol class={category.data.length > 0 ? "visible" : "invisible"} on:mouseenter={setActiveCategory} on:mouseleave={unsetActiveCategory}>
     {#if category.data.length > 1}
-        <label for="select-all">
+        <li>
             <input type="checkbox" id="select-all" checked={selectedNames.size === names.length} on:change={onSelectAll}>
-            {@html "<strong>Select All</strong>"}
-        </label>
+            <label for="select-all">
+                <strong>Select All</strong>
+            </label>
+        </li>
     {/if}
     {#each names as name}
-        <label for={name}>
+        <li>
             <input type="checkbox" id={name} value={name} checked={selectedNames.has(name)} on:change={onCheckName}>
-            {name}
-        </label>
+            <label for={name}>
+                {name}
+            </label>
+        </li>
     {/each}
-</div>
+</ol>
 
 <style>
+    ol {
+        list-style-type: none;
+        padding-left: 0;
+    }
     .visible {
         margin: 5px;
         padding: 10px;
