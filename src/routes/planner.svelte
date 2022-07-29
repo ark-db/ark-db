@@ -88,8 +88,8 @@
     }
     .banner .tooltip img {
         width: 100%;
-        max-width: 80px;
-        min-width: 80px;
+        max-width: 90px;
+        min-width: 90px;
     }
     .select {
         padding: 5px;
