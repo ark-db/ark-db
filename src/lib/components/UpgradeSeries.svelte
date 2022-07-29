@@ -37,7 +37,7 @@
 <ol on:mouseenter={setActiveCategory} on:mouseleave={unsetActiveCategory}>
     {#if category.data.length > 1}
         <li>
-            <input type="checkbox" id="select-all" checked={selectedNames.size === names.length} on:change={onSelectAll}>
+            <input type="checkbox" class="select-all" checked={selectedNames.size === names.length} on:change={onSelectAll}>
             <label for="select-all">
                 <strong>Select All</strong>
             </label>
