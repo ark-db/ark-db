@@ -89,9 +89,9 @@
         text-align: center;
     }
     .banner .tooltip img {
-        width: 100%;
-        max-width: 90px;
-        min-width: 90px;
+        height: 100%;
+        max-height: 90px;
+        min-height: 90px;
     }
     .select {
         padding: 5px;
