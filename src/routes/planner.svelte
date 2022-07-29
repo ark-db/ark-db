@@ -37,9 +37,11 @@
     </div>
     <div class="select">
         {#each $selectedChar.upgrades as category}
-            <div class="series">
-                <UpgradeSeries {category} {activeCategory} />
-            </div>
+            {#if category.data.length > 0}
+                <div class="series">
+                    <UpgradeSeries {category} {activeCategory} />
+                </div>
+            {/if}
         {/each}
     </div>
 {/if}

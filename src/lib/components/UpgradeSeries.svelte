@@ -34,7 +34,7 @@
     };
 </script>
 
-<ol class={category.data.length > 0 ? "visible" : "invisible"} on:mouseenter={setActiveCategory} on:mouseleave={unsetActiveCategory}>
+<ol on:mouseenter={setActiveCategory} on:mouseleave={unsetActiveCategory}>
     {#if category.data.length > 1}
         <li>
             <input type="checkbox" id="select-all" checked={selectedNames.size === names.length} on:change={onSelectAll}>
@@ -57,8 +57,6 @@
     ol {
         list-style-type: none;
         padding-left: 0;
-    }
-    .visible {
         margin: 5px;
         padding: 10px;
         background-color: rgb(215, 218, 224);
