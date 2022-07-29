@@ -52,22 +52,44 @@ for char_id, char_info in chars.items():
     if is_operator(char_info) and char_info["rarity"] > 1:
         for skill in char_info["skills"]:
             skill_ids.add(skill["skillId"])
-        module_ids = modules["charEquip"].get(char_id, [])[1:]
+
         char_data[char_id] = {
             "charId": char_id,
             "name": name_changes.get(char_id, char_info["appellation"]),
             "rarity": char_info["rarity"] + 1,
-            "elite": [format_cost(phase["evolveCost"]) + [{"id": "4001", "count": elite_lmd_costs[char_info["rarity"]][i]}]
-                      for i, phase in enumerate(char_info["phases"][1:])],
-            "skill": [format_cost(level["lvlUpCost"]) for level in char_info["allSkillLvlup"]],
-            "mastery": [{"skillId": skill["skillId"], 
-                         "costs": [format_cost(mastery["levelUpCost"]) for mastery in skill["levelUpCostCond"]],} 
-                         for skill in char_info["skills"]],
-            "modules": [{"moduleId": module_id,
-                         "type": modules["equipDict"][module_id]["typeIcon"].upper(),
-                         "costs": [format_cost(cost) for cost in modules["equipDict"][module_id]["itemCost"].values()],}
-                         for module_id in module_ids],
+            "upgrades": [
+                {"type": "elite",
+                 "data": [{"name": f"Elite {i+1}",
+                           "cost": format_cost(phase["evolveCost"])
+                                   + [{"id": "4001", "count": elite_lmd_costs[char_info["rarity"]][i]}]}
+                          for i, phase in enumerate(char_info["phases"][1:])]},
+                {"type": "skill",
+                 "data": [{"name": f"Skill Level {i+2}",
+                           "cost": format_cost(level["lvlUpCost"])}
+                          for i, level in enumerate(char_info["allSkillLvlup"])]}
+            ]
         }
+
+        for i, skill in enumerate(char_info["skills"]):
+            char_data[char_id]["upgrades"].append(
+                {"type": "mastery",
+                 "skillId": skill["skillId"],
+                 "data":[{"name": f"Skill {i+1} Mastery {j+1}",
+                          "cost": format_cost(mastery["levelUpCost"])}
+                         for j, mastery in enumerate(skill["levelUpCostCond"])]
+                })
+
+
+        module_ids = modules["charEquip"].get(char_id, [])[1:]
+        for i, module_id in enumerate(module_ids):
+            module_info = modules['equipDict'][module_id]
+            char_data[char_id]["upgrades"].append(
+                {"type": "module",
+                 "moduleId": module_info["uniEquipId"],
+                 "data": [{"name": f"{module_info['typeIcon'].upper()} Stage {i+1}",
+                           "cost": format_cost(cost)}
+                          for i, cost in enumerate(module_info["itemCost"].values())]
+                })
 
         icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/avatars/{char_id}.png"
         icon_data = requests.get(icon_url).content
