@@ -28,7 +28,7 @@
             <OperatorIcon
                 charId={$selectedChar.charId}
                 name={$selectedChar.name}
-                rarity={$selectedChar.rarity}    
+                rarity={$selectedChar.rarity}
             />
             <h1>{$selectedChar.name}</h1>
         </div>

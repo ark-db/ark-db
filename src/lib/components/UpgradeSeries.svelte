@@ -7,9 +7,9 @@
     let selectedNames = new Set();
 
     const setActiveCategory = () => {
-        if (category.type === "mastery") {
+        if (category.cls === "mastery") {
             $activeCategory = `./src/lib/images/skills/${category.skillId}.png`;
-        } else if (category.type === "module") {
+        } else if (category.cls === "module") {
             $activeCategory = `./src/lib/images/modules/${category.moduleId}.png`;
         }
     };
@@ -24,6 +24,7 @@
             selectedNames.delete(event.target.value);
         }
         selectedNames = selectedNames;
+        $allUpgrades[category.type] = selectedNames;
     };
     const onSelectAll = event => {
         if (event.target.checked) {
@@ -32,6 +33,7 @@
             selectedNames.clear();
         }
         selectedNames = selectedNames;
+        $allUpgrades[category.type] = selectedNames;
     };
 </script>
 
