@@ -11,19 +11,21 @@
 
     let innerWidth;
     let upgradeListByChar = {};
+    $: allSelectedUpgrades = Object.entries(upgradeListByChar).map(([charId, upgrades]) => (upgrades.map(upgrade => ({charId, ...upgrade})))).flat();
+    $: console.log(allSelectedUpgrades);
 
     const submitUpgrades = () => {
         let allSelectedNames = Object.values($selectedUpgradeNames).map(set => Array.from(set)).flat(); 
         let upgrades = $selectedChar.upgrades.map(category => category.data.flat()).flat();
         let selectedUpgrades = upgrades.filter(upgrade => allSelectedNames.includes(upgrade.name));
 
-        if ($selectedChar.name in upgradeListByChar) {
-            upgradeListByChar[$selectedChar.name] = [...upgradeListByChar[$selectedChar.name],
-                                                     selectedUpgrades.filter(upgrade => !upgradeListByChar[$selectedChar.name].map(upgrade => upgrade.name).includes(upgrade.name))
-                                                                     .map(upgrade => ({...upgrade, ready: false}))
-                                                    ].flat();
+        if ($selectedChar.charId in upgradeListByChar) {
+            upgradeListByChar[$selectedChar.charId] = [...upgradeListByChar[$selectedChar.charId],
+                                                       selectedUpgrades.filter(upgrade => !upgradeListByChar[$selectedChar.charId].map(upgrade => upgrade.name).includes(upgrade.name))
+                                                                       .map(upgrade => ({...upgrade, ready: false}))]
+                                                       .flat();
         } else {
-            upgradeListByChar[$selectedChar.name] = selectedUpgrades.map(upgrade => ({...upgrade, ready: false}));
+            upgradeListByChar[$selectedChar.charId] = selectedUpgrades.map(upgrade => ({...upgrade, ready: false}));
         }
 
         selectedUpgradeNames.reset();
