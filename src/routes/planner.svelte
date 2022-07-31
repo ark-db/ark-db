@@ -26,7 +26,7 @@
             upgradeListByChar[$selectedChar.name] = selectedUpgrades.map(upgrade => ({...upgrade, ready: false}));
         }
 
-        $selectedUpgradeNames = {elite: new Set(), skill: new Set(), mastery1: new Set(), mastery2: new Set(), mastery3: new Set(), module1: new Set(), module2: new Set()};
+        selectedUpgradeNames.reset();
         $selectedChar = {};
         console.log(upgradeListByChar);
     }
@@ -126,6 +126,7 @@
         background-color: rgb(136, 255, 96);
         padding: 0 1em 0 1em;
     }
+
     .select {
         padding: 5px;
         background-color: rgb(235, 238, 244);
@@ -134,7 +135,7 @@
         align-items: flex-start;
         justify-content: center;
     }
-    .series {
+    .select .series {
         flex-grow: 1;
     }
 </style>
