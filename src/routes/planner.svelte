@@ -51,11 +51,7 @@
     {#if $selectedChar}
         <div class="banner">
             <div class="card">
-                <OperatorIcon
-                    charId={$selectedChar.charId}
-                    name={$selectedChar.name}
-                    rarity={$selectedChar.rarity}
-                />
+                <OperatorIcon charId={$selectedChar.charId} />
                 <h1>{$selectedChar.name}</h1>
             </div>
             {#if $activeCategory && innerWidth >= 700}

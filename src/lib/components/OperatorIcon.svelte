@@ -1,8 +1,9 @@
 <script>
+    import operators from "../data/operators.json";
     export let charId;
-    export let name;
-    export let rarity;
+    
     $: src = `./src/lib/images/operators/${charId}.png`;
+    $: ({ name, rarity } = operators[charId]);
 </script>
 
 <img class="{rarity}" {src} alt={name} />
