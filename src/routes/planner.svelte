@@ -3,15 +3,38 @@
     <meta name="description" content="Arknights operator upgrade cost calculator and planner" />
 </svelte:head>
 
-<svelte:window bind:innerWidth={innerWidth} />
-
 <script>
-    import { selectedChar, activeCategory, allUpgrades } from "./stores.js"
+    import { selectedChar, activeCategory, selectedUpgradeNames } from "./stores.js"
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
+
     let innerWidth;
+    let upgradeListByChar = {};
+
+    const submitUpgrades = () => {
+        let allSelectedNames = Object.values($selectedUpgradeNames).map(set => Array.from(set)).flat(); 
+        let upgrades = $selectedChar.upgrades.map(category => category.data.flat()).flat();
+        let selectedUpgrades = upgrades.filter(upgrade => allSelectedNames.includes(upgrade.name));
+
+        if ($selectedChar.name in upgradeListByChar) {
+            upgradeListByChar[$selectedChar.name] = [...upgradeListByChar[$selectedChar.name],
+                                                     selectedUpgrades.filter(upgrade => !upgradeListByChar[$selectedChar.name].map(upgrade => upgrade.name).includes(upgrade.name))
+                                                                     .map(upgrade => ({...upgrade, ready: false}))
+                                                    ].flat();
+        } else {
+            upgradeListByChar[$selectedChar.name] = selectedUpgrades.map(upgrade => ({...upgrade, ready: false}));
+        }
+
+        $selectedUpgradeNames = {elite: new Set(), skill: new Set(), mastery1: new Set(), mastery2: new Set(), mastery3: new Set(), module1: new Set(), module2: new Set()};
+        $selectedChar = {};
+        console.log(upgradeListByChar);
+    }
 </script>
+
+<svelte:window bind:innerWidth={innerWidth} />
+
+
 
 <div class="top">
     <div class="search">
@@ -22,32 +45,37 @@
     </div>
 </div>
 
-{#if $selectedChar}
-    <div class="banner">
-        <div class="card">
-            <OperatorIcon
-                charId={$selectedChar.charId}
-                name={$selectedChar.name}
-                rarity={$selectedChar.rarity}
-            />
-            <h1>{$selectedChar.name}</h1>
-        </div>
-        {#if $activeCategory && innerWidth >= 700}
-            <div class="tooltip">
-                <img src={$activeCategory} alt="Upgrade icon" />
+{#key $selectedChar}
+    {#if $selectedChar}
+        <div class="banner">
+            <div class="card">
+                <OperatorIcon
+                    charId={$selectedChar.charId}
+                    name={$selectedChar.name}
+                    rarity={$selectedChar.rarity}
+                />
+                <h1>{$selectedChar.name}</h1>
             </div>
-        {/if}
-    </div>
-    <div class="select">
-        {#each $selectedChar.upgrades as category}
-            {#if category.data.length > 0}
-                <div class="series">
-                    <UpgradeSeries {category} {activeCategory} {allUpgrades} />
+            {#if $activeCategory && innerWidth >= 700}
+                <div class="tooltip">
+                    <img src={$activeCategory} alt="Upgrade icon" />
                 </div>
             {/if}
-        {/each}
-    </div>
-{/if}
+            <button on:click={submitUpgrades}>
+                <p>Save & add to list</p>
+            </button>
+        </div>
+        <div class="select">
+            {#each $selectedChar.upgrades as category}
+                {#if category.data.length > 0}
+                    <div class="series">
+                        <UpgradeSeries {category} {activeCategory} {selectedUpgradeNames} />
+                    </div>
+                {/if}
+            {/each}
+        </div>
+    {/if}
+{/key}
 
 
 
@@ -77,6 +105,7 @@
         flex-flow: row wrap;
         align-items: center;
         justify-content: space-between;
+        gap: 1em;
     }
     .banner .card {
         display: flex;
@@ -92,6 +121,10 @@
         height: 100%;
         max-height: 90px;
         min-height: 90px;
+    }
+    .banner button {
+        background-color: rgb(136, 255, 96);
+        padding: 0 1em 0 1em;
     }
     .select {
         padding: 5px;

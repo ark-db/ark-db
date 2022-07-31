@@ -61,14 +61,12 @@ for char_id, char_info in chars.items():
                 {"cls": "elite",
                  "type": "elite",
                  "data": [{"name": f"Elite {i+1}",
-                           "nick": f"E{i+1}",
                            "cost": format_cost(phase["evolveCost"])
                                    + [{"id": "4001", "count": elite_lmd_costs[char_info["rarity"]][i]}]}
                           for i, phase in enumerate(char_info["phases"][1:])]},
                 {"cls": "skill",
                  "type": "skill",
                  "data": [{"name": f"Skill Level {i+2}",
-                           "nick": f"SL{i+2}",
                            "cost": format_cost(level["lvlUpCost"])}
                           for i, level in enumerate(char_info["allSkillLvlup"])]}
             ]
@@ -80,7 +78,6 @@ for char_id, char_info in chars.items():
                  "type": f"mastery{i+1}",
                  "skillId": skill["skillId"],
                  "data":[{"name": f"Skill {i+1} Mastery {j+1}",
-                          "nick": f"S{i+1}M{j+1}",
                           "cost": format_cost(mastery["levelUpCost"])}
                          for j, mastery in enumerate(skill["levelUpCostCond"])]
                 })
@@ -94,7 +91,6 @@ for char_id, char_info in chars.items():
                  "type": f"module{i+1}",
                  "moduleId": module_info["uniEquipId"],
                  "data": [{"name": f"{module_info['typeIcon'].upper()} Stage {i+1}",
-                           "nick": f"{module_info['typeName2']}{i+1}",
                            "cost": format_cost(cost)}
                           for i, cost in enumerate(module_info["itemCost"].values())]
                 })

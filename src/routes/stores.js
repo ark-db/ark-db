@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 
 export const selectedChar = writable();
 export const activeCategory = writable();
-export const allUpgrades = writable({
+export const selectedUpgradeNames = writable({
     elite: new Set(),
     skill: new Set(),
     mastery1: new Set(),

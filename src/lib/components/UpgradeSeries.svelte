@@ -1,7 +1,7 @@
 <script>
     export let category;
     export let activeCategory;
-    export let allUpgrades;
+    export let selectedUpgradeNames;
 
     $: names = category.data.map(upgrade => upgrade.name);
     let selectedNames = new Set();
@@ -24,7 +24,7 @@
             selectedNames.delete(event.target.value);
         }
         selectedNames = selectedNames;
-        $allUpgrades[category.type] = selectedNames;
+        $selectedUpgradeNames[category.type] = selectedNames;
     };
     const onSelectAll = event => {
         if (event.target.checked) {
@@ -33,7 +33,7 @@
             selectedNames.clear();
         }
         selectedNames = selectedNames;
-        $allUpgrades[category.type] = selectedNames;
+        $selectedUpgradeNames[category.type] = selectedNames;
     };
 </script>
 
