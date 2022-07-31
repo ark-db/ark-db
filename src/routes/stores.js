@@ -3,7 +3,7 @@ import { writable } from "svelte/store";
 export const selectedChar = writable();
 export const activeCategory = writable();
 
-function initSelectedUpgrades() {
+function initSelectedUpgradeNames() {
     const { subscribe, set, update } = writable({
         elite: new Set(),
         skill: new Set(),
@@ -30,4 +30,4 @@ function initSelectedUpgrades() {
 	};
 }
 
-export const selectedUpgradeNames = initSelectedUpgrades();
+export const selectedUpgradeNames = initSelectedUpgradeNames();
