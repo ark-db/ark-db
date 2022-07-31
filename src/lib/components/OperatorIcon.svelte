@@ -2,6 +2,7 @@
     import operators from "../data/operators.json";
     export let charId;
     
+    let src, name, rarity;
     $: src = `./src/lib/images/operators/${charId}.png`;
     $: ({ name, rarity } = operators[charId]);
 </script>

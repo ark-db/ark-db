@@ -48,7 +48,7 @@
 </div>
 
 {#key $selectedChar}
-    {#if $selectedChar}
+    {#if $selectedChar?.charId !== undefined}
         <div class="banner">
             <div class="card">
                 <OperatorIcon charId={$selectedChar.charId} />
@@ -63,6 +63,8 @@
                 <p>Save & add to list</p>
             </button>
         </div>
+    {/if}
+    {#if $selectedChar?.upgrades !== undefined}
         <div class="select">
             {#each $selectedChar.upgrades as category}
                 {#if category.data.length > 0}
