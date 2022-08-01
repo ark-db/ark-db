@@ -38,7 +38,7 @@
 <svelte:window bind:innerWidth={innerWidth} />
 
 
-
+<div class="page">
 <div class="top">
     <div class="search">
         <SearchBar {selectedChar} />
@@ -87,12 +87,18 @@
         {/each}
     </section>
 {/if}
-
+</div>
 
 
 <style>
+    .page {
+        margin-top: 5px;
+        padding: 5px 0 5px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
     .top {
-        margin: 10px 0px 10px 0px;
         padding: 5px 10px 5px 10px;
         background-color: rgb(235, 238, 244);
         display: flex;
@@ -109,7 +115,6 @@
     }
 
     .banner {
-        margin-bottom: 10px;
         padding: 10px;
         background-color: rgb(235, 238, 244);
         display: flex;
