@@ -39,54 +39,67 @@
 
 
 <div class="page">
-<div class="top">
-    <div class="search">
+    <section id="top">
         <SearchBar {selectedChar} />
-    </div>
-    <div class="settings">
-        <p>There's nothing here yet!</p>
-    </div>
-</div>
+        <div class="settings">
+            <p>There's nothing here yet!</p>
+        </div>
+    </section>
 
-{#key $selectedChar}
+    {#key $selectedChar}
     {#if $selectedChar?.charId !== undefined}
-        <div class="banner">
-            <div class="card">
-                <OperatorIcon charId={$selectedChar.charId} --size="100px" --border="5px" />
+        <section id="banner">
+            <div id="card">
+                <OperatorIcon
+                    charId={$selectedChar.charId}
+                    --size="100px"
+                    --border="7.5px"
+                />
                 <h1>{$selectedChar.name}</h1>
             </div>
             {#if $activeCategory && innerWidth >= 700}
-                <div class="tooltip">
-                    <img src={$activeCategory} alt="Upgrade icon" />
-                </div>
+                <img src={$activeCategory} alt="Upgrade icon" />
             {/if}
             <button on:click={submitUpgrades}>
                 <p>Save & add to list</p>
             </button>
-        </div>
+        </section>
     {/if}
     {#if $selectedChar?.upgrades !== undefined}
-        <div class="select">
+        <section id="select">
             {#each $selectedChar.upgrades as category}
                 {#if category.data.length > 0}
                     <div class="series">
-                        <UpgradeSeries {category} {activeCategory} {selectedUpgradeNames} />
+                        <UpgradeSeries
+                            {category}
+                            {activeCategory}
+                            {selectedUpgradeNames}
+                        />
                     </div>
                 {/if}
             {/each}
-        </div>
+        </section>
     {/if}
-{/key}
+    {/key}
 
-{#if allSelected.length > 0}
-    <section id="taskboard" use:dndzone={{items: allSelected, flipDurationMs}} on:consider={handleDnd} on:finalize={handleDnd}>
-        {#each allSelected as upgrade (upgrade.id)}
-            <div animate:flip="{{duration: flipDurationMs}}">
-                <TaskItem charId={upgrade.charId} upgradeName={upgrade.name} bind:ready={upgrade.ready} />
-            </div>
-        {/each}
-    </section>
-{/if}
+    {#if allSelected.length > 0}
+        <section
+            id="taskboard"
+            use:dndzone={{items: allSelected, flipDurationMs}}
+            on:consider={handleDnd}
+            on:finalize={handleDnd}
+        >
+            {#each allSelected as upgrade (upgrade.id)}
+                <div animate:flip="{{duration: flipDurationMs}}">
+                    <TaskItem
+                        charId={upgrade.charId}
+                        upgradeName={upgrade.name}
+                        bind:ready={upgrade.ready}
+                    />
+                </div>
+            {/each}
+        </section>
+    {/if}
 </div>
 
 
@@ -98,23 +111,23 @@
         flex-direction: column;
         gap: 10px;
     }
-    .top {
+    #top {
         padding: 5px 10px 5px 10px;
         background-color: rgb(235, 238, 244);
         display: flex;
         flex-flow: row wrap;
         align-items: center;
     }
-    .top .settings p {
+    #top .settings p {
         text-align: center;
     }
-    .top .settings {
+    #top .settings {
         flex-grow: 1;
         display: flex;
         justify-content: center;
     }
 
-    .banner {
+    #banner {
         padding: 10px;
         background-color: rgb(235, 238, 244);
         display: flex;
@@ -123,27 +136,27 @@
         justify-content: space-between;
         gap: 1em;
     }
-    .banner .card {
+    #banner #card {
         display: flex;
         flex-flow: row wrap;
         align-items: center;
         justify-content: center;
         column-gap: 1em;
     }
-    .banner .card h1 {
+    #banner #card h1 {
         text-align: center;
     }
-    .banner .tooltip img {
+    #banner img {
         height: 100%;
         max-height: 90px;
         min-height: 90px;
     }
-    .banner button {
+    #banner button {
         background-color: rgb(136, 255, 96);
         padding: 0 1em 0 1em;
     }
 
-    .select {
+    #select {
         padding: 5px;
         background-color: rgb(235, 238, 244);
         display: flex;
@@ -151,11 +164,11 @@
         align-items: flex-start;
         justify-content: center;
     }
-    .select .series {
+    #select .series {
         flex-grow: 1;
     }
 
-    section#taskboard {
+    #taskboard {
         padding: 10px;
         background-color: rgb(235, 238, 244);
         display: flex;
