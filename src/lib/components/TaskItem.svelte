@@ -64,5 +64,10 @@
         width: 100%;
         max-width: 15px;
         min-width: 15px;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    section:hover input[type=image] {
+        opacity: 1;
     }
 </style>
