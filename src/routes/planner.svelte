@@ -12,11 +12,12 @@
     import { flip } from "svelte/animate";
     import { dndzone } from "svelte-dnd-action";
 
-    let uid = 0;
     let innerWidth;
+    let uid = 0;
     let allSelected = [];
+    const flipDurationMs = 150;
 
-    const submitUpgrades = () => {
+    function submitUpgrades() {
         let allSelectedNames = Object.values($selectedUpgradeNames).map(set => Array.from(set)).flat();
         let upgrades = $selectedChar.upgrades.map(category => category.data.flat()).flat();
         let newUpgrades = upgrades.filter(upgrade => allSelectedNames.includes(upgrade.name))
@@ -29,13 +30,8 @@
         selectedUpgradeNames.reset();
         $selectedChar = {};
     }
-
-    const flipDurationMs = 150;
-    function handleDndConsider(e) {
-        allSelected = e.detail.items;
-    }
-    function handleDndFinalize(e) {
-        allSelected = e.detail.items;
+    function handleDnd(event) {
+        allSelected = event.detail.items;
     }
 </script>
 
@@ -82,13 +78,17 @@
     {/if}
 {/key}
 
-<section use:dndzone="{{items: allSelected, flipDurationMs}}" on:consider="{handleDndConsider}" on:finalize="{handleDndFinalize}">
-    {#each allSelected as upgrade(upgrade.id)}
-        <div animate:flip="{{duration: flipDurationMs}}">
-            <TaskItem charId={upgrade.charId} upgradeName={upgrade.name} />
-        </div>
-    {/each}
-</section>
+{#if allSelected.length > 0}
+    <section id="taskboard" use:dndzone={{items: allSelected, flipDurationMs}} on:consider={handleDnd} on:finalize={handleDnd}>
+        {#each allSelected as upgrade (upgrade.id)}
+            <div animate:flip="{{duration: flipDurationMs}}">
+                <TaskItem charId={upgrade.charId} upgradeName={upgrade.name} bind:ready={upgrade.ready} />
+            </div>
+        {/each}
+    </section>
+{/if}
+
+
 
 <style>
     .top {
@@ -150,11 +150,11 @@
         flex-grow: 1;
     }
 
-    section {
-        padding: 5px;
-        background-color: rgb(215, 218, 224);
-        /**display: flex;
+    section#taskboard {
+        padding: 10px;
+        background-color: rgb(235, 238, 244);
+        display: flex;
         flex-direction: column;
-        row-gap: 5px;*/
+        row-gap: 5px;
     }
 </style>
