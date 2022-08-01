@@ -16,6 +16,8 @@
     let splitByStatus = false;
     let uid = 0;
     let allSelected = [];
+    $: allReady = allSelected.filter(upgrade => upgrade.ready);
+    $: allNotReady = allSelected.filter(upgrade => !upgrade.ready);
     const flipDurationMs = 150;
 
     function submitUpgrades() {
@@ -33,6 +35,12 @@
     }
     function handleDnd(event) {
         allSelected = event.detail.items;
+    }
+    function handleDndReady(event) {
+        allReady = event.detail.items;
+    }
+    function handleDndNotReady(event) {
+        allNotReady = event.detail.items;
     }
 </script>
 
@@ -85,23 +93,56 @@
     {/key}
 
     {#if allSelected.length > 0}
-        <section
-            id="taskboard"
-            use:dndzone={{items: allSelected, flipDurationMs}}
-            on:consider={handleDnd}
-            on:finalize={handleDnd}
-        >
-            <h1>Upgrades</h1>
-            {#each allSelected as upgrade (upgrade.id)}
-                <div animate:flip="{{duration: flipDurationMs}}">
-                    <TaskItem
-                        charId={upgrade.charId}
-                        upgradeName={upgrade.name}
-                        bind:ready={upgrade.ready}
-                    />
-                </div>
-            {/each}
-        </section>
+        <div class="taskboard">
+        {#if splitByStatus}
+            <section
+                use:dndzone={{items: allNotReady, flipDurationMs, dropFromOthersDisabled: true}}
+                on:consider={handleDndNotReady}
+                on:finalize={handleDndNotReady}
+            >
+                {#each allNotReady as upgrade (upgrade.id)}
+                    <div animate:flip="{{duration: flipDurationMs}}">
+                        <TaskItem
+                            charId={upgrade.charId}
+                            upgradeName={upgrade.name}
+                            bind:ready={upgrade.ready}
+                        />
+                    </div>
+                {/each}
+            </section>
+            <section
+                use:dndzone={{items: allReady, flipDurationMs, dropFromOthersDisabled: true}}
+                on:consider={handleDndReady}
+                on:finalize={handleDndReady}
+            >
+                {#each allReady as upgrade (upgrade.id)}
+                    <div animate:flip="{{duration: flipDurationMs}}">
+                        <TaskItem
+                            charId={upgrade.charId}
+                            upgradeName={upgrade.name}
+                            bind:ready={upgrade.ready}
+                        />
+                    </div>
+                {/each}
+            </section>
+        {:else}
+            <section
+                use:dndzone={{items: allSelected, flipDurationMs}}
+                on:consider={handleDnd}
+                on:finalize={handleDnd}
+            >
+                {#each allSelected as upgrade (upgrade.id)}
+                    <div animate:flip="{{duration: flipDurationMs}}">
+                        <TaskItem
+                            charId={upgrade.charId}
+                            upgradeName={upgrade.name}
+                            bind:ready={upgrade.ready}
+                        />
+                    </div>
+                {/each}
+            </section>
+        {/if}
+        </div>
     {:else}
         <section id="placeholder">
             <p>No upgrades added yet</p>
@@ -185,14 +226,17 @@
         justify-content: center;
     }
 
-    #taskboard {
+    .taskboard {
+        display: flex;
+        flex-flow: row wrap;
+        gap: 10px;
+    }
+    .taskboard section {
         padding: 10px;
         background-color: rgb(235, 238, 244);
+        flex-grow: 1;
         display: flex;
         flex-direction: column;
         row-gap: 5px;
-    }
-    #taskboard h1 {
-        text-align: center;
     }
 </style>
