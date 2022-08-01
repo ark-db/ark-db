@@ -14,37 +14,28 @@
 
     let uid = 0;
     let innerWidth;
-    let upgradeListByChar = {};
-    $: allSelectedUpgrades = Object.entries(upgradeListByChar).map(([charId, upgrades]) => (upgrades.map(upgrade => ({charId, ...upgrade})))).flat();
-    $: console.log(allSelectedUpgrades);
-    $: readyUpgrades = allSelectedUpgrades.filter(upgrade => upgrade.ready);
-    $: notReadyUpgrades = allSelectedUpgrades.filter(upgrade => !upgrade.ready);
+    let allSelected = [];
 
     const submitUpgrades = () => {
-        let allSelectedNames = Object.values($selectedUpgradeNames).map(set => Array.from(set)).flat(); 
+        let allSelectedNames = Object.values($selectedUpgradeNames).map(set => Array.from(set)).flat();
         let upgrades = $selectedChar.upgrades.map(category => category.data.flat()).flat();
-        let selectedUpgrades = upgrades.filter(upgrade => allSelectedNames.includes(upgrade.name));
+        let newUpgrades = upgrades.filter(upgrade => allSelectedNames.includes(upgrade.name))
+                                  .filter(upgrade => !allSelected.filter(upgrade => upgrade.charId === $selectedChar.charId)
+                                                                 .map(upgrade => upgrade.name)
+                                  .includes(upgrade.name));
 
-        if ($selectedChar.charId in upgradeListByChar) {
-            upgradeListByChar[$selectedChar.charId] = [...upgradeListByChar[$selectedChar.charId],
-                                                       selectedUpgrades.filter(upgrade => !upgradeListByChar[$selectedChar.charId].map(upgrade => upgrade.name).includes(upgrade.name))
-                                                                       .map(upgrade => ({...upgrade, id: uid++, ready: false}))]
-                                                       .flat();
-        } else {
-            upgradeListByChar[$selectedChar.charId] = selectedUpgrades.map(upgrade => ({...upgrade, id: uid++, ready: false}));
-        }
+        allSelected = [...allSelected, ...newUpgrades.map(upgrade => ({...upgrade, charId: $selectedChar.charId, id: uid++, ready: false}))]
 
         selectedUpgradeNames.reset();
         $selectedChar = {};
-        console.log(upgradeListByChar);
     }
 
     const flipDurationMs = 150;
     function handleDndConsider(e) {
-        notReadyUpgrades = e.detail.items;
+        allSelected = e.detail.items;
     }
     function handleDndFinalize(e) {
-        notReadyUpgrades = e.detail.items;
+        allSelected = e.detail.items;
     }
 </script>
 
@@ -65,7 +56,7 @@
     {#if $selectedChar?.charId !== undefined}
         <div class="banner">
             <div class="card">
-                <OperatorIcon charId={$selectedChar.charId} --size="100px" />
+                <OperatorIcon charId={$selectedChar.charId} --size="100px" --border="5px" />
                 <h1>{$selectedChar.name}</h1>
             </div>
             {#if $activeCategory && innerWidth >= 700}
@@ -91,15 +82,13 @@
     {/if}
 {/key}
 
-<section use:dndzone="{{items: notReadyUpgrades, flipDurationMs}}" on:consider="{handleDndConsider}" on:finalize="{handleDndFinalize}">
-    {#each notReadyUpgrades as upgrade(upgrade.id)}
+<section use:dndzone="{{items: allSelected, flipDurationMs}}" on:consider="{handleDndConsider}" on:finalize="{handleDndFinalize}">
+    {#each allSelected as upgrade(upgrade.id)}
         <div animate:flip="{{duration: flipDurationMs}}">
             <TaskItem charId={upgrade.charId} upgradeName={upgrade.name} />
         </div>
     {/each}
 </section>
-
-
 
 <style>
     .top {
@@ -159,5 +148,13 @@
     }
     .select .series {
         flex-grow: 1;
+    }
+
+    section {
+        padding: 5px;
+        background-color: rgb(215, 218, 224);
+        /**display: flex;
+        flex-direction: column;
+        row-gap: 5px;*/
     }
 </style>
