@@ -13,6 +13,7 @@
     import { dndzone } from "svelte-dnd-action";
 
     let innerWidth;
+    let splitByStatus = false;
     let uid = 0;
     let allSelected = [];
     const flipDurationMs = 150;
@@ -42,7 +43,8 @@
     <section id="top">
         <SearchBar {selectedChar} />
         <div class="settings">
-            <p>There's nothing here yet!</p>
+            <input id="split-status" type="checkbox" bind:checked={splitByStatus}>
+            <label for="split-status">Show upgrades by completion status</label>
         </div>
     </section>
 
@@ -117,19 +119,21 @@
         gap: 10px;
     }
     #top {
-        padding: 5px 10px 5px 10px;
+        padding: 10px;
         background-color: rgb(235, 238, 244);
         display: flex;
         flex-flow: row wrap;
         align-items: center;
-    }
-    #top .settings p {
-        text-align: center;
+        gap: 1em;
     }
     #top .settings {
         flex-grow: 1;
         display: flex;
         justify-content: center;
+    }
+    #top .settings input[type=checkbox] {
+        transform: scale(1.5);
+        margin-right: 1em;
     }
 
     #banner {
