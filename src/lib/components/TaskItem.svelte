@@ -1,7 +1,7 @@
 <script>
     import operators from "../data/operators.json";
     import OperatorIcon from "./OperatorIcon.svelte";
-    export let ready = false;
+    export let ready;
     export let charId;
     export let upgradeName;
 </script>
