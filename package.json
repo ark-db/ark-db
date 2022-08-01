@@ -12,11 +12,9 @@
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"svelte": "^3.44.0",
+		"svelte-dnd-action": "^0.9.19",
+		"svelte-typeahead": "^4.2.4",
 		"vite": "^3.0.0"
 	},
-	"type": "module",
-	"dependencies": {
-		"svelte-dnd-action": "^0.9.19",
-		"svelte-typeahead": "^4.2.4"
-	}
+	"type": "module"
 }
