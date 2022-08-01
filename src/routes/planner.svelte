@@ -8,11 +8,17 @@
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
+    import TaskItem from "$lib/components/TaskItem.svelte";
+    import { flip } from "svelte/animate";
+    import { dndzone } from "svelte-dnd-action";
 
+    let uid = 0;
     let innerWidth;
     let upgradeListByChar = {};
     $: allSelectedUpgrades = Object.entries(upgradeListByChar).map(([charId, upgrades]) => (upgrades.map(upgrade => ({charId, ...upgrade})))).flat();
     $: console.log(allSelectedUpgrades);
+    $: readyUpgrades = allSelectedUpgrades.filter(upgrade => upgrade.ready);
+    $: notReadyUpgrades = allSelectedUpgrades.filter(upgrade => !upgrade.ready);
 
     const submitUpgrades = () => {
         let allSelectedNames = Object.values($selectedUpgradeNames).map(set => Array.from(set)).flat(); 
@@ -22,15 +28,23 @@
         if ($selectedChar.charId in upgradeListByChar) {
             upgradeListByChar[$selectedChar.charId] = [...upgradeListByChar[$selectedChar.charId],
                                                        selectedUpgrades.filter(upgrade => !upgradeListByChar[$selectedChar.charId].map(upgrade => upgrade.name).includes(upgrade.name))
-                                                                       .map(upgrade => ({...upgrade, ready: false}))]
+                                                                       .map(upgrade => ({...upgrade, id: uid++, ready: false}))]
                                                        .flat();
         } else {
-            upgradeListByChar[$selectedChar.charId] = selectedUpgrades.map(upgrade => ({...upgrade, ready: false}));
+            upgradeListByChar[$selectedChar.charId] = selectedUpgrades.map(upgrade => ({...upgrade, id: uid++, ready: false}));
         }
 
         selectedUpgradeNames.reset();
         $selectedChar = {};
         console.log(upgradeListByChar);
+    }
+
+    const flipDurationMs = 150;
+    function handleDndConsider(e) {
+        notReadyUpgrades = e.detail.items;
+    }
+    function handleDndFinalize(e) {
+        notReadyUpgrades = e.detail.items;
     }
 </script>
 
@@ -51,7 +65,7 @@
     {#if $selectedChar?.charId !== undefined}
         <div class="banner">
             <div class="card">
-                <OperatorIcon charId={$selectedChar.charId} />
+                <OperatorIcon charId={$selectedChar.charId} --size="100px" />
                 <h1>{$selectedChar.name}</h1>
             </div>
             {#if $activeCategory && innerWidth >= 700}
@@ -76,6 +90,14 @@
         </div>
     {/if}
 {/key}
+
+<section use:dndzone="{{items: notReadyUpgrades, flipDurationMs}}" on:consider="{handleDndConsider}" on:finalize="{handleDndFinalize}">
+    {#each notReadyUpgrades as upgrade(upgrade.id)}
+        <div animate:flip="{{duration: flipDurationMs}}">
+            <TaskItem charId={upgrade.charId} upgradeName={upgrade.name} />
+        </div>
+    {/each}
+</section>
 
 
 
