@@ -95,6 +95,7 @@
     {/if}
     {/key}
 
+    <h1>Upgrades</h1>
     {#if allSelected.length > 0}
         <div class="taskboard">
         {#if splitByStatus}
@@ -232,6 +233,10 @@
         justify-content: center;
     }
 
+    .page > h1 {
+        margin-top: 1em;
+        text-align: center;
+    }
     .taskboard {
         display: flex;
         flex-flow: row wrap;
