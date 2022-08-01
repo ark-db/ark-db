@@ -1,5 +1,5 @@
 <script>
-    import src from "./skalter.jpg"
+    import src from "..images/skalter.jpg";
     export let status;
     export let message;
 </script>
