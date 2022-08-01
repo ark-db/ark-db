@@ -11,7 +11,7 @@
 
 <style>
     img {
-        border-width: 5px;
+        border-width: var(--border);
         border-style: solid;
         width: 100%;
         max-width: var(--size);
