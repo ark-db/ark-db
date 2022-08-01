@@ -22,7 +22,6 @@
         grid-template-columns: 1.25em 50px auto;
         grid-template-rows: 30px 30px;
         column-gap: 1em;
-        justify-items: start;
         align-items: center;
     }
     section.ready {
