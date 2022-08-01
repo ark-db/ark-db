@@ -89,6 +89,7 @@
             on:consider={handleDnd}
             on:finalize={handleDnd}
         >
+            <h1>Upgrades</h1>
             {#each allSelected as upgrade (upgrade.id)}
                 <div animate:flip="{{duration: flipDurationMs}}">
                     <TaskItem
@@ -186,5 +187,8 @@
         display: flex;
         flex-direction: column;
         row-gap: 5px;
+    }
+    #taskboard h1 {
+        text-align: center;
     }
 </style>
