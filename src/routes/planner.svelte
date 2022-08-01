@@ -33,6 +33,9 @@
         selectedUpgradeNames.reset();
         $selectedChar = {};
     }
+    function remove(upgrade) {
+        allSelected = allSelected.filter(up => !(up.charName === upgrade.charName && up.name === upgrade.name));
+    }
     function handleDnd(event) {
         allSelected = event.detail.items;
     }
@@ -106,6 +109,7 @@
                             charId={upgrade.charId}
                             upgradeName={upgrade.name}
                             bind:ready={upgrade.ready}
+                            on:click={() => remove(upgrade)}
                         />
                     </div>
                 {/each}
@@ -121,6 +125,7 @@
                             charId={upgrade.charId}
                             upgradeName={upgrade.name}
                             bind:ready={upgrade.ready}
+                            on:click={() => remove(upgrade)}
                         />
                     </div>
                 {/each}
@@ -137,6 +142,7 @@
                             charId={upgrade.charId}
                             upgradeName={upgrade.name}
                             bind:ready={upgrade.ready}
+                            on:click={() => remove(upgrade)}
                         />
                     </div>
                 {/each}
