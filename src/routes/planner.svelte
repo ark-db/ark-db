@@ -55,7 +55,7 @@
         <SearchBar {selectedChar} />
         <div class="settings">
             <input id="split-status" type="checkbox" bind:checked={splitByStatus}>
-            <label for="split-status">Show upgrades by completion status</label>
+            <label for="split-status">Organize upgrades by status</label>
         </div>
     </section>
 
@@ -74,7 +74,7 @@
                 <img src={$activeCategory} alt="Upgrade icon" />
             {/if}
             <button on:click={submitUpgrades}>
-                <p>Save & add to list</p>
+                <p>Save and add to list</p>
             </button>
         </section>
     {/if}
@@ -100,7 +100,9 @@
         <div class="taskboard">
         {#if splitByStatus}
             <section
-                use:dndzone={{items: allNotReady, flipDurationMs, dropFromOthersDisabled: true}}
+                use:dndzone={{items: allNotReady,
+                              flipDurationMs,
+                              dropFromOthersDisabled: true}}
                 on:consider={handleDndNotReady}
                 on:finalize={handleDndNotReady}
             >
@@ -116,7 +118,9 @@
                 {/each}
             </section>
             <section
-                use:dndzone={{items: allReady, flipDurationMs, dropFromOthersDisabled: true}}
+                use:dndzone={{items: allReady,
+                              flipDurationMs,
+                              dropFromOthersDisabled: true}}
                 on:consider={handleDndReady}
                 on:finalize={handleDndReady}
             >
@@ -133,7 +137,8 @@
             </section>
         {:else}
             <section
-                use:dndzone={{items: allSelected, flipDurationMs}}
+                use:dndzone={{items: allSelected,
+                              flipDurationMs}}
                 on:consider={handleDnd}
                 on:finalize={handleDnd}
             >
@@ -209,8 +214,15 @@
         min-height: 90px;
     }
     #banner button {
-        background-color: rgb(136, 255, 96);
+        margin-right: 1em;
         padding: 0 1em 0 1em;
+        border: 5px solid rgb(149, 255, 114);
+        border-radius: 10px;
+        background-color: rgb(149, 255, 114);
+    }
+    #banner button:hover {
+        border: 5px solid rgb(139, 245, 104);
+        background-color: rgb(139, 245, 104);
     }
 
     #select {
@@ -227,6 +239,7 @@
 
     #placeholder {
         margin: 15px;
+        border-radius: 10px;
         background-color: rgb(245, 248, 254);
         display: flex;
         align-items: center;

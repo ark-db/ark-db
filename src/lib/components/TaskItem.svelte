@@ -22,9 +22,16 @@
 <style>
     section {
         padding: 10px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+    }
+    .ready {
+        background-color: rgb(151, 255, 148);
+    }
+    .notready {
+        background-color: rgb(255, 140, 140);
     }
     section div {
         display: grid;
@@ -32,12 +39,6 @@
         grid-template-rows: 30px 30px;
         column-gap: 1em;
         align-items: center;
-    }
-    .ready {
-        background-color: rgb(151, 255, 148);
-    }
-    .notready {
-        background-color: rgb(255, 140, 140);
     }
     input[type=checkbox] {
         grid-column: 1 / 2;
