@@ -99,6 +99,10 @@
                 </div>
             {/each}
         </section>
+    {:else}
+        <section id="placeholder">
+            <p>No upgrades added yet</p>
+        </section>
     {/if}
 </div>
 
@@ -166,6 +170,14 @@
     }
     #select .series {
         flex-grow: 1;
+    }
+
+    #placeholder {
+        margin: 15px;
+        background-color: rgb(245, 248, 254);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     #taskboard {
