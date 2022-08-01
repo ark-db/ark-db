@@ -14,8 +14,8 @@
         border-width: 5px;
         border-style: solid;
         width: 100%;
-        max-width: 100px;
-        min-width: 100px;
+        max-width: var(--size);
+        min-width: var(--size);
     }
     img.\36 {
         border-color: #ed702d;
