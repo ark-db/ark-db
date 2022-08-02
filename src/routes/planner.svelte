@@ -4,7 +4,7 @@
 </svelte:head>
 
 <script>
-    import { selectedChar, activeCategory, selectedUpgradeNames } from "./stores.js"
+    import { selectedChar, activeCategory, selectedUpgradeNames, splitByStatus } from "./stores.js"
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
@@ -13,7 +13,6 @@
     import { dndzone } from "svelte-dnd-action";
 
     let innerWidth;
-    let splitByStatus = false;
     let uid = 0;
     let allSelected = [];
     $: allReady = allSelected.filter(upgrade => upgrade.ready);
@@ -52,9 +51,9 @@
 
 <div class="page">
     <section id="top">
-        <SearchBar {selectedChar} />
+        <SearchBar {selectedChar} {splitByStatus} />
         <div class="settings">
-            <input id="split-status" type="checkbox" bind:checked={splitByStatus}>
+            <input id="split-status" type="checkbox" bind:checked={$splitByStatus}>
             <label for="split-status">Organize upgrades by status</label>
         </div>
     </section>
@@ -98,7 +97,7 @@
     <h1>Upgrades</h1>
     {#if allSelected.length > 0}
         <div class="taskboard">
-        {#if splitByStatus}
+        {#if $splitByStatus}
             <section
                 use:dndzone={{items: allNotReady,
                               flipDurationMs,

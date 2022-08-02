@@ -1,8 +1,5 @@
 import { writable } from "svelte/store";
 
-export const selectedChar = writable();
-export const activeCategory = writable();
-
 function initSelectedUpgradeNames() {
     const { subscribe, set, update } = writable({
         elite: new Set(),
@@ -30,4 +27,7 @@ function initSelectedUpgradeNames() {
 	};
 }
 
+export const selectedChar = writable();
+export const activeCategory = writable();
 export const selectedUpgradeNames = initSelectedUpgradeNames();
+export const splitByStatus = writable(false);
