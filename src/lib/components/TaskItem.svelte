@@ -13,7 +13,7 @@
         <div class="icon">
             <OperatorIcon {charId} --size="50px" --border="0px" />
         </div>
-        <h2>{operators[charId].name}</h2>
+        <h3>{operators[charId].name}</h3>
         <p>{upgradeName}</p>
     </div>
     <input type="image" src={deleteIcon} alt="delete" on:click />
@@ -54,15 +54,15 @@
         justify-self: center;
         align-items: center;
     }
-    h2 {
+    h3 {
         grid-column: 3 / 4;
         grid-row: 1 / 2;
-        margin: 0.2em;
+        margin: 0.2em 0 0.2em 0;
     }
     p {
         grid-column: 3 / 4;
         grid-row: 2 / 3;
-        margin: 0.25em;
+        margin: 0.15em 0 0.15em 0;
     }
     input[type=image] {
         width: 100%;

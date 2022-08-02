@@ -105,7 +105,7 @@
     {/if}
     {/key}
 
-    <h1>Upgrades</h1>
+    <h2>Upgrades</h2>
     {#if allSelected.length > 0}
         <div class="taskboard">
         {#if $splitByStatus}
@@ -213,7 +213,7 @@
         flex-flow: row wrap;
         align-items: center;
         justify-content: space-between;
-        gap: 1em;
+        row-gap: 0.5em;
     }
     #banner #card {
         display: flex;
@@ -223,7 +223,9 @@
         column-gap: 1em;
     }
     #banner #card h1 {
+        margin: 0.5em 0 0.5em 0;
         text-align: center;
+        font-size: 2em;
     }
     #banner img {
         height: 100%;
@@ -263,8 +265,8 @@
         justify-content: center;
     }
 
-    .page > h1 {
-        margin-top: 1em;
+    .page > h2 {
+        margin: 1em 0 0.25em 0;
         text-align: center;
     }
     .taskboard {
