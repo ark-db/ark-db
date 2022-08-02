@@ -2,14 +2,9 @@
     import Typeahead from "svelte-typeahead";
     import operators from "../data/operators.json";
     export let selectedChar;
-    export let splitByStatus;
 
     const data = Object.values(operators)
     const extract = (id) => id.name;
-    function handleSelect({ detail }) {
-        $selectedChar = detail.original;
-        $splitByStatus = false;
-    }
     const stripTags = (str) => {
         return str.replace( /(<([^>]+)>)/ig, '');
     }
@@ -23,7 +18,7 @@
     inputAfterSelect="clear"
     let:value
     let:result
-    on:select={handleSelect}
+    on:select={({ detail }) => $selectedChar = detail.original}
 >
     <svelte:fragment slot="no-results">
         No results found for "{value}"

@@ -26,13 +26,14 @@
                                   .filter(upgrade => !allSelected.filter(upgrade => upgrade.charId === $selectedChar.charId)
                                                                  .map(upgrade => upgrade.name)
                                   .includes(upgrade.name));
-
+        let origState = $splitByStatus;
+        $splitByStatus = false;
         allSelected = [...allSelected,
                        ...newUpgrades.map(upgrade => ({...upgrade,
                                                        charId: $selectedChar.charId,
                                                        id: uid++,
                                                        ready: false}))]
-
+        $splitByStatus = origState;
         selectedUpgradeNames.reset();
         $selectedChar = {};
     }
@@ -56,7 +57,7 @@
 
 <div class="page">
     <section id="top">
-        <SearchBar {selectedChar} {splitByStatus} />
+        <SearchBar {selectedChar} />
         <div class="settings">
             <div>
                 <input id="split-status" type="checkbox" bind:checked={$splitByStatus}>
