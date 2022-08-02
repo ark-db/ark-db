@@ -98,42 +98,46 @@
     {#if allSelected.length > 0}
         <div class="taskboard">
         {#if $splitByStatus}
-            <section
-                use:dndzone={{items: allNotReady,
-                              flipDurationMs,
-                              dropFromOthersDisabled: true}}
-                on:consider={handleDndNotReady}
-                on:finalize={handleDndNotReady}
-            >
-                {#each allNotReady as upgrade (upgrade.id)}
-                    <div animate:flip="{{duration: flipDurationMs}}">
-                        <TaskItem
-                            charId={upgrade.charId}
-                            upgradeName={upgrade.name}
-                            bind:ready={upgrade.ready}
-                            on:click={() => remove(upgrade)}
-                        />
-                    </div>
-                {/each}
-            </section>
-            <section
-                use:dndzone={{items: allReady,
-                              flipDurationMs,
-                              dropFromOthersDisabled: true}}
-                on:consider={handleDndReady}
-                on:finalize={handleDndReady}
-            >
-                {#each allReady as upgrade (upgrade.id)}
-                    <div animate:flip="{{duration: flipDurationMs}}">
-                        <TaskItem
-                            charId={upgrade.charId}
-                            upgradeName={upgrade.name}
-                            bind:ready={upgrade.ready}
-                            on:click={() => remove(upgrade)}
-                        />
-                    </div>
-                {/each}
-            </section>
+            {#if allNotReady.length > 0}
+                <section
+                    use:dndzone={{items: allNotReady,
+                                  flipDurationMs,
+                                  dropFromOthersDisabled: true}}
+                    on:consider={handleDndNotReady}
+                    on:finalize={handleDndNotReady}
+                >
+                    {#each allNotReady as upgrade (upgrade.id)}
+                        <div animate:flip="{{duration: flipDurationMs}}">
+                            <TaskItem
+                                charId={upgrade.charId}
+                                upgradeName={upgrade.name}
+                                bind:ready={upgrade.ready}
+                                on:click={() => remove(upgrade)}
+                            />
+                        </div>
+                    {/each}
+                </section>
+            {/if}
+            {#if allReady.length > 0}
+                <section
+                    use:dndzone={{items: allReady,
+                                  flipDurationMs,
+                                  dropFromOthersDisabled: true}}
+                    on:consider={handleDndReady}
+                    on:finalize={handleDndReady}
+                >
+                    {#each allReady as upgrade (upgrade.id)}
+                        <div animate:flip="{{duration: flipDurationMs}}">
+                            <TaskItem
+                                charId={upgrade.charId}
+                                upgradeName={upgrade.name}
+                                bind:ready={upgrade.ready}
+                                on:click={() => remove(upgrade)}
+                            />
+                        </div>
+                    {/each}
+                </section>
+            {/if}
         {:else}
             <section
                 use:dndzone={{items: allSelected,
