@@ -15,7 +15,7 @@
             <li class:active={$page.url.pathname === '/'}>
                 <a href="/">Home</a>
             </li>
-			<li class:active={$page.url.pathname === '/planner'}>
+			<li class:active={$page.url.pathname.startsWith("/planner")}>
 				<a href="/planner">Upgrade Planner</a>
 			</li>
         </ul>
