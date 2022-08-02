@@ -31,3 +31,4 @@ export const selectedChar = writable();
 export const activeCategory = writable();
 export const selectedUpgradeNames = initSelectedUpgradeNames();
 export const splitByStatus = writable(false);
+export const showCost = writable(false);

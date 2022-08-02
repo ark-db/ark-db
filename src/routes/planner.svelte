@@ -4,7 +4,7 @@
 </svelte:head>
 
 <script>
-    import { selectedChar, activeCategory, selectedUpgradeNames, splitByStatus } from "./stores.js"
+    import { selectedChar, activeCategory, selectedUpgradeNames, splitByStatus, showCost } from "./stores.js"
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
@@ -27,13 +27,18 @@
                                                                  .map(upgrade => upgrade.name)
                                   .includes(upgrade.name));
 
-        allSelected = [...allSelected, ...newUpgrades.map(upgrade => ({...upgrade, charId: $selectedChar.charId, id: uid++, ready: false}))]
+        allSelected = [...allSelected,
+                       ...newUpgrades.map(upgrade => ({...upgrade,
+                                                       charId: $selectedChar.charId,
+                                                       id: uid++,
+                                                       ready: false}))]
 
         selectedUpgradeNames.reset();
         $selectedChar = {};
     }
     function remove(upgrade) {
-        allSelected = allSelected.filter(up => !(up.charName === upgrade.charName && up.name === upgrade.name));
+        allSelected = allSelected.filter(up => !(up.charName === upgrade.charName
+                                                 && up.name === upgrade.name));
     }
     function handleDnd(event) {
         allSelected = event.detail.items;
@@ -53,8 +58,14 @@
     <section id="top">
         <SearchBar {selectedChar} {splitByStatus} />
         <div class="settings">
-            <input id="split-status" type="checkbox" bind:checked={$splitByStatus}>
-            <label for="split-status">Organize upgrades by status</label>
+            <div>
+                <input id="split-status" type="checkbox" bind:checked={$splitByStatus}>
+                <label for="split-status">Organize upgrades by status</label>
+            </div>
+            <div>
+                <input id="show-cost" type="checkbox" bind:checked={$showCost}>
+                <label for="show-cost">Show upgrade costs</label>
+            </div>
         </div>
     </section>
 
@@ -69,7 +80,7 @@
                 />
                 <h1>{$selectedChar.name}</h1>
             </div>
-            {#if $activeCategory && innerWidth >= 700}
+            {#if $activeCategory && innerWidth >= 800}
                 <img src={$activeCategory} alt="Upgrade icon" />
             {/if}
             <button on:click={submitUpgrades}>
@@ -185,11 +196,13 @@
     #top .settings {
         flex-grow: 1;
         display: flex;
+        flex-flow: row wrap;
         justify-content: center;
+        gap: 1em 3em;
     }
     #top .settings input[type=checkbox] {
         transform: scale(1.5);
-        margin-right: 1em;
+        margin-right: 0.5em;
     }
 
     #banner {
