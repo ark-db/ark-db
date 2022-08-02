@@ -191,6 +191,7 @@
         display: flex;
         flex-flow: row wrap;
         align-items: center;
+        justify-content: space-around;
         gap: 1em;
     }
     #top .settings {

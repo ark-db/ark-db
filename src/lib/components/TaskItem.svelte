@@ -26,6 +26,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        column-gap: 10px;
     }
     .ready {
         background-color: rgb(151, 255, 148);
@@ -36,7 +37,7 @@
     section div {
         display: grid;
         grid-template-columns: 1.25em 50px auto;
-        grid-template-rows: 30px 30px;
+        grid-template-rows: auto auto;
         column-gap: 1em;
         align-items: center;
     }
@@ -56,10 +57,12 @@
     h2 {
         grid-column: 3 / 4;
         grid-row: 1 / 2;
+        margin: 0.2em;
     }
     p {
         grid-column: 3 / 4;
         grid-row: 2 / 3;
+        margin: 0.25em;
     }
     input[type=image] {
         width: 100%;
