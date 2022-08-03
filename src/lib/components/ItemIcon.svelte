@@ -31,9 +31,9 @@
     div p {
         grid-area: 1 / 1 / 2 / 2;
         place-self: end;
-        margin: 0 calc(var(--size) / 6.8) calc(var(--size) / 9.9) 0;
+        margin: 0 calc(var(--size) / 6.1) calc(var(--size) / 9.2) 0;
         padding: 0.1em 0.3em 0.1em 0.3em;
-        background-color: rgba(0, 0, 0, 0.6);
+        background-color: rgba(0, 0, 0, 0.7);
         box-shadow: 0.1em 0.2em 0.2em rgba(0, 0, 0, 0.45);
         color: white;
         font-weight: 300;
