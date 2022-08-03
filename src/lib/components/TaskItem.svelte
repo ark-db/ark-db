@@ -15,7 +15,7 @@
         {/if}
         <div class="info">
             <div class="top">
-                <OperatorIcon {charId} --size="50px" --border="0px" />
+                <OperatorIcon {charId} --size="60px" --border="0px" />
                 <div class="title">
                     <h3>{operators[charId].name}</h3>
                     <p>{name}</p>
@@ -24,7 +24,7 @@
             {#if $showCost}
                 <div class="cost">
                     {#each cost as item}
-                        <ItemIcon {...item} --size="50px" />
+                        <ItemIcon {...item} --size="60px" />
                     {/each}
                 </div>
             {/if}
@@ -87,6 +87,7 @@
         flex-flow: row wrap;
         align-items: center;
         justify-content: space-evenly;
+        column-gap: 5px;
     }
 
     input[type=image] {
