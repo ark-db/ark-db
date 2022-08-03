@@ -6,13 +6,18 @@
     let itemSrc = new URL(`../images/items/${id}.png`, import.meta.url).href;
     let { name, rarity } = items[id];
     let bgSrc = new URL(`../images/rarities/${rarity}.png`, import.meta.url).href;
+
+    const compactNum = Intl.NumberFormat("en-US", {
+        notation: "compact",
+        maximumFractionDigits: 2
+    });
 </script>
 
 <div>
     <img src={bgSrc} alt="background" />
     <img src={itemSrc} alt={name} />
     {#if count !== undefined}
-        <p>{count}</p>
+        <p>{compactNum.format(count)}</p>
     {/if}
 </div>
 
@@ -37,5 +42,6 @@
         box-shadow: 0.1em 0.2em 0.2em rgba(0, 0, 0, 0.45);
         color: white;
         font-weight: 300;
+        font-size: 80%;
     }
 </style>
