@@ -22,6 +22,7 @@
                 </div>
             </div>
             {#if $showCost}
+                <div class="gap" />
                 <div class="cost">
                     {#each cost as item}
                         <ItemIcon {...item} --size="60px" />
@@ -54,43 +55,48 @@
     }
 
     .left {
+        flex-grow: 1;
         display: flex;
         column-gap: 0.75em;
     }
-    .left .info {
-        display: flex;
-        flex-flow: row wrap;
-        align-items: center;
-        justify-content: start;
-        gap: 1em 2em;
-    }
-    .left .top {
-        display: flex;
-        align-items: center;
-        column-gap: 0.75em;
-    }
-    .left .title {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    .left .title h3 {
-        margin: 0.1em 0 0.2em 0;
-    }
-    .left .title p {
-        margin: 0.1em 0 0.2em 0;
-    }
-
-    .left .cost {
+    .info {
         flex-grow: 1;
         display: flex;
         flex-flow: row wrap;
         align-items: center;
-        justify-content: space-evenly;
-        column-gap: 5px;
+        justify-content: space-between;
+        gap: 1em 2em;
+    }
+    .top {
+        display: flex;
+        align-items: center;
+        column-gap: 0.75em;
+    }
+    .title {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .title h3 {
+        margin: 0.1em 0 0.2em 0;
+    }
+    .title p {
+        margin: 0.1em 0 0.2em 0;
+    }
+
+    .gap {
+        flex-grow: 1;
+    }
+    .cost {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        justify-content: center;
+        column-gap: 10px;
     }
 
     input[type=image] {
+        margin-left: 10px;
         width: 100%;
         max-width: 15px;
         min-width: 15px;
