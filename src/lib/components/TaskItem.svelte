@@ -8,13 +8,15 @@
 </script>
 
 <section class={ready ? "ready" : "notready"}>
-    <div>
+    <div class="left">
         <input type="checkbox" bind:checked={ready}>
-        <div class="icon">
+        <div id="icon">
             <OperatorIcon {charId} --size="50px" --border="0px" />
         </div>
-        <h3>{operators[charId].name}</h3>
-        <p>{upgradeName}</p>
+        <div class="name">
+            <h3>{operators[charId].name}</h3>
+            <p>{upgradeName}</p>
+        </div>
     </div>
     <input type="image" src={deleteIcon} alt="delete" on:click />
 </section>
@@ -34,35 +36,27 @@
     .notready {
         background-color: rgb(255, 140, 140);
     }
-    section div {
-        display: grid;
-        grid-template-columns: 1.25em 50px auto;
-        grid-template-rows: auto auto;
-        column-gap: 1em;
-        align-items: center;
-    }
     input[type=checkbox] {
-        grid-column: 1 / 2;
-        grid-row: 1 / 3;
         transform: scale(1.5);
-        justify-self: center
     }
-    .icon {
-        grid-column: 2 / 3;
-        grid-row: 1 / 3;
+    section .left {
         display: flex;
-        justify-self: center;
+        column-gap: 0.75em;
+    }
+    section .left #icon {
+        align-self: center;
         align-items: center;
+        justify-content: center;
     }
-    h3 {
-        grid-column: 3 / 4;
-        grid-row: 1 / 2;
-        margin: 0.2em 0 0.2em 0;
+    section .left .name {
+        display: flex;
+        flex-direction: column;
     }
-    p {
-        grid-column: 3 / 4;
-        grid-row: 2 / 3;
-        margin: 0.15em 0 0.15em 0;
+    .name h3 {
+        margin: 0.1em 0 0.2em 0;
+    }
+    .name p {
+        margin: 0.1em 0 0.2em 0;
     }
     input[type=image] {
         width: 100%;
