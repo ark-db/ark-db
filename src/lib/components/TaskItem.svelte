@@ -2,6 +2,7 @@
     import operators from "../data/operators.json";
     import OperatorIcon from "./OperatorIcon.svelte";
     import deleteIcon from "../images/delete.svg";
+    export let splitByStatus;
     export let ready;
     export let charId;
     export let upgradeName;
@@ -9,7 +10,9 @@
 
 <section class={ready ? "ready" : "notready"}>
     <div class="left">
-        <input type="checkbox" bind:checked={ready}>
+        {#if !$splitByStatus}
+            <input type="checkbox" bind:checked={ready}>
+        {/if}
         <div id="icon">
             <OperatorIcon {charId} --size="50px" --border="0px" />
         </div>
