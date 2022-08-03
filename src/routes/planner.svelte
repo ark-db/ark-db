@@ -126,6 +126,7 @@
                                 bind:ready={upgrade.ready}
                                 on:click={() => remove(upgrade)}
                                 {splitByStatus}
+                                {showCost}
                             />
                         </div>
                     {/each}
@@ -147,6 +148,7 @@
                                 bind:ready={upgrade.ready}
                                 on:click={() => remove(upgrade)}
                                 {splitByStatus}
+                                {showCost}
                             />
                         </div>
                     {/each}
@@ -167,6 +169,7 @@
                             bind:ready={upgrade.ready}
                             on:click={() => remove(upgrade)}
                             {splitByStatus}
+                            {showCost}
                         />
                     </div>
                 {/each}

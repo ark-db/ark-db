@@ -3,6 +3,7 @@
     import OperatorIcon from "./OperatorIcon.svelte";
     import deleteIcon from "../images/delete.svg";
     export let splitByStatus;
+    export let showCost;
     export let ready;
     export let charId;
     export let upgradeName;
@@ -16,10 +17,14 @@
         <div id="icon">
             <OperatorIcon {charId} --size="50px" --border="0px" />
         </div>
-        <div class="name">
-            <h3>{operators[charId].name}</h3>
-            <p>{upgradeName}</p>
-        </div>
+        {#if $showCost}
+            {{}}
+        {:else}
+            <div class="name">
+                <h3>{operators[charId].name}</h3>
+                <p>{upgradeName}</p>
+            </div>
+        {/if}
     </div>
     <input type="image" src={deleteIcon} alt="delete" on:click />
 </section>
