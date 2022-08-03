@@ -1,18 +1,18 @@
 <script>
     import items from "../data/items.json";
-    export let itemId;
-    export let qty = undefined;
+    export let id;
+    export let count = undefined;
 
-    let itemSrc = new URL(`../images/items/${itemId}.png`, import.meta.url).href;
-    let { name, rarity } = items[itemId];
+    let itemSrc = new URL(`../images/items/${id}.png`, import.meta.url).href;
+    let { name, rarity } = items[id];
     let bgSrc = new URL(`../images/rarities/${rarity}.png`, import.meta.url).href;
 </script>
 
 <div>
     <img src={bgSrc} alt="background" />
     <img src={itemSrc} alt={name} />
-    {#if qty !== undefined}
-        <p>{qty}</p>
+    {#if count !== undefined}
+        <p>{count}</p>
     {/if}
 </div>
 

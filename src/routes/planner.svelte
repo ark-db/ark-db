@@ -121,12 +121,11 @@
                     {#each allNotReady as upgrade (upgrade.id)}
                         <div animate:flip="{{duration: flipDurationMs}}">
                             <TaskItem
-                                charId={upgrade.charId}
-                                upgradeName={upgrade.name}
-                                bind:ready={upgrade.ready}
-                                on:click={() => remove(upgrade)}
+                                {...upgrade}
                                 {splitByStatus}
                                 {showCost}
+                                bind:ready={upgrade.ready}
+                                on:click={() => remove(upgrade)}
                             />
                         </div>
                     {/each}
@@ -143,12 +142,11 @@
                     {#each allReady as upgrade (upgrade.id)}
                         <div animate:flip="{{duration: flipDurationMs}}">
                             <TaskItem
-                                charId={upgrade.charId}
-                                upgradeName={upgrade.name}
-                                bind:ready={upgrade.ready}
-                                on:click={() => remove(upgrade)}
+                                {...upgrade}
                                 {splitByStatus}
                                 {showCost}
+                                bind:ready={upgrade.ready}
+                                on:click={() => remove(upgrade)}
                             />
                         </div>
                     {/each}
@@ -164,12 +162,11 @@
                 {#each allSelected as upgrade (upgrade.id)}
                     <div animate:flip="{{duration: flipDurationMs}}">
                         <TaskItem
-                            charId={upgrade.charId}
-                            upgradeName={upgrade.name}
-                            bind:ready={upgrade.ready}
-                            on:click={() => remove(upgrade)}
+                            {...upgrade}
                             {splitByStatus}
                             {showCost}
+                            bind:ready={upgrade.ready}
+                            on:click={() => remove(upgrade)}
                         />
                     </div>
                 {/each}

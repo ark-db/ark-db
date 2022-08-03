@@ -1,12 +1,11 @@
 <script>
     import operators from "../data/operators.json";
     import OperatorIcon from "./OperatorIcon.svelte";
+    import ItemIcon from "./ItemIcon.svelte";
     import deleteIcon from "../images/delete.svg";
     export let splitByStatus;
     export let showCost;
-    export let ready;
-    export let charId;
-    export let upgradeName;
+    export let name, cost, charId, id, ready;
 </script>
 
 <section class={ready ? "ready" : "notready"}>
@@ -14,17 +13,22 @@
         {#if !$splitByStatus}
             <input type="checkbox" bind:checked={ready}>
         {/if}
-        <div id="icon">
-            <OperatorIcon {charId} --size="50px" --border="0px" />
-        </div>
-        {#if $showCost}
-            {{}}
-        {:else}
-            <div class="name">
-                <h3>{operators[charId].name}</h3>
-                <p>{upgradeName}</p>
+        <div class="info">
+            <div class="top">
+                <OperatorIcon {charId} --size="50px" --border="0px" />
+                <div class="title">
+                    <h3>{operators[charId].name}</h3>
+                    <p>{name}</p>
+                </div>
             </div>
-        {/if}
+            {#if $showCost}
+                <div class="cost">
+                    {#each cost as item}
+                        <ItemIcon {...item} --size="50px" />
+                    {/each}
+                </div>
+            {/if}
+        </div>
     </div>
     <input type="image" src={deleteIcon} alt="delete" on:click />
 </section>
@@ -44,28 +48,47 @@
     .notready {
         background-color: rgb(255, 140, 140);
     }
+
     input[type=checkbox] {
         transform: scale(1.5);
     }
-    section .left {
+
+    .left {
         display: flex;
         column-gap: 0.75em;
     }
-    section .left #icon {
-        align-self: center;
+    .left .info {
+        display: flex;
+        flex-flow: row wrap;
         align-items: center;
-        justify-content: center;
+        justify-content: start;
+        gap: 1em 2em;
     }
-    section .left .name {
+    .left .top {
+        display: flex;
+        align-items: center;
+        column-gap: 0.75em;
+    }
+    .left .title {
         display: flex;
         flex-direction: column;
+        justify-content: center;
     }
-    .name h3 {
+    .left .title h3 {
         margin: 0.1em 0 0.2em 0;
     }
-    .name p {
+    .left .title p {
         margin: 0.1em 0 0.2em 0;
     }
+
+    .left .cost {
+        flex-grow: 1;
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
     input[type=image] {
         width: 100%;
         max-width: 15px;
