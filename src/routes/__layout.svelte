@@ -1,8 +1,8 @@
 <script>
-    import Header from "$lib/components/Header.svelte";
+    import AppBar from "$lib/components/AppBar.svelte";
 </script>
 
-<Header />
+<AppBar />
 
 <main>
     <slot />
