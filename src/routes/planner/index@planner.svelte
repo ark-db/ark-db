@@ -188,6 +188,10 @@
         flex-direction: column;
         gap: 10px;
     }
+    .page > h1 {
+        margin: 0.6em 0 0.2em 0;
+        text-align: center;
+    }
     #top {
         padding: 10px;
         background-color: rgb(235, 238, 244);
@@ -208,7 +212,6 @@
         transform: scale(1.5);
         margin-right: 0.5em;
     }
-
     #banner {
         padding: 10px;
         background-color: rgb(235, 238, 244);
@@ -246,7 +249,6 @@
         border: 5px solid rgb(139, 245, 104);
         background-color: rgb(139, 245, 104);
     }
-
     #select {
         padding: 5px;
         background-color: rgb(235, 238, 244);
@@ -258,18 +260,12 @@
     #select .series {
         flex-grow: 1;
     }
-
     #placeholder {
         margin: 15px;
         border-radius: 10px;
         background-color: rgb(245, 248, 254);
         display: flex;
         justify-content: center;
-    }
-
-    .page > h1 {
-        margin: 0.6em 0 0.2em 0;
-        text-align: center;
     }
     #taskboard {
         display: flex;
