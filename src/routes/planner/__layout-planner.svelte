@@ -36,7 +36,7 @@
         background-color: rgb(235, 245, 253);
         border-bottom: 2px solid transparent;
         box-sizing: border-box;
-        max-width: 15em;
+        max-width: 25em;
         text-decoration: none;
         color: initial;
     }

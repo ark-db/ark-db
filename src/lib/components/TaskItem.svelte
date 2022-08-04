@@ -91,8 +91,7 @@
         display: flex;
         flex-flow: row wrap;
         align-items: center;
-        justify-content: center;
-        column-gap: 10px;
+        column-gap: 5px;
     }
 
     input[type=image] {

@@ -24,7 +24,7 @@
 
 <style>
     .page {
-        margin: 10px;
+        margin: 5px;
         padding: 5px;
         display: flex;
         flex-direction: column;
