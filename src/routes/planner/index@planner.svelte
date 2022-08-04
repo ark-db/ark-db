@@ -54,7 +54,7 @@
 <div class="page">
     <section id="top">
         <SearchBar {selectedChar} />
-        <div class="settings">
+        <section id="settings">
             <div>
                 <input id="split-status" type="checkbox" bind:checked={$splitByStatus}>
                 <label for="split-status">Organize upgrades by status</label>
@@ -63,7 +63,7 @@
                 <input id="show-cost" type="checkbox" bind:checked={$showCost}>
                 <label for="show-cost">Show upgrade costs</label>
             </div>
-        </div>
+        </section>
     </section>
 
     {#key $selectedChar}
@@ -198,14 +198,14 @@
         justify-content: space-around;
         gap: 1em;
     }
-    #top .settings {
+    #top #settings {
         flex-grow: 1;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         gap: 1em 3em;
     }
-    #top .settings input[type=checkbox] {
+    #top #settings input[type=checkbox] {
         transform: scale(1.5);
         margin-right: 0.5em;
     }
