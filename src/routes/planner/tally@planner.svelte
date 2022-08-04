@@ -20,12 +20,12 @@
 <div class="page">
     <section id="settings">
         <div>
-            <input id="show-ready" type="checkbox" bind:group={filters} value={true}>
-            <label for="show-ready">Include prepared upgrades</label>
+            <input id="show-ready" type="checkbox" bind:group={filters} value={false}>
+            <label for="show-ready">Include <span id="notready">unprepared</span> upgrades</label>
         </div>
         <div>
-            <input id="show-ready" type="checkbox" bind:group={filters} value={false}>
-            <label for="show-ready">Include unprepared upgrades</label>
+            <input id="show-ready" type="checkbox" bind:group={filters} value={true}>
+            <label for="show-ready">Include <span id="ready">prepared</span> upgrades</label>
         </div>
     </section>
 
@@ -63,6 +63,12 @@
     #settings input[type=checkbox] {
         transform: scale(1.5);
         margin-right: 0.5em;
+    }
+    #settings #notready {
+        background-color: rgba(255, 140, 140, 0.7);
+    }
+    #settings #ready {
+        background-color: rgba(151, 255, 148, 0.7);
     }
     .page > h1 {
         margin: 0.6em 0 0.2em 0;
