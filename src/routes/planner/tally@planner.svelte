@@ -30,4 +30,12 @@
         flex-direction: column;
         gap: 10px;
     }
+    .costs {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 100px);
+        justify-content: center;
+        gap: 8px;
+        padding: 10px;
+        background-color: rgb(235, 238, 244);
+    }
 </style>
