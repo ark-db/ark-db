@@ -4,7 +4,7 @@
 </svelte:head>
 
 <script>
-    import { selectedChar, activeCategory, selectedUpgradeNames, splitByStatus, showCost } from "../stores.js"
+    import { selectedChar, activeCategory, selectedUpgradeNames, allSelected, splitByStatus, showCost } from "../stores.js"
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
@@ -14,35 +14,34 @@
 
     let innerWidth;
     let uid = 0;
-    let allSelected = [];
-    $: allReady = allSelected.filter(upgrade => upgrade.ready);
-    $: allNotReady = allSelected.filter(upgrade => !upgrade.ready);
+    $: allReady = $allSelected.filter(upgrade => upgrade.ready);
+    $: allNotReady = $allSelected.filter(upgrade => !upgrade.ready);
     const flipDurationMs = 150;
 
     function submitUpgrades() {
         let allSelectedNames = Object.values($selectedUpgradeNames).map(set => Array.from(set)).flat();
         let upgrades = $selectedChar.upgrades.map(category => category.data.flat()).flat();
         let newUpgrades = upgrades.filter(upgrade => allSelectedNames.includes(upgrade.name))
-                                  .filter(upgrade => !allSelected.filter(upgrade => upgrade.charId === $selectedChar.charId)
+                                  .filter(upgrade => !$allSelected.filter(upgrade => upgrade.charId === $selectedChar.charId)
                                                                  .map(upgrade => upgrade.name)
                                   .includes(upgrade.name));
         let origState = $splitByStatus;
         $splitByStatus = false;
-        allSelected = [...allSelected,
-                       ...newUpgrades.map(upgrade => ({...upgrade,
-                                                       charId: $selectedChar.charId,
-                                                       id: uid++,
-                                                       ready: false}))]
+        $allSelected = [...$allSelected,
+                        ...newUpgrades.map(upgrade => ({...upgrade,
+                                                        charId: $selectedChar.charId,
+                                                        id: uid++,
+                                                        ready: false}))]
         $splitByStatus = origState;
         selectedUpgradeNames.reset();
         $selectedChar = {};
     }
     function remove(upgrade) {
-        allSelected = allSelected.filter(up => !(up.charName === upgrade.charName
+        $allSelected = $allSelected.filter(up => !(up.charName === upgrade.charName
                                                  && up.name === upgrade.name));
     }
     function handleDnd(event) {
-        allSelected = event.detail.items;
+        $allSelected = event.detail.items;
     }
     function handleDndReady(event) {
         allReady = event.detail.items;
@@ -107,7 +106,7 @@
     {/key}
 
     <h2>Upgrades</h2>
-    {#if allSelected.length > 0}
+    {#if $allSelected.length > 0}
         <div class="taskboard">
         {#if $splitByStatus}
             {#if allNotReady.length > 0}
@@ -154,12 +153,12 @@
             {/if}
         {:else}
             <section
-                use:dndzone={{items: allSelected,
+                use:dndzone={{items: $allSelected,
                               flipDurationMs}}
                 on:consider={handleDnd}
                 on:finalize={handleDnd}
             >
-                {#each allSelected as upgrade (upgrade.id)}
+                {#each $allSelected as upgrade (upgrade.id)}
                     <div animate:flip="{{duration: flipDurationMs}}">
                         <TaskItem
                             {...upgrade}
