@@ -42,6 +42,6 @@
         box-shadow: 0.1em 0.2em 0.2em rgba(0, 0, 0, 0.45);
         color: white;
         font-weight: 300;
-        font-size: 80%;
+        font-size: clamp(85%, 1em, calc(var(--size) / 5))
     }
 </style>
