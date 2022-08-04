@@ -4,7 +4,7 @@
 </svelte:head>
 
 <script>
-    import { selectedChar, activeCategory, selectedUpgradeNames, allSelected, splitByStatus, showCost } from "../stores.js"
+    import { selectedChar, activeCategory, selectedUpgradeNames, allSelected, splitByStatus, showCost } from "../stores.js";
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
@@ -23,7 +23,7 @@
         let upgrades = $selectedChar.upgrades.map(category => category.data.flat()).flat();
         let newUpgrades = upgrades.filter(upgrade => allSelectedNames.includes(upgrade.name))
                                   .filter(upgrade => !$allSelected.filter(upgrade => upgrade.charId === $selectedChar.charId)
-                                                                 .map(upgrade => upgrade.name)
+                                                                  .map(upgrade => upgrade.name)
                                   .includes(upgrade.name));
         let origState = $splitByStatus;
         $splitByStatus = false;
@@ -38,7 +38,7 @@
     }
     function remove(upgrade) {
         $allSelected = $allSelected.filter(up => !(up.charName === upgrade.charName
-                                                 && up.name === upgrade.name));
+                                                   && up.name === upgrade.name));
     }
     function handleDnd(event) {
         $allSelected = event.detail.items;
