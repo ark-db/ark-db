@@ -192,7 +192,7 @@
         padding: 10px;
         background-color: rgb(235, 238, 244);
         display: flex;
-        flex-flow: row wrap;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: space-around;
         gap: 1em;
@@ -200,7 +200,7 @@
     #top .settings {
         flex-grow: 1;
         display: flex;
-        flex-flow: row wrap;
+        flex-wrap: wrap;
         justify-content: center;
         gap: 1em 3em;
     }
@@ -251,7 +251,7 @@
         padding: 5px;
         background-color: rgb(235, 238, 244);
         display: flex;
-        flex-flow: row wrap;
+        flex-wrap: wrap;
         align-items: flex-start;
         justify-content: center;
     }
@@ -264,7 +264,6 @@
         border-radius: 10px;
         background-color: rgb(245, 248, 254);
         display: flex;
-        align-items: center;
         justify-content: center;
     }
 
@@ -274,7 +273,7 @@
     }
     #taskboard {
         display: flex;
-        flex-flow: row wrap;
+        flex-wrap: wrap;
         gap: 10px;
     }
     #taskboard section {
