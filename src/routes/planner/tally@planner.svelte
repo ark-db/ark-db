@@ -12,6 +12,8 @@
     };
 </script>
 
+
+
 <div class="page">
     <h1>Upgrade Costs</h1>
     {#if itemCounter.length > 0}
@@ -27,6 +29,8 @@
     {/if}
 </div>
 
+
+
 <style>
     .page {
         margin-top: 10px;
@@ -39,12 +43,13 @@
         text-align: center;
     }
     #costs {
+        margin-top: 15px;
+        padding: 10px;
+        background-color: rgb(235, 238, 244);
         display: grid;
         grid-template-columns: repeat(auto-fit, 100px);
         justify-content: center;
         gap: 8px;
-        padding: 10px;
-        background-color: rgb(235, 238, 244);
     }
     #placeholder {
         margin: 15px;
