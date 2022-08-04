@@ -13,13 +13,18 @@
 </script>
 
 <div class="page">
-    <div class="costs">
-        {#if itemCounter}
+    <h1>Upgrade Costs</h1>
+    {#if itemCounter.length > 0}
+        <section id="costs">
             {#each itemCounter as item}
                 <ItemIcon {...item} --size="100px" />
             {/each}
-        {/if}
-    </div>
+        </section>
+    {:else}
+        <section id="placeholder">
+            <p>No upgrades added yet</p>
+        </section>
+    {/if}
 </div>
 
 <style>
@@ -29,12 +34,23 @@
         flex-direction: column;
         gap: 10px;
     }
-    .costs {
+    h1 {
+        margin: 0.6em 0 0.2em 0;
+        text-align: center;
+    }
+    #costs {
         display: grid;
         grid-template-columns: repeat(auto-fit, 100px);
         justify-content: center;
         gap: 8px;
         padding: 10px;
         background-color: rgb(235, 238, 244);
+    }
+    #placeholder {
+        margin: 15px;
+        border-radius: 10px;
+        background-color: rgb(245, 248, 254);
+        display: flex;
+        justify-content: center;
     }
 </style>
