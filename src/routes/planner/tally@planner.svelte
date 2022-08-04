@@ -37,9 +37,7 @@
             {/each}
         </section>
     {:else}
-        <section id="placeholder">
-            <p>No upgrades found</p>
-        </section>
+        <p id="placeholder">No upgrades found</p>
     {/if}
 </div>
 
@@ -85,9 +83,9 @@
     }
     #placeholder {
         margin: 15px;
+        padding: 1em;
         border-radius: 10px;
         background-color: rgb(245, 248, 254);
-        display: flex;
-        justify-content: center;
+        text-align: center;
     }
 </style>
