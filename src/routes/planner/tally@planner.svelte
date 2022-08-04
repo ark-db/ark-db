@@ -1,6 +1,6 @@
 <script>
     import { allSelected } from "../stores.js";
-    import items from "/src/lib/data/items.json"
+    import items from "/src/lib/data/items.json";
 
     $: itemCounter = counter($allSelected.map(upgrade => upgrade.cost).flat());
     $: console.log(itemCounter);
