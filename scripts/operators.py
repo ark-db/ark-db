@@ -13,6 +13,11 @@ patch_chars = (
             ["patchChars"]
 )
 
+skills = (
+    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/skill_table.json")
+            .json()
+)
+
 modules = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/uniequip_table.json")
             .json()
@@ -48,11 +53,12 @@ def format_cost(cost):
         return [{k: v for k, v in mat.items() if k != "type"} for mat in cost]
     return []
 
+def get_skill_id(skill):
+    skill_info = skills[skill["skillId"]]
+    return skill_info["iconId"] or skill_info["skillId"]
+
 for char_id, char_info in chars.items():
     if is_operator(char_info) and char_info["rarity"] > 1:
-        for skill in char_info["skills"]:
-            skill_ids.add(skill["skillId"])
-
         char_data[char_id] = {
             "charId": char_id,
             "name": name_changes.get(char_id, char_info["appellation"]),
@@ -73,10 +79,12 @@ for char_id, char_info in chars.items():
         }
 
         for i, skill in enumerate(char_info["skills"]):
+            if char_info["rarity"] > 2:
+                skill_ids.add(get_skill_id(skill))
             char_data[char_id]["upgrades"].append(
                 {"cls": f"mastery",
                  "type": f"mastery{i+1}",
-                 "skillId": skill["skillId"],
+                 "skillId": get_skill_id(skill),
                  "data":[{"name": f"Skill {i+1} Mastery {j+1}",
                           "cost": format_cost(mastery["levelUpCost"])}
                          for j, mastery in enumerate(skill["levelUpCostCond"])]
@@ -94,7 +102,7 @@ for char_id, char_info in chars.items():
                            "cost": format_cost(cost)}
                           for i, cost in enumerate(module_info["itemCost"].values())]
                 })
-
+'''
         icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/avatars/{char_id}.png"
         icon_data = requests.get(icon_url).content
         with open(f"./src/lib/images/operators/{char_id}.png", "wb") as f:
@@ -105,7 +113,7 @@ for char_id, char_info in chars.items():
             module_icon_data = requests.get(module_icon_url).content
             with open(f"./src/lib/images/modules/{module_id}.png", "wb") as f:
                 f.write(module_icon_data)
-
+'''
 for skill_id in skill_ids:
     skill_icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/skills/skill_icon_{skill_id}.png"
     skill_icon_data = requests.get(skill_icon_url).content
