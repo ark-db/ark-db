@@ -213,14 +213,14 @@
         padding: 10px;
         background-color: rgb(235, 238, 244);
         display: flex;
-        flex-flow: row wrap;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
-        row-gap: 0.5em;
+        gap: 0.5em 2em;
     }
     #banner #card {
         display: flex;
-        flex-flow: row wrap;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: center;
         column-gap: 1em;
@@ -265,6 +265,7 @@
         justify-content: center;
     }
     #taskboard {
+        margin-top: 15px;
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
