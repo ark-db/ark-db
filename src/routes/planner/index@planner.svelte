@@ -107,7 +107,7 @@
 
     <h2>Upgrades</h2>
     {#if $allSelected.length > 0}
-        <div class="taskboard">
+        <section id="taskboard">
         {#if $splitByStatus}
             {#if allNotReady.length > 0}
                 <section
@@ -171,7 +171,7 @@
                 {/each}
             </section>
         {/if}
-        </div>
+        </section>
     {:else}
         <section id="placeholder">
             <p>No upgrades added yet</p>
@@ -272,12 +272,12 @@
         margin: 1em 0 0.25em 0;
         text-align: center;
     }
-    .taskboard {
+    #taskboard {
         display: flex;
         flex-flow: row wrap;
         gap: 10px;
     }
-    .taskboard section {
+    #taskboard section {
         padding: 10px;
         background-color: rgb(235, 238, 244);
         flex-grow: 1;
