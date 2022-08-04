@@ -3,7 +3,10 @@
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
 
-    $: itemCounter = counter($allSelected.map(upgrade => upgrade.cost).flat());
+    let filters = [false];
+    $: itemCounter = counter($allSelected.filter(upgrade => filters.includes(upgrade.ready))
+                                         .map(upgrade => upgrade.cost)
+                                         .flat());
 
     const counter = (list) => {
         return Object.entries(list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {}))
@@ -15,6 +18,17 @@
 
 
 <div class="page">
+    <section id="settings">
+        <div>
+            <input id="show-ready" type="checkbox" bind:group={filters} value={true}>
+            <label for="show-ready">Include prepared upgrades</label>
+        </div>
+        <div>
+            <input id="show-ready" type="checkbox" bind:group={filters} value={false}>
+            <label for="show-ready">Include unprepared upgrades</label>
+        </div>
+    </section>
+
     <h1>Upgrade Costs</h1>
     {#if itemCounter.length > 0}
         <section id="costs">
@@ -24,7 +38,7 @@
         </section>
     {:else}
         <section id="placeholder">
-            <p>No upgrades added yet</p>
+            <p>No upgrades found</p>
         </section>
     {/if}
 </div>
@@ -38,7 +52,19 @@
         flex-direction: column;
         gap: 10px;
     }
-    h1 {
+    #settings {
+        padding: calc(1em + 2.25px);
+        background-color: rgb(235, 238, 244);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1em 3em;
+    }
+    #settings input[type=checkbox] {
+        transform: scale(1.5);
+        margin-right: 0.5em;
+    }
+    .page > h1 {
         margin: 0.6em 0 0.2em 0;
         text-align: center;
     }
