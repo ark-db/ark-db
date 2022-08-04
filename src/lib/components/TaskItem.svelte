@@ -22,7 +22,6 @@
                 </div>
             </div>
             {#if $showCost}
-                <div class="gap" />
                 <div class="cost">
                     {#each cost as item}
                         <ItemIcon {...item} --size="60px" />
@@ -84,14 +83,11 @@
         margin: 0.1em 0 0.2em 0;
     }
 
-    .gap {
-        flex-grow: 1;
-    }
     .cost {
         display: flex;
         flex-flow: row wrap;
         align-items: center;
-        column-gap: 5px;
+        column-gap: 10px;
     }
 
     input[type=image] {
