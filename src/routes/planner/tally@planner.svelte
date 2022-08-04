@@ -1,9 +1,9 @@
 <script>
     import { allSelected } from "../stores.js";
-    import items from "/src/lib/data/items.json";
+    import items from "$lib/data/items.json";
+    import ItemIcon from "$lib/components/ItemIcon.svelte";
 
     $: itemCounter = counter($allSelected.map(upgrade => upgrade.cost).flat());
-    $: console.log(itemCounter);
 
     const counter = (list) => {
         return Object.entries(list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {}))
@@ -11,3 +11,23 @@
                      .sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
     };
 </script>
+
+<div class="page">
+    <div class="costs">
+        {#if itemCounter}
+            {#each itemCounter as item}
+                <ItemIcon {...item} --size="100px" />
+            {/each}
+        {/if}
+    </div>
+</div>
+
+<style>
+    .page {
+        margin: 10px;
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+</style>
