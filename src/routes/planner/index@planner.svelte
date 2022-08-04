@@ -4,7 +4,7 @@
 </svelte:head>
 
 <script>
-    import { selectedChar, activeCategory, selectedUpgradeNames, allSelected, splitByStatus, showCost } from "../stores.js";
+    import { selectedChar, activeCategory, selectedUpgradeNames, uid, allSelected, splitByStatus, showCost } from "../stores.js";
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
@@ -13,7 +13,6 @@
     import { dndzone } from "svelte-dnd-action";
 
     let innerWidth;
-    let uid = 0;
     $: allReady = $allSelected.filter(upgrade => upgrade.ready);
     $: allNotReady = $allSelected.filter(upgrade => !upgrade.ready);
     const flipDurationMs = 150;
@@ -30,7 +29,7 @@
         $allSelected = [...$allSelected,
                         ...newUpgrades.map(upgrade => ({...upgrade,
                                                         charId: $selectedChar.charId,
-                                                        id: uid++,
+                                                        id: $uid++,
                                                         ready: false}))]
         $splitByStatus = origState;
         selectedUpgradeNames.reset();

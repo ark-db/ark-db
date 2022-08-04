@@ -30,6 +30,7 @@ function initSelectedUpgradeNames() {
 export const selectedChar = writable();
 export const activeCategory = writable();
 export const selectedUpgradeNames = initSelectedUpgradeNames();
+export const uid = writable(0);
 export const allSelected = writable([]);
 export const splitByStatus = writable(false);
 export const showCost = writable(false);
