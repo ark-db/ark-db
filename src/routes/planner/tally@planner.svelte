@@ -49,7 +49,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, 100px);
         justify-content: center;
-        gap: 8px;
+        gap: 16px;
     }
     #placeholder {
         margin: 15px;
