@@ -1,7 +1,9 @@
 <script>
-    import { allSelected, costFilter, makeT3 } from "../stores.js";
+    import { allSelected, inventory, costFilter, makeT3 } from "../stores.js";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
+    //import plusIcon from "$lib/images/plus.svg";
+    //import minusIcon from "$lib/images/minus.svg";
 
     $: itemCounter = makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
                                              .map(upgrade => upgrade.cost)
@@ -35,20 +37,35 @@
         </div>
         <div>
             <input id="convert-t3" type="checkbox" bind:checked={$makeT3}>
-            <label for="convert-t3">Convert materials to T3</label>
+            <label for="convert-t3">Convert upgrade cost materials to T3</label>
         </div>
     </section>
 
     <h1>Upgrade Costs</h1>
     {#if itemCounter.length > 0}
-        <section id="costs">
+        <section class="items">
             {#each $makeT3 ? convertToT3(itemCounter) : itemCounter as item}
                 <ItemIcon {...item} --size="100px" />
             {/each}
         </section>
     {:else}
-        <p id="placeholder">No upgrades found</p>
+        <p class="placeholder">No upgrades found</p>
     {/if}
+
+    <h1>Inventory</h1>
+    <!--<section class="items">
+        {#each $inventory as { id, count }}
+            <div class="item">
+                <ItemIcon {id} --size="100px" />
+                <div class="inputs">
+                    <input type="image" src={minusIcon} alt="delete" on:click={() => count === 0 ? count : count--}/>
+                    <input type="number" min={0} max={1e5} use:validator={count} bind:value={count} placeholder="Lorem ipsum"/>
+                    <input type="image" src={plusIcon} alt="delete" on:click={() => count === 1e5 ? count : count++}/>
+                </div>
+            </div>
+        {/each}
+    </section>-->
+    <p>Coming soon!</p>
 </div>
 
 
@@ -84,11 +101,11 @@
     span#ready {
         background-color: rgba(151, 255, 148, 0.7);
     }
-    .page > h1 {
+    .page h1 {
         margin: 0.6em 0 0.2em 0;
         text-align: center;
     }
-    #costs {
+    .items {
         margin-top: 15px;
         padding: 10px;
         background-color: rgb(235, 238, 244);
@@ -97,7 +114,7 @@
         justify-content: center;
         gap: 16px;
     }
-    #placeholder {
+    .placeholder {
         margin: 15px;
         padding: 1em;
         border-radius: 10px;
