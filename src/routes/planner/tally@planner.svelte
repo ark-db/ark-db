@@ -1,12 +1,9 @@
 <script>
-    import { allSelected } from "../stores.js";
+    import { allSelected, costFilter, makeT3 } from "../stores.js";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
 
-    let filters = [false];
-    let asT3 = false;
-
-    $: itemCounter = makeCounter($allSelected.filter(upgrade => filters.includes(upgrade.ready))
+    $: itemCounter = makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
                                              .map(upgrade => upgrade.cost)
                                              .flat());
 
@@ -28,16 +25,16 @@
     <section id="settings">
         <div id="filter">
             <div>
-                <input id="show-notready" type="checkbox" bind:group={filters} value={false}>
+                <input id="show-notready" type="checkbox" bind:group={$costFilter} value={false}>
                 <label for="show-notready">Include <span id="notready">unprepared</span> upgrades</label>
             </div>
             <div>
-                <input id="show-ready" type="checkbox" bind:group={filters} value={true}>
+                <input id="show-ready" type="checkbox" bind:group={$costFilter} value={true}>
                 <label for="show-ready">Include <span id="ready">prepared</span> upgrades</label>
             </div>
         </div>
         <div>
-            <input id="convert-t3" type="checkbox" bind:checked={asT3}>
+            <input id="convert-t3" type="checkbox" bind:checked={$makeT3}>
             <label for="convert-t3">Convert materials to T3</label>
         </div>
     </section>
@@ -45,7 +42,7 @@
     <h1>Upgrade Costs</h1>
     {#if itemCounter.length > 0}
         <section id="costs">
-            {#each asT3 ? convertToT3(itemCounter) : itemCounter as item}
+            {#each $makeT3 ? convertToT3(itemCounter) : itemCounter as item}
                 <ItemIcon {...item} --size="100px" />
             {/each}
         </section>
