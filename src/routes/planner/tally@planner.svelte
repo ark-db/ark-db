@@ -37,7 +37,7 @@
         </div>
         <div>
             <input id="convert-t3" type="checkbox" bind:checked={$makeT3}>
-            <label for="convert-t3">Convert upgrade cost materials to T3</label>
+            <label for="convert-t3">Convert materials to T3</label>
         </div>
     </section>
 
