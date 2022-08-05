@@ -4,19 +4,19 @@
     import ItemIcon from "$lib/components/ItemIcon.svelte";
 
     let filters = [false];
-    $: itemCounter = counter($allSelected.filter(upgrade => filters.includes(upgrade.ready))
+    let asT3 = false;
+
+    $: itemCounter = makeCounter($allSelected.filter(upgrade => filters.includes(upgrade.ready))
                                          .map(upgrade => upgrade.cost)
                                          .flat());
 
-    $: console.log(convertToT3(itemCounter));
-
-    const counter = (list) => {
+    function makeCounter(list) {
         return Object.entries(list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {}))
                      .map(item => ({id: item[0], count: item[1]}))
                      .sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
     };
     function convertToT3(list) {
-        return counter(list.map(item => ([...items[item.id].asT3.map(mat => ({id: mat.id, count: mat.count * item.count}))]))
+        return makeCounter(list.map(item => ([...items[item.id].asT3.map(mat => ({id: mat.id, count: mat.count * item.count}))]))
                            .filter(item => item.length)
                            .flat());
     };
@@ -26,20 +26,26 @@
 
 <div class="page">
     <section id="settings">
-        <div>
-            <input id="show-notready" type="checkbox" bind:group={filters} value={false}>
-            <label for="show-notready">Include <span id="notready">unprepared</span> upgrades</label>
+        <div id="filter">
+            <div>
+                <input id="show-notready" type="checkbox" bind:group={filters} value={false}>
+                <label for="show-notready">Include <span id="notready">unprepared</span> upgrades</label>
+            </div>
+            <div>
+                <input id="show-ready" type="checkbox" bind:group={filters} value={true}>
+                <label for="show-ready">Include <span id="ready">prepared</span> upgrades</label>
+            </div>
         </div>
         <div>
-            <input id="show-ready" type="checkbox" bind:group={filters} value={true}>
-            <label for="show-ready">Include <span id="ready">prepared</span> upgrades</label>
+            <input id="convert-t3" type="checkbox" bind:checked={asT3}>
+            <label for="convert-t3">Convert materials to T3</label>
         </div>
     </section>
 
     <h1>Upgrade Costs</h1>
     {#if itemCounter.length > 0}
         <section id="costs">
-            {#each itemCounter as item}
+            {#each asT3 ? convertToT3(itemCounter) : itemCounter as item}
                 <ItemIcon {...item} --size="100px" />
             {/each}
         </section>
@@ -62,17 +68,23 @@
         background-color: rgb(235, 238, 244);
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: space-between;
         gap: 1em 3em;
     }
     #settings input[type=checkbox] {
         transform: scale(1.5);
         margin-right: 0.5em;
     }
-    #settings #notready {
+    #settings #filter {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1em 3em;
+    }
+    span#notready {
         background-color: rgba(255, 140, 140, 0.7);
     }
-    #settings #ready {
+    span#ready {
         background-color: rgba(151, 255, 148, 0.7);
     }
     .page > h1 {
