@@ -102,7 +102,7 @@ for char_id, char_info in chars.items():
                            "cost": format_cost(cost)}
                           for i, cost in enumerate(module_info["itemCost"].values())]
                 })
-'''
+
         icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/avatars/{char_id}.png"
         icon_data = requests.get(icon_url).content
         with open(f"./src/lib/images/operators/{char_id}.png", "wb") as f:
@@ -113,7 +113,7 @@ for char_id, char_info in chars.items():
             module_icon_data = requests.get(module_icon_url).content
             with open(f"./src/lib/images/modules/{module_id}.png", "wb") as f:
                 f.write(module_icon_data)
-'''
+
 for skill_id in skill_ids:
     skill_icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/skills/skill_icon_{skill_id}.png"
     skill_icon_data = requests.get(skill_icon_url).content
