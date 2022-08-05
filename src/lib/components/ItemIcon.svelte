@@ -3,10 +3,9 @@
     export let id;
     export let count = undefined;
 
-    let itemSrc, name, rarity, bgSrc;
-    $: itemSrc = `../src/lib/images/items/${id}.png`;
+    $: itemSrc = new URL(`../images/items/${id}.png`, import.meta.url).href;
     $: ({ name, rarity } = items[id]);
-    $: bgSrc = `../src/lib/images/rarities/${rarity}.png`;
+    $: bgSrc = new URL(`../images/rarities/${rarity}.png`, import.meta.url).href;
 
     const compactNum = Intl.NumberFormat("en-US", {
         notation: "compact",
