@@ -10,7 +10,7 @@
         if (category.cls === "mastery") {
             $activeCategory = new URL(`../images/skills/${category.skillId}.png`, import.meta.url).href;
         } else if (category.cls === "module") {
-            $activeCategory = new URL(`../images/skills/${category.moduleId}.png`, import.meta.url).href;
+            $activeCategory = new URL(`../images/modules/${category.moduleId}.png`, import.meta.url).href;
         }
     };
     const unsetActiveCategory = () => {
