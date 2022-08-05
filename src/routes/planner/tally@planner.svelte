@@ -65,7 +65,7 @@
             </div>
         {/each}
     </section>-->
-    <p>Coming soon!</p>
+    <p class="placeholder">Coming soon!</p>
 </div>
 
 

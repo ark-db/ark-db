@@ -91,4 +91,11 @@
 		color: black;
 		text-decoration: none;
 	}
+
+	:global(body) {
+        background-image: url("$lib/images/mainbg.svg");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+	}
 </style>

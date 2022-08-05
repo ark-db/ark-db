@@ -3,5 +3,22 @@
     <meta name="description" content="Utility website for Arknights players" />
 </svelte:head>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<h1>ArkDB</h1>
+<h2>A utility website for Arknights players</h2>
+<p>v0.1.0-beta</p>
+
+
+<style>
+    h1 {
+        margin-bottom: 0.2em;
+        text-align: center;
+        font-size: clamp(5em, 10vw, 10em);
+    }
+    h2 {
+        text-align: center;
+        font-size: clamp(1em, 5vw, 2em);
+    }
+    p {
+        text-align: center;
+    }
+</style>
