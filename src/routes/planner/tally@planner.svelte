@@ -7,8 +7,8 @@
     let asT3 = false;
 
     $: itemCounter = makeCounter($allSelected.filter(upgrade => filters.includes(upgrade.ready))
-                                         .map(upgrade => upgrade.cost)
-                                         .flat());
+                                             .map(upgrade => upgrade.cost)
+                                             .flat());
 
     function makeCounter(list) {
         return Object.entries(list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {}))
@@ -17,8 +17,8 @@
     };
     function convertToT3(list) {
         return makeCounter(list.map(item => ([...items[item.id].asT3.map(mat => ({id: mat.id, count: mat.count * item.count}))]))
-                           .filter(item => item.length)
-                           .flat());
+                               .filter(item => item.length)
+                               .flat());
     };
 </script>
 
