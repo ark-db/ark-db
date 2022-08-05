@@ -20,8 +20,8 @@
 <div class="page">
     <section id="settings">
         <div>
-            <input id="show-ready" type="checkbox" bind:group={filters} value={false}>
-            <label for="show-ready">Include <span id="notready">unprepared</span> upgrades</label>
+            <input id="show-notready" type="checkbox" bind:group={filters} value={false}>
+            <label for="show-notready">Include <span id="notready">unprepared</span> upgrades</label>
         </div>
         <div>
             <input id="show-ready" type="checkbox" bind:group={filters} value={true}>
