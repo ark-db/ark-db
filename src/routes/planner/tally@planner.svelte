@@ -114,11 +114,4 @@
         justify-content: center;
         gap: 16px;
     }
-    .placeholder {
-        margin: 15px;
-        padding: 1em;
-        border-radius: 10px;
-        background-color: rgb(245, 248, 254);
-        text-align: center;
-    }
 </style>

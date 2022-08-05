@@ -170,7 +170,7 @@
         {/if}
         </section>
     {:else}
-        <p id="placeholder">No upgrades added yet</p>
+        <p class="placeholder">No upgrades added yet</p>
     {/if}
 </div>
 
@@ -254,13 +254,6 @@
     }
     #select .series {
         flex-grow: 1;
-    }
-    #placeholder {
-        margin: 15px;
-        padding: 1em;
-        border-radius: 10px;
-        background-color: rgb(245, 248, 254);
-        text-align: center;
     }
     #taskboard {
         margin-top: 15px;

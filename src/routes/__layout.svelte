@@ -98,4 +98,12 @@
         background-attachment: fixed;
         background-size: cover;
 	}
+	:global(.placeholder) {
+		margin: 15px;
+		border: 1px dashed black;
+        border-radius: 10px;
+        padding: 1em;
+        background-color: rgb(245, 248, 254);
+        text-align: center;
+	}
 </style>
