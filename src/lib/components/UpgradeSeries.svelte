@@ -8,9 +8,9 @@
 
     const setActiveCategory = () => {
         if (category.cls === "mastery") {
-            $activeCategory = `./src/lib/images/skills/${category.skillId}.png`;
+            $activeCategory = new URL(`../images/skills/${category.skillId}.png`, import.meta.url).href;
         } else if (category.cls === "module") {
-            $activeCategory = `./src/lib/images/modules/${category.moduleId}.png`;
+            $activeCategory = new URL(`../images/skills/${category.skillId}.png`, import.meta.url).href;
         }
     };
     const unsetActiveCategory = () => {
