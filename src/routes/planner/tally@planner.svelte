@@ -8,10 +8,17 @@
                                          .map(upgrade => upgrade.cost)
                                          .flat());
 
+    $: console.log(convertToT3(itemCounter));
+
     const counter = (list) => {
         return Object.entries(list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {}))
                      .map(item => ({id: item[0], count: item[1]}))
                      .sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
+    };
+    function convertToT3(list) {
+        return counter(list.map(item => ([...items[item.id].asT3.map(mat => ({id: mat.id, count: mat.count * item.count}))]))
+                           .filter(item => item.length)
+                           .flat());
     };
 </script>
 
