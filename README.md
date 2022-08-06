@@ -1,5 +1,5 @@
 # ArkDB
-ArkDB is a website of tools for Arknights. The project is currently in beta; expect drastic changes in the near future. View the changelog [here](CHANGELOG.md).
+ArkDB is a website of tools for Arknights. The project is currently in beta; expect drastic changes in the near future.
 
 ## Acknowledgements
 - [Game data](https://github.com/Kengxxiao/ArknightsGameData) from Kengxxiao's ArknightsGameData repository
