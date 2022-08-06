@@ -54,6 +54,9 @@ for item_id, item_info in cn_items.items():
 
 composition_data = defaultdict(list)
 
+for item_id in VALID_ITEMS["t3"]:
+    composition_data[item_id].append({"id": item_id, "count": 1})
+
 for item_id in VALID_ITEMS["t4"]:
     recipe = item_id_to_recipe_cost[item_id]
     for mat in recipe:
