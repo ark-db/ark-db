@@ -122,7 +122,7 @@ for char_id, char_info in chars.items():
             save_image(icon_url, "modules", module_id)
 
 for skill_id in skill_ids:
-    skill_icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/skills/skill_icon_{skill_id}.png"
+    icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/skills/skill_icon_{skill_id}.png"
     save_image(icon_url, "skills", skill_id)
 
 with open("errors.txt", "w") as f:
