@@ -1,5 +1,7 @@
 import requests
 from collections import defaultdict
+from PIL import Image
+from io import BytesIO
 import json
 
 chars = (
@@ -42,6 +44,7 @@ chars.update(patch_chars)
 
 char_data = defaultdict(dict)
 skill_ids = set()
+bad_ids = []
 
 def is_operator(char_info):
     return char_info["profession"] != "TOKEN" \
@@ -56,6 +59,14 @@ def format_cost(cost):
 def get_skill_id(skill):
     skill_info = skills[skill["skillId"]]
     return skill_info["iconId"] or skill_info["skillId"]
+
+def save_image(url, type, id):
+    if (res := requests.get(url)): # check if 4xx/5xx error 
+        Image.open(BytesIO(res.content)) \
+             .convert("RGBA") \
+             .save(f"./src/lib/images/{type}/{id}.webp", "webp")
+    else: # currently applies to uniequip_002_mm & uniequip_003_mgllan
+        bad_ids.append(f"{type}: {id}")
 
 for char_id, char_info in chars.items():
     if is_operator(char_info) and char_info["rarity"] > 1:
@@ -104,21 +115,19 @@ for char_id, char_info in chars.items():
                 })
 
         icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/avatars/{char_id}.png"
-        icon_data = requests.get(icon_url).content
-        with open(f"./src/lib/images/operators/{char_id}.png", "wb") as f:
-            f.write(icon_data)
+        save_image(icon_url, "operators", char_id)
 
         for module_id in module_ids:
-            module_icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/equip/icon/{module_id}.png"
-            module_icon_data = requests.get(module_icon_url).content
-            with open(f"./src/lib/images/modules/{module_id}.png", "wb") as f:
-                f.write(module_icon_data)
+            icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/equip/icon/{module_id}.png"
+            save_image(icon_url, "modules", module_id)
 
 for skill_id in skill_ids:
     skill_icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/skills/skill_icon_{skill_id}.png"
-    skill_icon_data = requests.get(skill_icon_url).content
-    with open(f"./src/lib/images/skills/{skill_id}.png", "wb") as f:
-        f.write(skill_icon_data)
+    save_image(icon_url, "skills", skill_id)
+
+with open("errors.txt", "w") as f:
+    for id in bad_ids:
+        f.write(f"{id}\n")
 
 with open("./src/lib/data/operators.json", "w") as f:
     json.dump(char_data, f)
