@@ -63,7 +63,10 @@
 		--dark-moderate: #1f2937;
 		--dark-mild: #3a4558;
 		--med-strong: #d1d5db;
+		--light-strong: #ebeef4;
 		--light-moderate: #f5f8fe;
+		--green-strong: #22c55e;
+		--green-moderate: #4ade80;
 	}
 	:global(.placeholder) {
 		margin: 15px;

@@ -70,11 +70,7 @@
     {#if $selectedChar?.charId !== undefined}
         <section id="banner">
             <div id="card">
-                <OperatorIcon
-                    charId={$selectedChar.charId}
-                    --size="100px"
-                    --border="7.5px"
-                />
+                <OperatorIcon charId={$selectedChar.charId} --size="100px" --border="7.5px" />
                 <h1>{$selectedChar.name}</h1>
             </div>
             {#if $activeCategory && innerWidth >= 800}
@@ -90,11 +86,7 @@
             {#each $selectedChar.upgrades as category}
                 {#if category.data.length > 0}
                     <div class="series">
-                        <UpgradeSeries
-                            {category}
-                            {activeCategory}
-                            {selectedUpgradeNames}
-                        />
+                        <UpgradeSeries {category} {activeCategory} {selectedUpgradeNames} />
                     </div>
                 {/if}
             {/each}
@@ -107,63 +99,37 @@
         <section id="taskboard">
         {#if $splitByStatus}
             {#if allNotReady.length > 0}
-                <section
-                    use:dndzone={{items: allNotReady,
-                                  flipDurationMs,
-                                  dropFromOthersDisabled: true}}
-                    on:consider={handleDndNotReady}
-                    on:finalize={handleDndNotReady}
+                <section use:dndzone={{items: allNotReady, flipDurationMs, dropFromOthersDisabled: true}}
+                         on:consider={handleDndNotReady}
+                         on:finalize={handleDndNotReady}
                 >
                     {#each allNotReady as upgrade (upgrade.id)}
                         <div animate:flip="{{duration: flipDurationMs}}">
-                            <TaskItem
-                                {...upgrade}
-                                {splitByStatus}
-                                {showCost}
-                                bind:ready={upgrade.ready}
-                                on:click={() => remove(upgrade)}
-                            />
+                            <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                         </div>
                     {/each}
                 </section>
             {/if}
             {#if allReady.length > 0}
-                <section
-                    use:dndzone={{items: allReady,
-                                  flipDurationMs,
-                                  dropFromOthersDisabled: true}}
-                    on:consider={handleDndReady}
-                    on:finalize={handleDndReady}
+                <section use:dndzone={{items: allReady, flipDurationMs, dropFromOthersDisabled: true}}
+                         on:consider={handleDndReady}
+                         on:finalize={handleDndReady}
                 >
                     {#each allReady as upgrade (upgrade.id)}
                         <div animate:flip="{{duration: flipDurationMs}}">
-                            <TaskItem
-                                {...upgrade}
-                                {splitByStatus}
-                                {showCost}
-                                bind:ready={upgrade.ready}
-                                on:click={() => remove(upgrade)}
-                            />
+                            <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                         </div>
                     {/each}
                 </section>
             {/if}
         {:else}
-            <section
-                use:dndzone={{items: $allSelected,
-                              flipDurationMs}}
-                on:consider={handleDnd}
-                on:finalize={handleDnd}
+            <section use:dndzone={{items: $allSelected, flipDurationMs}}
+                     on:consider={handleDnd}
+                     on:finalize={handleDnd}
             >
                 {#each $allSelected as upgrade (upgrade.id)}
                     <div animate:flip="{{duration: flipDurationMs}}">
-                        <TaskItem
-                            {...upgrade}
-                            {splitByStatus}
-                            {showCost}
-                            bind:ready={upgrade.ready}
-                            on:click={() => remove(upgrade)}
-                        />
+                        <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                     </div>
                 {/each}
             </section>
@@ -189,7 +155,7 @@
     }
     #top {
         padding: 10px;
-        background-color: rgb(235, 238, 244);
+        background-color: var(--light-strong);
         display: flex;
         flex-wrap: wrap;
         align-items: center;
@@ -209,7 +175,7 @@
     }
     #banner {
         padding: 10px;
-        background-color: rgb(235, 238, 244);
+        background-color: var(--light-strong);
         display: flex;
         flex-wrap: wrap;
         align-items: center;
@@ -236,17 +202,17 @@
     #banner button {
         margin-right: 1em;
         padding: 0 1em 0 1em;
-        border: 5px solid rgb(149, 255, 114);
+        border: 5px solid var(--green-moderate);
         border-radius: 10px;
-        background-color: rgb(149, 255, 114);
+        background-color: var(--green-moderate);
     }
     #banner button:hover {
-        border: 5px solid rgb(139, 245, 104);
-        background-color: rgb(139, 245, 104);
+        border: 5px solid var(--green-strong);
+        background-color: var(--green-strong);
     }
     #select {
         padding: 5px;
-        background-color: rgb(235, 238, 244);
+        background-color: var(--light-strong);
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
