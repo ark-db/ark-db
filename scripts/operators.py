@@ -125,7 +125,7 @@ for skill_id in skill_ids:
     icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/skills/skill_icon_{skill_id}.png"
     save_image(icon_url, "skills", skill_id)
 
-with open("errors.txt", "w") as f:
+with open("./scripts/errors.txt", "w") as f:
     for id in bad_ids:
         f.write(f"{id}\n")
 
