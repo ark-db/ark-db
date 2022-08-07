@@ -79,15 +79,11 @@
     }
     #settings {
         padding: calc(1em + 2.25px);
-        background-color: rgb(235, 238, 244);
+        background-color: var(--light-strong);
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
         gap: 1em 3em;
-    }
-    #settings input[type=checkbox] {
-        transform: scale(1.5);
-        margin-right: 0.5em;
     }
     #settings #filter {
         display: flex;
@@ -108,7 +104,7 @@
     .items {
         margin-top: 15px;
         padding: 10px;
-        background-color: rgb(235, 238, 244);
+        background-color: var(--light-strong);
         display: grid;
         grid-template-columns: repeat(auto-fit, 100px);
         justify-content: center;

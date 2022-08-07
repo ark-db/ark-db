@@ -169,10 +169,6 @@
         justify-content: center;
         gap: 1em 3em;
     }
-    #top #settings input[type=checkbox] {
-        transform: scale(1.5);
-        margin-right: 0.5em;
-    }
     #banner {
         padding: 10px;
         background-color: var(--light-strong);
@@ -202,13 +198,21 @@
     #banner button {
         margin-right: 1em;
         padding: 0 1em 0 1em;
-        border: 5px solid var(--green-moderate);
-        border-radius: 10px;
-        background-color: var(--green-moderate);
+        border: 2px solid var(--green-strong);
+        border-radius: 4em;
+        background-color: transparent;
+        transition: all 0.1s ease;
     }
     #banner button:hover {
-        border: 5px solid var(--green-strong);
-        background-color: var(--green-strong);
+        border: 2px solid var(--green-moderate);
+        background-color: var(--green-moderate);
+    }
+    button > p {
+        color: var(--green-strong);
+        transition: color 0.1s ease;
+    }
+    button:hover > p {
+        color: white;
     }
     #select {
         padding: 5px;
@@ -229,7 +233,7 @@
     }
     #taskboard section {
         padding: 10px;
-        background-color: rgb(235, 238, 244);
+        background-color: var(--light-strong);
         flex-grow: 1;
         display: flex;
         flex-direction: column;

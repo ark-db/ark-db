@@ -42,6 +42,7 @@
 	a {
 		border-radius: 6px;
 		padding: 0.5em 1em;
+		font-weight: 500;
 		text-decoration: none;
 		color: var(--med-strong);
 	}
@@ -58,15 +59,31 @@
 	}
 
 	:global(body) {
-		margin: 0px;
 		--dark-strong: #111827;
 		--dark-moderate: #1f2937;
 		--dark-mild: #3a4558;
 		--med-strong: #d1d5db;
+		/**
 		--light-strong: #ebeef4;
 		--light-moderate: #f5f8fe;
+		*/
+		--light-strong: #f3f4f6;
+		--light-moderate: #f9fafb;
 		--green-strong: #22c55e;
 		--green-moderate: #4ade80;
+		--green-mild: #69e896;
+
+		margin: 0px;
+		background-color: var(--dark-mild);
+		
+	}
+	:global(.page) {
+		margin: auto;
+		max-width: 1200px;
+	}
+	:global(input[type=checkbox]) {
+        transform: scale(1.5);
+        margin-right: 0.5em;
 	}
 	:global(.placeholder) {
 		margin: 15px;
