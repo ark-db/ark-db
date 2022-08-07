@@ -2,7 +2,7 @@
     import operators from "../data/operators.json";
     export let charId;
     
-    $: src = new URL(`../images/operators/${charId}.png`, import.meta.url).href;
+    $: src = new URL(`../images/operators/${charId}.webp`, import.meta.url).href;
     $: ({ name, rarity } = operators[charId]);
 </script>
 

@@ -1,6 +1,8 @@
 import requests
 from collections import defaultdict, Counter
 from itertools import chain
+from PIL import Image
+from io import BytesIO
 import json
 
 VALID_ITEMS = {
@@ -47,10 +49,15 @@ for item_id, item_info in cn_items.items():
             "rarity": item_info["rarity"],
             "sortId": item_info["sortId"],
         }  
-        icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{item_info['iconId']}.png"
-        icon_data = requests.get(icon_url).content
-        with open(f"./src/lib/images/items/{item_id}.png", "wb") as f:
-            f.write(icon_data)
+
+        icon_data = (
+            requests.get(f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{item_info['iconId']}.png")
+                    .content
+        )
+        Image.open(BytesIO(icon_data)) \
+             .convert("RGBA") \
+             .save(f"./src/lib/images/items/{item_id}.webp", "webp")
+        
 
 composition_data = defaultdict(list)
 
