@@ -24,7 +24,7 @@
 
 <style>
 	header {
-		background-color: #1f2937;
+		background-color: var(--dark-moderate);
 		display: flex;
         gap: 1em;
 	}
@@ -43,14 +43,14 @@
 		border-radius: 6px;
 		padding: 0.5em 1em;
 		text-decoration: none;
-		color: #d1d5db;
+		color: var(--med-strong);
 	}
 	nav a:hover:not(.active) {
-		background-color: #3a4558;
+		background-color: var(--dark-mild);
 		color: white;
 	}
 	a.active {
-		background-color: #111827;
+		background-color: var(--dark-strong);
 		color: white;
 	}
 	main {
@@ -59,17 +59,18 @@
 
 	:global(body) {
 		margin: 0px;
-        background-image: url("$lib/images/mainbg.svg");
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-size: cover
+		--dark-strong: #111827;
+		--dark-moderate: #1f2937;
+		--dark-mild: #3a4558;
+		--med-strong: #d1d5db;
+		--light-moderate: #f5f8fe;
 	}
 	:global(.placeholder) {
 		margin: 15px;
 		border: 1px dashed black;
         border-radius: 10px;
         padding: 1em;
-        background-color: rgb(245, 248, 254);
+        background-color: var(--light-moderate);
         text-align: center;
 	}
 </style>
