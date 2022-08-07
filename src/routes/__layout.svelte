@@ -6,21 +6,13 @@
 
 
 <header>
-    <div class="logo">
-        <a href="/">
-			<img src={logo} alt="ArkDB">
-		</a>
-    </div>
+    <a href="/">
+		<img src={logo} alt="ArkDB">
+	</a>
 
     <nav>
-        <ul>
-            <li class:active={$page.url.pathname === '/'}>
-                <a href="/">Home</a>
-            </li>
-			<li class:active={$page.url.pathname.startsWith("/planner")}>
-				<a href="/planner">Upgrade Planner</a>
-			</li>
-        </ul>
+        <a href="/" class:active={$page.url.pathname === '/'}>Home</a>
+		<a href="/planner" class:active={$page.url.pathname.startsWith("/planner")}>Planner</a>
     </nav>
 </header>
 
@@ -32,71 +24,45 @@
 
 <style>
 	header {
+		background-color: #1f2937;
 		display: flex;
-        background: rgb(190, 229, 249);
+        gap: 1em;
 	}
-
-	.logo {
-		width: 3em;
-		height: 3em;
-	}
-
-	.logo a {
-		display: flex;
-		align-items: center;
-		justify-content: center;
+	header > a {
+		margin: 0 10px;
 		width: 100%;
-		height: 100%;
+		max-width: 40px;
+		min-width: 40px;
 	}
-
-	.logo img {
-		width: 2em;
-		height: 2em;
-		object-fit: contain;
-	}
-
 	nav {
 		display: flex;
-		justify-content: center;
-	}
-
-	ul {
-		position: relative;
-		padding: 0;
-		margin: 0;
-		height: 3em;
-		display: flex;
-		justify-content: center;
 		align-items: center;
-		list-style: none;
-		background-size: contain;
+		gap: 1em;
 	}
-
-	li {
-		position: relative;
-		height: 100%;
-        border-bottom: 3px solid transparent;
-	}
-
-    li.active {
-        border-bottom: 3px solid skyblue;
-        box-sizing: border-box;
-    }
-
-	nav a {
-		display: flex;
-		height: 100%;
-		align-items: center;
-		padding: 0 1em;
-		color: black;
+	a {
+		border-radius: 6px;
+		padding: 0.5em 1em;
 		text-decoration: none;
+		color: #d1d5db;
+	}
+	nav a:hover:not(.active) {
+		background-color: #3a4558;
+		color: white;
+	}
+	a.active {
+		background-color: #111827;
+		color: white;
+	}
+	main {
+		margin: 10px;
 	}
 
 	:global(body) {
+		margin: 0px;
         background-image: url("$lib/images/mainbg.svg");
         background-repeat: no-repeat;
         background-attachment: fixed;
-        background-size: cover;
+        background-size: cover
 	}
 	:global(.placeholder) {
 		margin: 15px;
