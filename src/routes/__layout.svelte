@@ -66,7 +66,7 @@
         margin: 0.6em 0 0.2em 0;
         text-align: center;
 		color: var(--light-moderate);
-		text-shadow: 4px 4px var(--dark-strong);
+		text-shadow: 3px 3px var(--dark-strong);
     }
 	:global(main > section) {
 		border-radius: 6px;
@@ -97,10 +97,10 @@
 	}
 	:global(.placeholder) {
 		margin: 15px;
-		border: 1px dashed black;
+		border: 1px dashed var(--light-moderate);
         border-radius: 10px;
         padding: 1em;
-        background-color: var(--light-moderate);
         text-align: center;
+		color: var(--light-moderate);
 	}
 </style>
