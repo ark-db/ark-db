@@ -5,7 +5,7 @@
 </script>
 
 <h1>
-    {status} - {message}
+    {status} | {message}
 </h1>
 
 <figure>
@@ -15,13 +15,29 @@
         <a href="https://twitter.com/Kuro_Tofu/status/1454254316710096899"
            target="_blank"
            rel="noreferrer">
-           source
+            source
         </a>
     </figcaption>
 </figure>
 
 <style>
-    h1, figure {
+    h1 {
+        font-size: 3em;
+    }
+    figure {
         text-align: center;
+    }
+    img {
+        max-width: clamp(0px, 80vw, 800px);
+    }
+    figcaption {
+        margin: 1em 20vw;
+        padding: 0.5em;
+        border-radius: 8px;
+        background-color: var(--dark-moderate);
+        color: var(--light-moderate);
+    }
+    a {
+        text-decoration: none;
     }
 </style>
