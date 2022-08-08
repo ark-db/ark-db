@@ -93,7 +93,8 @@
 	}
 	:global(input[type=checkbox]) {
 		/**max-width: 100%;*/
-		width: auto;
+		/**width: auto;*/
+		max-width: 20px;
 		transform: scale(1.5);
         margin-right: 0.5em;
 	}
