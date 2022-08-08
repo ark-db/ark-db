@@ -34,7 +34,7 @@
         font-weight: 500;
         text-decoration: none;
         color: var(--light-moderate);
-        
+        transition: all 0.1s ease-out;
     }
     a.active {
         outline: 1px solid var(--light-moderate);

@@ -55,9 +55,23 @@
 		color: white;
 	}
 	main {
-		margin: 10px;
+		margin: auto;
+        padding: 5px;
+		max-width: clamp(1200px, 70vw, 1800px);
+		display: flex;
+        flex-direction: column;
+        gap: 10px;
 	}
-
+	:global(main > h1) {
+        margin: 0.6em 0 0.2em 0;
+        text-align: center;
+		color: var(--light-moderate);
+		text-shadow: 4px 4px var(--dark-strong);
+    }
+	:global(main > section) {
+		border-radius: 6px;
+		box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.4);
+	}
 	:global(body) {
 		--dark-strong: #111827;
 		--dark-moderate: #1f2937;
@@ -76,18 +90,6 @@
 		background-repeat: no-repeat;
         background-attachment: fixed;
         background-size: cover;
-	}
-	:global(.page) {
-		margin: auto;
-        padding: 5px;
-		max-width: clamp(1200px, 70vw, 1800px);
-		display: flex;
-        flex-direction: column;
-        gap: 10px;
-	}
-	:global(.page > section) {
-		border-radius: 6px;
-		box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.4);
 	}
 	:global(input[type=checkbox]) {
         transform: scale(1.5);

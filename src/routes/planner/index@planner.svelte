@@ -48,104 +48,100 @@
     }
 </script>
 
+
+
 <svelte:window bind:innerWidth={innerWidth} />
 
-
-<div class="page">
-    <section id="top">
-        <SearchBar {selectedChar} />
-        <section id="settings">
-            <div>
-                <input id="split-status" type="checkbox" bind:checked={$splitByStatus}>
-                <label for="split-status">Organize upgrades by status</label>
-            </div>
-            <div>
-                <input id="show-cost" type="checkbox" bind:checked={$showCost}>
-                <label for="show-cost">Show upgrade costs</label>
-            </div>
-        </section>
+<section id="top">
+    <SearchBar {selectedChar} />
+    <section id="settings">
+        <div>
+            <input id="split-status" type="checkbox" bind:checked={$splitByStatus}>
+            <label for="split-status">Organize upgrades by status</label>
+        </div>
+        <div>
+            <input id="show-cost" type="checkbox" bind:checked={$showCost}>
+            <label for="show-cost">Show upgrade costs</label>
+        </div>
     </section>
+</section>
 
-    {#key $selectedChar}
-    {#if $selectedChar?.charId !== undefined}
-        <section id="banner">
-            <div id="card">
-                <OperatorIcon charId={$selectedChar.charId} --size="100px" --border="7.5px" />
-                <h1>{$selectedChar.name}</h1>
-            </div>
-            {#if $activeCategory && innerWidth >= 800}
-                <img src={$activeCategory} alt="Upgrade icon" />
+{#key $selectedChar}
+{#if $selectedChar?.charId !== undefined}
+    <section id="banner">
+        <div id="card">
+            <OperatorIcon charId={$selectedChar.charId} --size="100px" --border="7.5px" />
+            <h1>{$selectedChar.name}</h1>
+        </div>
+        {#if $activeCategory && innerWidth >= 800}
+            <img src={$activeCategory} alt="Upgrade icon" />
+        {/if}
+        <button on:click={submitUpgrades}>
+            <p>Save and add to list</p>
+        </button>
+    </section>
+{/if}
+{#if $selectedChar?.upgrades !== undefined}
+    <section id="select">
+        {#each $selectedChar.upgrades as category}
+            {#if category.data.length > 0}
+                <div class="series">
+                    <UpgradeSeries {category} {activeCategory} {selectedUpgradeNames} />
+                </div>
             {/if}
-            <button on:click={submitUpgrades}>
-                <p>Save and add to list</p>
-            </button>
-        </section>
-    {/if}
-    {#if $selectedChar?.upgrades !== undefined}
-        <section id="select">
-            {#each $selectedChar.upgrades as category}
-                {#if category.data.length > 0}
-                    <div class="series">
-                        <UpgradeSeries {category} {activeCategory} {selectedUpgradeNames} />
-                    </div>
-                {/if}
-            {/each}
-        </section>
-    {/if}
-    {/key}
+        {/each}
+    </section>
+{/if}
+{/key}
 
-    <h1>Upgrades</h1>
-    {#if $allSelected.length > 0}
-        <section id="taskboard">
-        {#if $splitByStatus}
-            {#if allNotReady.length > 0}
-                <section use:dndzone={{items: allNotReady, flipDurationMs, dropFromOthersDisabled: true}}
-                         on:consider={handleDndNotReady}
-                         on:finalize={handleDndNotReady}
-                >
-                    {#each allNotReady as upgrade (upgrade.id)}
-                        <div animate:flip="{{duration: flipDurationMs}}">
-                            <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
-                        </div>
-                    {/each}
-                </section>
-            {/if}
-            {#if allReady.length > 0}
-                <section use:dndzone={{items: allReady, flipDurationMs, dropFromOthersDisabled: true}}
-                         on:consider={handleDndReady}
-                         on:finalize={handleDndReady}
-                >
-                    {#each allReady as upgrade (upgrade.id)}
-                        <div animate:flip="{{duration: flipDurationMs}}">
-                            <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
-                        </div>
-                    {/each}
-                </section>
-            {/if}
-        {:else}
-            <section use:dndzone={{items: $allSelected, flipDurationMs}}
-                     on:consider={handleDnd}
-                     on:finalize={handleDnd}
+<h1>Upgrades</h1>
+{#if $allSelected.length > 0}
+    <section id="taskboard">
+    {#if $splitByStatus}
+        {#if allNotReady.length > 0}
+            <section use:dndzone={{items: allNotReady, flipDurationMs, dropFromOthersDisabled: true}}
+                     on:consider={handleDndNotReady}
+                     on:finalize={handleDndNotReady}
             >
-                {#each $allSelected as upgrade (upgrade.id)}
+                {#each allNotReady as upgrade (upgrade.id)}
                     <div animate:flip="{{duration: flipDurationMs}}">
                         <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                     </div>
                 {/each}
             </section>
         {/if}
-        </section>
+        {#if allReady.length > 0}
+            <section use:dndzone={{items: allReady, flipDurationMs, dropFromOthersDisabled: true}}
+                     on:consider={handleDndReady}
+                     on:finalize={handleDndReady}
+            >
+                {#each allReady as upgrade (upgrade.id)}
+                    <div animate:flip="{{duration: flipDurationMs}}">
+                        <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
+                    </div>
+                {/each}
+            </section>
+        {/if}
     {:else}
-        <p class="placeholder">No upgrades added yet</p>
+        <section use:dndzone={{items: $allSelected, flipDurationMs}}
+                 on:consider={handleDnd}
+                 on:finalize={handleDnd}
+        >
+            {#each $allSelected as upgrade (upgrade.id)}
+                <div animate:flip="{{duration: flipDurationMs}}">
+                    <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
+                </div>
+            {/each}
+        </section>
     {/if}
-</div>
+    </section>
+{:else}
+    <p class="placeholder">No upgrades added yet</p>
+{/if}
+
 
 
 <style>
-    .page > h1 {
-        margin: 0.6em 0 0.2em 0;
-        text-align: center;
-    }
     #top {
         padding: 10px;
         background-color: var(--light-strong);
