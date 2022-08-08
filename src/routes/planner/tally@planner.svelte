@@ -2,8 +2,10 @@
     import { allSelected, inventory, costFilter, makeT3 } from "../stores.js";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
-    //import plusIcon from "$lib/images/plus.svg";
-    //import minusIcon from "$lib/images/minus.svg";
+    import NumberInput from "$lib/components/NumberInput.svelte";
+
+    let min = 0;
+    let max = 999999;
 
     $: itemCounter = makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
                                              .map(upgrade => upgrade.cost)
@@ -51,18 +53,14 @@
     <p class="placeholder">No upgrades found</p>
 {/if}
 <h1>Inventory</h1>
-<!--<section class="items">
+<section class="items">
     {#each $inventory as { id, count }}
         <div class="item">
-            <ItemIcon {id} --size="100px" />
-            <div class="inputs">
-                <input type="image" src={minusIcon} alt="delete" on:click={() => count === 0 ? count : count--}/>
-                <input type="number" min={0} max={1e5} use:validator={count} bind:value={count} placeholder="Lorem ipsum"/>
-                <input type="image" src={plusIcon} alt="delete" on:click={() => count === 1e5 ? count : count++}/>
-            </div>
+            <ItemIcon {id} {count} --size="100px" />
+            <NumberInput {min} {max} bind:value={count} invalidText="Number must be between {min} and {max}." />
         </div>
     {/each}
-</section>-->
+</section>
 <p class="placeholder">Coming soon!</p>
 
 
