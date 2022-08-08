@@ -2,29 +2,13 @@ import { writable } from "svelte/store";
 import items from "$lib/data/items.json";
 
 function initSelectedUpgradeNames() {
-    const { subscribe, set, update } = writable({
-        elite: new Set(),
-        skill: new Set(),
-        mastery1: new Set(),
-        mastery2: new Set(),
-        mastery3: new Set(),
-        module1: new Set(),
-        module2: new Set(),
-    });
+    const { subscribe, set, update } = writable(new Array(7).fill(new Set()));
 
 	return {
 		subscribe,
 		set,
         update,
-        reset: () => set({
-            elite: new Set(),
-            skill: new Set(),
-            mastery1: new Set(),
-            mastery2: new Set(),
-            mastery3: new Set(),
-            module1: new Set(),
-            module2: new Set(),
-        })
+        reset: () => set(new Array(7).fill(new Set()))
 	};
 }
 

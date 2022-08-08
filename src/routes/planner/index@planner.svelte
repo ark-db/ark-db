@@ -83,10 +83,10 @@
 {/if}
 {#if $selectedChar?.upgrades !== undefined}
     <section id="select">
-        {#each $selectedChar.upgrades as category}
+        {#each $selectedChar.upgrades as category, idx}
             {#if category.data.length > 0}
                 <div>
-                    <UpgradeSeries {category} {activeCategory} {selectedUpgradeNames} />
+                    <UpgradeSeries {category} {idx} {activeCategory} {selectedUpgradeNames} />
                 </div>
             {/if}
         {/each}
