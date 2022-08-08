@@ -9,6 +9,9 @@
 <a href="https://form.typeform.com/to/gSMV12RK">Submit feedback</a>
 
 <style>
+    h1, h2, p, a {
+        color: white;
+    }
     h1 {
         margin-bottom: 0.2em;
         text-align: center;
@@ -22,9 +25,15 @@
         text-align: center;
     }
     a {
-        margin-top: 5em;
-        color: black;
+        margin: 5em 40vw;
+        padding: 10px;
+        border-radius: 6px;
+        background-color: var(--dark-moderate);
         display: block;
         text-align: center;
+        text-decoration: none;
+    }
+    a:hover {
+        background-color: var(--dark-mild);
     }
 </style>

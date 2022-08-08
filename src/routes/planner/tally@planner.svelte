@@ -71,12 +71,6 @@
 
 
 <style>
-    .page {
-        margin-top: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
     #settings {
         padding: calc(1em + 2.25px);
         background-color: var(--light-strong);

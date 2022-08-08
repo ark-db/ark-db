@@ -9,14 +9,13 @@
     <a href="/planner/tally" class:active={$page.url.pathname === "/planner/tally"}>Cost Tracker</a>
 </nav>
 
-<main>
-    <slot />
-</main>
+<slot />
 
 
 
 <style>
     nav {
+        margin: 20px 0;
         display: flex;
         flex-flow: row wrap;
         align-items: center;
@@ -27,16 +26,26 @@
         flex-grow: 1;
         display: flex;
         justify-content: center;
-        padding: 0.5em 1em 0.5em 1em;
-        background-color: var(--light-strong);
+        border: 1px solid var(--light-moderate);
         border-radius: 8px;
-        border-bottom: 2px solid transparent;
-        box-sizing: border-box;
+        padding: 0.5em 1em;
+        background-color: transparent;
         max-width: 20em;
+        font-weight: 500;
         text-decoration: none;
-        color: initial;
+        color: var(--light-moderate);
+        
     }
     a.active {
-        border-bottom: 2px solid var(--dark-moderate);
+        outline: 1px solid var(--light-moderate);
+        outline-offset: 3px;
+        padding: calc(0.5em - 1px) calc(1em - 1px);
+        background-color: var(--light-moderate);
+        color: var(--dark-moderate);
+    }
+    a:hover:not(.active) {
+        transition: all 0.1s ease;
+        background-color: var(--med-mild);
+        color: var(--dark-moderate);
     }
 </style>

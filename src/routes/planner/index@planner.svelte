@@ -142,13 +142,6 @@
 
 
 <style>
-    .page {
-        margin-top: 5px;
-        padding: 5px 0 5px 0;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
     .page > h1 {
         margin: 0.6em 0 0.2em 0;
         text-align: center;

@@ -27,13 +27,13 @@
         grid-template-columns: var(--size);
         grid-template-rows: var(--size);
     }
-    div img {
+    img {
         grid-area: 1 / 1 / 2 / 2;
         place-self: center;
         max-width: var(--size);
         max-height: var(--size);
     }
-    div p {
+    p {
         grid-area: 1 / 1 / 2 / 2;
         place-self: end;
         margin: 0 calc(var(--size) / 6.1) calc(var(--size) / 9.2) 0;
