@@ -62,17 +62,7 @@
         flex-direction: column;
         gap: 10px;
 	}
-	:global(main > h1) {
-        margin: 0.6em 0 0.2em 0;
-        text-align: center;
-		color: var(--light-moderate);
-		text-shadow: 3px 3px var(--dark-strong);
-    }
-	:global(main > section) {
-		border-radius: 8px;
-		box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.4);
-	}
-	:global(body) {
+	:global {
 		--dark-strong: #111827;
 		--dark-moderate: #1f2937;
 		--dark-mild: #3a4558;
@@ -84,7 +74,18 @@
 		--green-strong: #22c55e;
 		--green-moderate: #4ade80;
 		--green-mild: #69e896;
-
+	}
+	:global(main > h1) {
+        margin: 0.6em 0 0.2em 0;
+        text-align: center;
+		color: var(--light-moderate);
+		text-shadow: 3px 3px var(--dark-strong);
+    }
+	:global(main > section) {
+		border-radius: 8px;
+		box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.4);
+	}
+	:global(body) {
 		margin: 0px;
         background-image: url("$lib/images/main-dark.svg");
 		background-repeat: no-repeat;
