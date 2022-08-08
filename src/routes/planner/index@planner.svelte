@@ -17,7 +17,6 @@
     $: uid = $allSelected.length;
     $: allReady = $allSelected.filter(upgrade => upgrade.ready);
     $: allNotReady = $allSelected.filter(upgrade => !upgrade.ready);
-    const flipDurationMs = 150;
 
     $: selectedUpgradeNames = writable(new Array($selectedChar?.upgrades?.length).fill(new Set()))
 
@@ -98,6 +97,7 @@
 
 <h1>Upgrades</h1>
 {#if $allSelected.length > 0}
+    {@const flipDurationMs = 150}
     <section id="taskboard">
     {#if $splitByStatus}
         {#if allNotReady.length > 0}
