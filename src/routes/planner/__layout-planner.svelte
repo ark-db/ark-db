@@ -34,7 +34,7 @@
         font-weight: 500;
         text-decoration: none;
         color: var(--light-moderate);
-        transition: all 0.1s ease-out;
+        transition: all 0.1s ease;
     }
     a.active {
         outline: 1px solid var(--light-moderate);
@@ -44,7 +44,7 @@
         color: var(--dark-moderate);
     }
     a:hover:not(.active) {
-        transition: all 0.1s ease;
+        
         background-color: var(--med-mild);
         color: var(--dark-moderate);
     }
