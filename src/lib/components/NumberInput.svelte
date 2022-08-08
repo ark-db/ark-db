@@ -21,6 +21,13 @@
 <div>
     <div>
         <div>
+            <button type="button"
+                    title="decrement"
+                    aria-label="decrement"
+                    on:click="{() => updateValue(-1)}"
+            >
+                <img src={minusIcon} alt="decrement">
+            </button>
             <input type="number"
                    pattern="[0-9]+"
                    aria-label="Numeric input field with increment and decrement buttons"
@@ -30,22 +37,13 @@
                    value={value ?? ""}
                    on:input={({ target }) => value = parse(target.value)}
             >
-            <div>
-                <button type="button"
-                        title="decrement"
-                        aria-label="decrement"
-                        on:click="{() => updateValue(-1)}"
-                >
-                    <img src={minusIcon} alt="decrement">
-                </button>
-                <button type="button"
-                        title="increment"
-                        aria-label="increment"
-                        on:click="{() => updateValue(1)}"
-                >
-                    <img src={addIcon} alt="increment">
-                </button>
-            </div>
+            <button type="button"
+                    title="increment"
+                    aria-label="increment"
+                    on:click="{() => updateValue(1)}"
+            >
+                <img src={addIcon} alt="increment">
+            </button>
         </div>
         {#if error}
             <p>Number must be between {min} and {max}.</p>
