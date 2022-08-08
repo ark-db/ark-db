@@ -4,7 +4,8 @@
 </svelte:head>
 
 <script>
-    import { selectedChar, activeCategory, selectedUpgradeNames, allSelected, splitByStatus, showCost } from "../stores.js";
+    import { writable } from "svelte/store";
+    import { selectedChar, activeCategory, allSelected, splitByStatus, showCost } from "../stores.js";
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
@@ -18,6 +19,8 @@
     $: allNotReady = $allSelected.filter(upgrade => !upgrade.ready);
     const flipDurationMs = 150;
 
+    $: selectedUpgradeNames = writable(new Array($selectedChar?.upgrades?.length).fill(new Set()))
+
     function submitUpgrades() {
         let allSelectedNames = Object.values($selectedUpgradeNames).map(set => Array.from(set)).flat();
         let upgrades = $selectedChar.upgrades.map(category => category.data.flat()).flat();
@@ -30,7 +33,6 @@
                                                         charId: $selectedChar.charId,
                                                         id: uid++,
                                                         ready: false}))]
-        selectedUpgradeNames.reset();
         $selectedChar = {};
     }
     function remove(upgrade) {
