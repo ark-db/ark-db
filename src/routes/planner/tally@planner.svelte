@@ -4,9 +4,6 @@
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import NumberInput from "$lib/components/NumberInput.svelte";
 
-    let min = 0;
-    let max = 999999;
-
     $: itemCounter = makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
                                              .map(upgrade => upgrade.cost)
                                              .flat());
@@ -55,6 +52,8 @@
 <h1>Inventory</h1>
 <section class="items">
     {#each $inventory as { id, count }}
+        {@const min = 0}
+        {@const max = 999999}
         <div>
             <ItemIcon {id} {count} --size="100px" />
             <NumberInput {min} {max} bind:value={count} />
