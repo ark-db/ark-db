@@ -15,7 +15,7 @@
                      .sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
     };
     function convertToT3(list) {
-        return makeCounter(list.map(item => ([...items[item.id].asT3.map(mat => ({id: mat.id, count: mat.count * item.count}))]))
+        return makeCounter(list.map(item => ([...items[item.id]?.asT3?.map(mat => ({id: mat.id, count: mat.count * item.count})) ?? []]))
                                .filter(item => item.length)
                                .flat());
     };
