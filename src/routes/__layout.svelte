@@ -28,7 +28,7 @@
 		display: flex;
         gap: 1em;
 	}
-	header > a {
+	img {
 		margin: 0 10px;
 		width: 100%;
 		max-width: 40px;
