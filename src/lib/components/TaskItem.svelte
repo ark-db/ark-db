@@ -49,7 +49,7 @@
     .left {
         flex-grow: 1;
         display: flex;
-        column-gap: 0.75em;
+        column-gap: 0.5em;
     }
     .info {
         flex-grow: 1;

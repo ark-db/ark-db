@@ -94,7 +94,7 @@
 	:global(input[type=checkbox]) {
 		max-width: 20px;
 		transform: scale(1.5);
-        margin-right: 0.25em;
+        margin-right: 0.5em;
 	}
 	:global(.placeholder) {
 		margin: 15px;
