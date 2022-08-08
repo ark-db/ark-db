@@ -61,7 +61,6 @@
         </div>
     {/each}
 </section>
-<p class="placeholder">Coming soon!</p>
 
 
 
