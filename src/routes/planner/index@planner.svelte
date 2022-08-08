@@ -69,7 +69,7 @@
 {#key $selectedChar}
 {#if $selectedChar?.charId !== undefined}
     <section id="banner">
-        <div id="card">
+        <div>
             <OperatorIcon charId={$selectedChar.charId} --size="100px" --border="7.5px" />
             <h1>{$selectedChar.name}</h1>
         </div>
@@ -85,7 +85,7 @@
     <section id="select">
         {#each $selectedChar.upgrades as category}
             {#if category.data.length > 0}
-                <div class="series">
+                <div>
                     <UpgradeSeries {category} {activeCategory} {selectedUpgradeNames} />
                 </div>
             {/if}
@@ -151,7 +151,7 @@
         justify-content: space-around;
         gap: 1em;
     }
-    #top #settings {
+    #settings {
         flex-grow: 1;
         display: flex;
         flex-wrap: wrap;
@@ -167,24 +167,24 @@
         justify-content: space-between;
         gap: 0.5em 2em;
     }
-    #banner #card {
+    #banner div {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
         column-gap: 1em;
     }
-    #banner #card h1 {
+    #banner h1 {
         margin: 0.5em 0 0.5em 0;
         text-align: center;
         font-size: 2em;
     }
-    #banner img {
+    img {
         height: 100%;
         max-height: 90px;
         min-height: 90px;
     }
-    #banner button {
+    button {
         margin-right: 1em;
         padding: 0 1em 0 1em;
         border: 2px solid var(--green-strong);
@@ -192,7 +192,7 @@
         background-color: transparent;
         transition: all 0.1s ease;
     }
-    #banner button:hover {
+    button:hover {
         border: 2px solid var(--green-moderate);
         background-color: var(--green-moderate);
     }
@@ -211,7 +211,7 @@
         align-items: flex-start;
         justify-content: center;
     }
-    #select .series {
+    #select div {
         flex-grow: 1;
     }
     #taskboard {
