@@ -7,17 +7,17 @@
 
 <header>
     <a href="/">
-		<img src="{logo}" alt="ArkDB">
+		<img src={logo} alt="ArkDB">
 	</a>
 
     <nav>
-        <a href="/" class:active={page.url.pathname === "/"}>Home</a>
-		<a href="/planner" class:active={page.url.pathname.startsWith("/planner")}>Planner</a>
+        <a href="/" class:active={$page.url.pathname === '/'}>Home</a>
+		<a href="/planner" class:active={$page.url.pathname.startsWith("/planner")}>Planner</a>
     </nav>
 </header>
 
 <main>
-    <slot></slot>
+    <slot />
 </main>
 
 
@@ -28,7 +28,7 @@
 		display: flex;
         gap: 1em;
 	}
-	img {
+	header > a {
 		margin: 0 10px;
 		width: 100%;
 		max-width: 40px;
