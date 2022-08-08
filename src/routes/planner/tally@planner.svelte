@@ -76,16 +76,16 @@
         justify-content: space-between;
         gap: 1em 3em;
     }
-    #settings #filter {
+    #filter {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         gap: 1em 3em;
     }
-    span#notready {
+    #notready {
         background-color: rgba(255, 140, 140, 0.7);
     }
-    span#ready {
+    #ready {
         background-color: rgba(151, 255, 148, 0.7);
     }
     .items {
