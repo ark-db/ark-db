@@ -5,22 +5,18 @@
     export let value = null;
     export let max = undefined;
     export let min = undefined;
-    export let invalidText = "";
+
+    $: error = value == null || value > max || value < min;
 
     function updateValue(direction) {
         value = Math.max(min, Math.min(value + direction, max));
     }
-
-    $: error = value == null || value > max || value < min;
-
     function parse(raw) {
-      return raw != "" ? Number(raw) : null;
-    }
-
-    function onInput({ target }) {
-      value = parse(target.value);
+        return raw != "" ? Number(raw) : null;
     }
 </script>
+
+
 
 <div>
     <div>
@@ -28,11 +24,11 @@
             <input type="number"
                    pattern="[0-9]+"
                    aria-label="Numeric input field with increment and decrement buttons"
-                   max="{max}"
-                   min="{min}"
+                   max={max}
+                   min={min}
                    step=1
-                   value="{value ?? ''}"
-                   on:input="{onInput}"
+                   value={value ?? ""}
+                   on:input={({ target }) => value = parse(target.value)}
             >
             <div>
                 <button type="button"
@@ -52,9 +48,13 @@
             </div>
         </div>
         {#if error}
-            <div>
-                {invalidText}
-            </div>
+            <p>Number must be between {min} and {max}.</p>
         {/if}
     </div>
 </div>
+
+
+
+<style>
+
+</style>

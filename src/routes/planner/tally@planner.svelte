@@ -57,7 +57,7 @@
     {#each $inventory as { id, count }}
         <div class="item">
             <ItemIcon {id} {count} --size="100px" />
-            <NumberInput {min} {max} bind:value={count} invalidText="Number must be between {min} and {max}." />
+            <NumberInput {min} {max} bind:value={count} />
         </div>
     {/each}
 </section>
