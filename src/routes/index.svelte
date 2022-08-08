@@ -6,7 +6,11 @@
 <h1>ArkDB</h1>
 <h2>A utility website for Arknights players</h2>
 <p>v0.2.0-beta</p>
-<a href="https://form.typeform.com/to/gSMV12RK">Submit feedback</a>
+<a href="https://form.typeform.com/to/gSMV12RK"
+   target="_blank"
+   rel="noreferrer">
+    Submit feedback
+</a>
 
 <style>
     h1, h2, p, a {
@@ -25,7 +29,7 @@
         text-align: center;
     }
     a {
-        margin: 5em 40vw;
+        margin: 5em 30vw;
         padding: 10px;
         border-radius: 6px;
         background-color: var(--dark-moderate);
