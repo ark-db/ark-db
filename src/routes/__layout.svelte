@@ -69,7 +69,7 @@
 		text-shadow: 3px 3px var(--dark-strong);
     }
 	:global(main > section) {
-		border-radius: 6px;
+		border-radius: 8px;
 		box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.4);
 	}
 	:global(body) {
