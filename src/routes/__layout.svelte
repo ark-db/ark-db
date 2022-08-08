@@ -6,21 +6,13 @@
 
 
 <header>
-    <div class="logo">
-        <a href="/">
-			<img src={logo} alt="ArkDB">
-		</a>
-    </div>
+    <a href="/">
+		<img src={logo} alt="ArkDB">
+	</a>
 
     <nav>
-        <ul>
-            <li class:active={$page.url.pathname === '/'}>
-                <a href="/">Home</a>
-            </li>
-			<li class:active={$page.url.pathname.startsWith("/planner")}>
-				<a href="/planner">Upgrade Planner</a>
-			</li>
-        </ul>
+        <a href="/" class:active={$page.url.pathname === '/'}>Home</a>
+		<a href="/planner" class:active={$page.url.pathname.startsWith("/planner")}>Planner</a>
     </nav>
 </header>
 
@@ -32,78 +24,83 @@
 
 <style>
 	header {
+		background-color: var(--dark-moderate);
 		display: flex;
-        background: rgb(190, 229, 249);
+        gap: 1em;
 	}
-
-	.logo {
-		width: 3em;
-		height: 3em;
-	}
-
-	.logo a {
-		display: flex;
-		align-items: center;
-		justify-content: center;
+	header > a {
+		margin: 0 10px;
 		width: 100%;
-		height: 100%;
+		max-width: 40px;
+		min-width: 40px;
 	}
-
-	.logo img {
-		width: 2em;
-		height: 2em;
-		object-fit: contain;
-	}
-
 	nav {
 		display: flex;
-		justify-content: center;
-	}
-
-	ul {
-		position: relative;
-		padding: 0;
-		margin: 0;
-		height: 3em;
-		display: flex;
-		justify-content: center;
 		align-items: center;
-		list-style: none;
-		background-size: contain;
+		gap: 1em;
 	}
-
-	li {
-		position: relative;
-		height: 100%;
-        border-bottom: 3px solid transparent;
-	}
-
-    li.active {
-        border-bottom: 3px solid skyblue;
-        box-sizing: border-box;
-    }
-
-	nav a {
-		display: flex;
-		height: 100%;
-		align-items: center;
-		padding: 0 1em;
-		color: black;
+	a {
+		border-radius: 6px;
+		padding: 0.5em 1em;
+		font-weight: 500;
 		text-decoration: none;
+		color: var(--med-strong);
 	}
-
+	nav a:hover:not(.active) {
+		background-color: var(--dark-mild);
+		color: white;
+	}
+	a.active {
+		background-color: var(--dark-strong);
+		color: white;
+	}
+	main {
+		margin: auto;
+        padding: 5px;
+		max-width: clamp(1200px, 70vw, 1800px);
+		display: flex;
+        flex-direction: column;
+        gap: 10px;
+	}
+	:global(main > h1) {
+        margin: 0.6em 0 0.2em 0;
+        text-align: center;
+		color: var(--light-moderate);
+		text-shadow: 3px 3px var(--dark-strong);
+    }
+	:global(main > section) {
+		border-radius: 8px;
+		box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.4);
+	}
 	:global(body) {
-        background-image: url("$lib/images/mainbg.svg");
-        background-repeat: no-repeat;
+		--dark-strong: #111827;
+		--dark-moderate: #1f2937;
+		--dark-mild: #3a4558;
+		--med-strong: #d1d5db;
+		--med-moderate: #d4d4d8;
+		--med-mild: #e4e4e7;
+		--light-strong: #f3f4f6;
+		--light-moderate: #f9fafb;
+		--green-strong: #22c55e;
+		--green-moderate: #4ade80;
+		--green-mild: #69e896;
+
+		margin: 0px;
+        background-image: url("$lib/images/main-dark.svg");
+		background-repeat: no-repeat;
         background-attachment: fixed;
         background-size: cover;
 	}
+	:global(input[type=checkbox]) {
+        transform: scale(1.5);
+        margin-right: 0.5em;
+	}
 	:global(.placeholder) {
 		margin: 15px;
-		border: 1px dashed black;
+		border: 1px dashed var(--light-moderate);
         border-radius: 10px;
         padding: 1em;
-        background-color: rgb(245, 248, 254);
         text-align: center;
+		color: var(--light-moderate);
 	}
 </style>

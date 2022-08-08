@@ -23,71 +23,58 @@
 
 
 
-<div class="page">
-    <section id="settings">
-        <div id="filter">
-            <div>
-                <input id="show-notready" type="checkbox" bind:group={$costFilter} value={false}>
-                <label for="show-notready">Include <span id="notready">unprepared</span> upgrades</label>
-            </div>
-            <div>
-                <input id="show-ready" type="checkbox" bind:group={$costFilter} value={true}>
-                <label for="show-ready">Include <span id="ready">prepared</span> upgrades</label>
-            </div>
+<section id="settings">
+    <div id="filter">
+        <div>
+            <input id="show-notready" type="checkbox" bind:group={$costFilter} value={false}>
+            <label for="show-notready">Include <span id="notready">unprepared</span> upgrades</label>
         </div>
         <div>
-            <input id="convert-t3" type="checkbox" bind:checked={$makeT3}>
-            <label for="convert-t3">Convert materials to T3</label>
+            <input id="show-ready" type="checkbox" bind:group={$costFilter} value={true}>
+            <label for="show-ready">Include <span id="ready">prepared</span> upgrades</label>
         </div>
-    </section>
+    </div>
+    <div>
+        <input id="convert-t3" type="checkbox" bind:checked={$makeT3}>
+        <label for="convert-t3">Convert materials to T3</label>
+    </div>
+</section>
 
-    <h1>Upgrade Costs</h1>
-    {#if itemCounter.length > 0}
-        <section class="items">
-            {#each $makeT3 ? convertToT3(itemCounter) : itemCounter as item}
-                <ItemIcon {...item} --size="100px" />
-            {/each}
-        </section>
-    {:else}
-        <p class="placeholder">No upgrades found</p>
-    {/if}
-
-    <h1>Inventory</h1>
-    <!--<section class="items">
-        {#each $inventory as { id, count }}
-            <div class="item">
-                <ItemIcon {id} --size="100px" />
-                <div class="inputs">
-                    <input type="image" src={minusIcon} alt="delete" on:click={() => count === 0 ? count : count--}/>
-                    <input type="number" min={0} max={1e5} use:validator={count} bind:value={count} placeholder="Lorem ipsum"/>
-                    <input type="image" src={plusIcon} alt="delete" on:click={() => count === 1e5 ? count : count++}/>
-                </div>
-            </div>
+<h1>Upgrade Costs</h1>
+{#if itemCounter.length > 0}
+    <section class="items">
+        {#each $makeT3 ? convertToT3(itemCounter) : itemCounter as item}
+            <ItemIcon {...item} --size="100px" />
         {/each}
-    </section>-->
-    <p class="placeholder">Coming soon!</p>
-</div>
+    </section>
+{:else}
+    <p class="placeholder">No upgrades found</p>
+{/if}
+<h1>Inventory</h1>
+<!--<section class="items">
+    {#each $inventory as { id, count }}
+        <div class="item">
+            <ItemIcon {id} --size="100px" />
+            <div class="inputs">
+                <input type="image" src={minusIcon} alt="delete" on:click={() => count === 0 ? count : count--}/>
+                <input type="number" min={0} max={1e5} use:validator={count} bind:value={count} placeholder="Lorem ipsum"/>
+                <input type="image" src={plusIcon} alt="delete" on:click={() => count === 1e5 ? count : count++}/>
+            </div>
+        </div>
+    {/each}
+</section>-->
+<p class="placeholder">Coming soon!</p>
 
 
 
 <style>
-    .page {
-        margin-top: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
     #settings {
         padding: calc(1em + 2.25px);
-        background-color: rgb(235, 238, 244);
+        background-color: var(--light-strong);
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
         gap: 1em 3em;
-    }
-    #settings input[type=checkbox] {
-        transform: scale(1.5);
-        margin-right: 0.5em;
     }
     #settings #filter {
         display: flex;
@@ -101,14 +88,10 @@
     span#ready {
         background-color: rgba(151, 255, 148, 0.7);
     }
-    .page h1 {
-        margin: 0.6em 0 0.2em 0;
-        text-align: center;
-    }
     .items {
         margin-top: 15px;
         padding: 10px;
-        background-color: rgb(235, 238, 244);
+        background-color: var(--light-strong);
         display: grid;
         grid-template-columns: repeat(auto-fit, 100px);
         justify-content: center;

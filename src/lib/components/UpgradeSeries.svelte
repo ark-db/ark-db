@@ -59,16 +59,12 @@
 <style>
     ol {
         list-style-type: none;
-        padding-left: 0;
         margin: 5px;
         padding: 10px;
-        background-color: rgb(215, 218, 224);
+        border-radius: 8px;
+        background-color: var(--med-mild);
         display: flex;
         flex-direction: column;
         row-gap: 1em;
-    }
-    input[type=checkbox] {
-        transform: scale(1.5);
-        margin-right: 0.5em;
     }
 </style>
