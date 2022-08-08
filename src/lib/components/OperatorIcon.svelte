@@ -6,7 +6,7 @@
     $: ({ name, rarity } = operators[charId]);
 </script>
 
-<img class="{rarity}" {src} alt={name} />
+<img class={rarity} {src} alt={name} />
 
 <style>
     img {
@@ -16,16 +16,16 @@
         max-width: var(--size);
         min-width: var(--size);
     }
-    img.\36 {
+    .\36 {
         border-color: #ed702d;
     }
-    img.\35 {
+    .\35 {
         border-color: #f3b13e;
     }
-    img.\34 {
+    .\34 {
         border-color: #d4b3d8;
     }
-    img.\33 {
+    .\33 {
         border-color: #4faff0;
     }
 </style>

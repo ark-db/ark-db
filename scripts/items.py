@@ -57,7 +57,6 @@ for item_id, item_info in cn_items.items():
         Image.open(BytesIO(icon_data)) \
              .convert("RGBA") \
              .save(f"./src/lib/images/items/{item_id}.webp", "webp")
-        
 
 composition_data = defaultdict(list)
 
@@ -78,7 +77,8 @@ for item_id in VALID_ITEMS["t5"]:
     composition_data[item_id] = [{"id": k, "count": v} for k, v in costs.items()]
 
 for item_id, item_info in item_data.items():
-    item_info.update({"asT3": composition_data.get(item_id, [])})
+    if (mats := composition_data.get(item_id)):
+        item_info.update({"asT3": mats})
 
 with open("./src/lib/data/items.json", "w") as f:
     json.dump(item_data, f)

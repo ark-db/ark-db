@@ -15,7 +15,7 @@
                      .sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
     };
     function convertToT3(list) {
-        return makeCounter(list.map(item => ([...items[item.id].asT3.map(mat => ({id: mat.id, count: mat.count * item.count}))]))
+        return makeCounter(list.map(item => ([...items[item.id]?.asT3?.map(mat => ({id: mat.id, count: mat.count * item.count})) ?? []]))
                                .filter(item => item.length)
                                .flat());
     };
@@ -76,16 +76,16 @@
         justify-content: space-between;
         gap: 1em 3em;
     }
-    #settings #filter {
+    #filter {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         gap: 1em 3em;
     }
-    span#notready {
+    #notready {
         background-color: rgba(255, 140, 140, 0.7);
     }
-    span#ready {
+    #ready {
         background-color: rgba(151, 255, 148, 0.7);
     }
     .items {

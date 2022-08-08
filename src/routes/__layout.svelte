@@ -92,7 +92,8 @@
         background-size: cover;
 	}
 	:global(input[type=checkbox]) {
-        transform: scale(1.5);
+		max-width: 20px;
+		transform: scale(1.5);
         margin-right: 0.5em;
 	}
 	:global(.placeholder) {

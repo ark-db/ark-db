@@ -1,15 +1,20 @@
 <script>
-    export let category;
-    export let activeCategory;
-    export let selectedUpgradeNames;
+    export let activeCategory, selectedUpgradeNames;
+    export let category, idx;
 
     $: names = category.data.map(upgrade => upgrade.name);
     let selectedNames = new Set();
 
+    function replaceAt(index, value) {
+        let temp = $selectedUpgradeNames.slice(0);
+        temp[index] = value;
+        return temp;
+    }
+
     const setActiveCategory = () => {
-        if (category.cls === "mastery") {
+        if (category?.cls === "mastery") {
             $activeCategory = new URL(`../images/skills/${category.skillId}.webp`, import.meta.url).href;
-        } else if (category.cls === "module") {
+        } else if (category?.cls === "module") {
             $activeCategory = new URL(`../images/modules/${category.moduleId}.webp`, import.meta.url).href;
         }
     };
@@ -24,7 +29,7 @@
             selectedNames.delete(event.target.value);
         }
         selectedNames = selectedNames;
-        $selectedUpgradeNames[category.type] = selectedNames;
+        $selectedUpgradeNames = replaceAt(idx, selectedNames)
     };
     const onSelectAll = event => {
         if (event.target.checked) {
@@ -33,7 +38,7 @@
             selectedNames.clear();
         }
         selectedNames = selectedNames;
-        $selectedUpgradeNames[category.type] = selectedNames;
+        $selectedUpgradeNames = replaceAt(idx, selectedNames)
     };
 </script>
 

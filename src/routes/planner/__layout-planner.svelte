@@ -44,7 +44,6 @@
         color: var(--dark-moderate);
     }
     a:hover:not(.active) {
-        
         background-color: var(--med-mild);
         color: var(--dark-moderate);
     }

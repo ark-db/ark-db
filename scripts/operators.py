@@ -75,15 +75,11 @@ for char_id, char_info in chars.items():
             "name": name_changes.get(char_id, char_info["appellation"]),
             "rarity": char_info["rarity"] + 1,
             "upgrades": [
-                {"cls": "elite",
-                 "type": "elite",
-                 "data": [{"name": f"Elite {i+1}",
+                {"data": [{"name": f"Elite {i+1}",
                            "cost": format_cost(phase["evolveCost"])
                                    + [{"id": "4001", "count": elite_lmd_costs[char_info["rarity"]][i]}]}
                           for i, phase in enumerate(char_info["phases"][1:])]},
-                {"cls": "skill",
-                 "type": "skill",
-                 "data": [{"name": f"Skill Level {i+2}",
+                {"data": [{"name": f"Skill Level {i+2}",
                            "cost": format_cost(level["lvlUpCost"])}
                           for i, level in enumerate(char_info["allSkillLvlup"])]}
             ]
@@ -94,7 +90,6 @@ for char_id, char_info in chars.items():
                 skill_ids.add(get_skill_id(skill))
             char_data[char_id]["upgrades"].append(
                 {"cls": f"mastery",
-                 "type": f"mastery{i+1}",
                  "skillId": get_skill_id(skill),
                  "data":[{"name": f"Skill {i+1} Mastery {j+1}",
                           "cost": format_cost(mastery["levelUpCost"])}
@@ -107,7 +102,6 @@ for char_id, char_info in chars.items():
             module_info = modules['equipDict'][module_id]
             char_data[char_id]["upgrades"].append(
                 {"cls": f"module",
-                 "type": f"module{i+1}",
                  "moduleId": module_info["uniEquipId"],
                  "data": [{"name": f"{module_info['typeIcon'].upper()} Stage {i+1}",
                            "cost": format_cost(cost)}
