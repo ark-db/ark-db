@@ -55,7 +55,7 @@
 <h1>Inventory</h1>
 <section class="items">
     {#each $inventory as { id, count }}
-        <div class="item">
+        <div>
             <ItemIcon {id} {count} --size="100px" />
             <NumberInput {min} {max} bind:value={count} />
         </div>
@@ -93,6 +93,6 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, 100px);
         justify-content: center;
-        gap: 16px;
+        gap: 20px;
     }
 </style>
