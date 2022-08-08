@@ -8,7 +8,7 @@
     export let name, cost, charId, id, ready;
 </script>
 
-<section class={ready ? "ready" : "notready"}>
+<section class:ready={ready}>
     <div class="left">
         {#if !$splitByStatus}
             <input type="checkbox" bind:checked={ready}>
@@ -37,6 +37,7 @@
     section {
         padding: 10px;
         border-radius: 10px;
+        background-color: rgb(255, 140, 140);
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -45,14 +46,6 @@
     .ready {
         background-color: rgb(151, 255, 148);
     }
-    .notready {
-        background-color: rgb(255, 140, 140);
-    }
-
-    input[type=checkbox] {
-        transform: scale(1.5);
-    }
-
     .left {
         flex-grow: 1;
         display: flex;
@@ -76,20 +69,18 @@
         flex-direction: column;
         justify-content: center;
     }
-    .title h3 {
+    h3 {
         margin: 0.1em 0 0.2em 0;
     }
-    .title p {
+    p {
         margin: 0.1em 0 0.2em 0;
     }
-
     .cost {
         display: flex;
         flex-flow: row wrap;
         align-items: center;
         column-gap: 10px;
     }
-
     input[type=image] {
         margin-left: 10px;
         width: 100%;
