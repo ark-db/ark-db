@@ -11,15 +11,30 @@
                                              .map(upgrade => upgrade.cost)
                                              .flat());
 
+    function sortBySortId(counter) {
+        return counter.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId)
+    };
     function makeCounter(list) {
         return Object.entries(list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {}))
                      .map(item => ({id: item[0], count: item[1]}))
-                     .sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
     };
-    function convertToT3(list) {
-        return makeCounter(list.map(item => ([...items[item.id]?.asT3?.map(mat => ({id: mat.id, count: mat.count * item.count})) ?? []]))
-                               .filter(item => item.length)
-                               .flat());
+    
+    function convertToT3(counter) {
+        let itemCounts = [];
+        function asT3({ id, count }) {
+            let { rarity, recipe = undefined } = items[id];
+            if (rarity === 2) {
+                itemCounts.push({ id, count });
+            } else if (rarity > 2 && recipe) {
+                for (const { id, count: ing_count } of recipe) {
+                    asT3({id, count: ing_count*count});
+                }
+            }
+        };
+        for (const item of counter) {
+            asT3(item);
+        }
+        return makeCounter(itemCounts);
     };
 </script>
 
@@ -45,7 +60,7 @@
 <h1>Upgrade Costs</h1>
 {#if itemCounter.length > 0}
     <section class="items">
-        {#each $makeT3 ? convertToT3(itemCounter) : itemCounter as item}
+        {#each sortBySortId($makeT3 ? convertToT3(itemCounter) : itemCounter) as item}
             <ItemIcon {...item} --size="100px" />
         {/each}
     </section>
