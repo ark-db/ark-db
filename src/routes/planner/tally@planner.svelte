@@ -7,31 +7,34 @@
     const min = 0;
     const max = 999999;
 
-    $: itemCounter = makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
+    $: itemCounter = normalize(makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
                                              .map(upgrade => upgrade.cost)
-                                             .flat());
+                                             .flat()));
 
-    function sortBySortId(counter) {
-        return counter.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
+    function sortBySortId(list) {
+        return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
     };
+    function normalize(counter) {
+        return Object.entries(counter)
+                     .map(([id, count]) => ({id, count}))
+    }
     function makeCounter(list) {
-        return Object.entries(list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {}))
-                     .map(([id, count]) => ({id, count}));
+        return list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
     };
     function convertToT3(counter) {
-        let itemCounts = [];
+        let itemCounts = {};
         
         function asT3({ id, count }) {
             let { rarity, recipe = undefined } = items[id];
             if (rarity === 2) {
-                itemCounts.push({ id, count });
+                itemCounts[id] = (itemCounts[id] ?? 0) + count;
             } else if (rarity > 2 && recipe) {
                 recipe.forEach(({ id, count: ingCount }) => asT3({id, count: ingCount*count}));
             }
         };
 
         counter.forEach(item => asT3(item));
-        return makeCounter(itemCounts);
+        return normalize(itemCounts);
     };
 </script>
 
