@@ -35,6 +35,7 @@
            step=1
            value={value ?? ""}
            on:input={({ target }) => value = parse(target.value)}
+           on:blur={() => updateValue(0)}
     >
     <button type="button"
             title="increment"
