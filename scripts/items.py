@@ -1,3 +1,4 @@
+import utils
 import requests
 from collections import defaultdict
 from PIL import Image
@@ -36,11 +37,6 @@ base_data = (
 )
 recipes = dict(base_data["manufactFormulas"], **base_data["workshopFormulas"])
 
-def format_cost(cost):
-    if cost:
-        return [{k: v for k, v in mat.items() if k != "type"} for mat in cost]
-    return []
-
 item_id_to_recipe_cost = {recipes[id]["itemId"]: recipes[id]["costs"] for id in recipes}
 
 item_data = defaultdict(dict)
@@ -54,15 +50,10 @@ for item_id, item_info in cn_items.items():
             "sortId": item_info["sortId"],
         }
         if (cost := item_id_to_recipe_cost.get(item_id)):
-            item_data[item_id].update({"recipe": format_cost(cost)})
+            item_data[item_id].update({"recipe": utils.format_cost(cost)})
 
-        icon_data = (
-            requests.get(f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{item_info['iconId']}.png")
-                    .content
-        )
-        Image.open(BytesIO(icon_data)) \
-             .convert("RGBA") \
-             .save(f"./src/lib/images/items/{item_id}.webp", "webp")
+        icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{item_info['iconId']}.png"
+        utils.save_image(icon_url, "items", item_id)
 
 with open("./src/lib/data/items.json", "w") as f:
     json.dump(item_data, f)
