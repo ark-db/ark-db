@@ -14,10 +14,10 @@
     import { dndzone } from "svelte-dnd-action";
 
     let innerWidth;
+    const flipDurationMs = 150;
     $: uid = $allSelected.length;
     $: allReady = $allSelected.filter(upgrade => upgrade.ready);
     $: allNotReady = $allSelected.filter(upgrade => !upgrade.ready);
-    const flipDurationMs = 150;
 
     $: selectedUpgradeNames = writable(new Array($selectedChar?.upgrades?.length).fill(new Set()))
 

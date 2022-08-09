@@ -25,3 +25,9 @@
     </svelte:fragment>
     {stripTags(result.string)}
 </Typeahead>
+
+<style>
+    :global([data-svelte-typeahead]) {
+        z-index: 1;
+}
+</style>

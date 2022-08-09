@@ -5,7 +5,10 @@ export const selectedChar = writable();
 export const activeCategory = writable();
 export const allSelected = writable([]);
 export const inventory = writable(
-    Object.keys(items).filter(id => id !== "4001").map(id => ({id, count: 0}))
+    Object.keys(items)
+          .sort((prev, curr) => items[prev].sortId - items[curr].sortId)
+          .filter(id => id !== "4001")
+          .map(id => ({id, count: 0}))
 );
 
 export const splitByStatus = writable(false);
