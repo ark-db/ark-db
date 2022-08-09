@@ -26,14 +26,10 @@
             if (rarity === 2) {
                 itemCounts.push({ id, count });
             } else if (rarity > 2 && recipe) {
-                for (const { id, count: ing_count } of recipe) {
-                    asT3({id, count: ing_count*count});
-                }
+                recipe.forEach(({ id, count: ingCount }) => asT3({id, count: ingCount*count}))
             }
         };
-        for (const item of counter) {
-            asT3(item);
-        }
+        counter.forEach(item => asT3(item))
         return makeCounter(itemCounts);
     };
 </script>
