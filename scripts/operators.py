@@ -68,7 +68,7 @@ for char_id, char_info in chars.items():
         for i, skill in enumerate(char_info["skills"]):
             skill_id = get_skill_id(skill)
 
-            if char_info["rarity"] > 2 and skill_id not in skill_ids:
+            if skill_id not in skill_ids and char_info["rarity"] > 2:
                 skill_ids.add(skill_id)
                 icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/skills/skill_icon_{skill_id}.png"
                 utils.save_image(icon_url, "skills", skill_id)

@@ -33,6 +33,7 @@ base_data = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
             .json()
 )
+
 recipes = base_data["manufactFormulas"] | base_data["workshopFormulas"]
 
 item_id_to_recipe_cost = {recipes[id]["itemId"]: recipes[id]["costs"] for id in recipes}
