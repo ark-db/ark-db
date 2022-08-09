@@ -7,9 +7,9 @@
     const min = 0;
     const max = 999999;
 
-    $: itemCounter = normalize(makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
+    $: itemCounter = makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
                                              .map(upgrade => upgrade.cost)
-                                             .flat()));
+                                             .flat());
 
     function sortBySortId(list) {
         return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
@@ -21,7 +21,7 @@
     function makeCounter(list) {
         return list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
     };
-    function convertToT3(counter) {
+    function convertToT3(list) {
         let itemCounts = {};
         
         function asT3({ id, count }) {
@@ -33,7 +33,7 @@
             }
         };
 
-        counter.forEach(item => asT3(item));
+        list.forEach(item => asT3(item));
         return normalize(itemCounts);
     };
 </script>
@@ -58,9 +58,10 @@
 </section>
 
 <h1>Upgrade Costs</h1>
-{#if itemCounter.length > 0}
+{#if Object.keys(itemCounter).length > 0}
+    {@const list = normalize(itemCounter)}
     <section class="items">
-        {#each sortBySortId($makeT3 ? convertToT3(itemCounter) : itemCounter) as item}
+        {#each sortBySortId($makeT3 ? convertToT3(list) : list) as item}
             <ItemIcon {...item} --size="100px" />
         {/each}
     </section>
