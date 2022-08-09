@@ -36,6 +36,12 @@
         list.forEach(item => asT3(item));
         return normalize(itemCounts);
     };
+    function compare(inv, counter) {
+        let deficits = [], surpluses = [];
+        inv.map(({ id, count }) => ({id, count: count - (counter[id] ?? 0)}))
+           .filter(({ count }) => count !== 0)
+           .forEach(item => item.count < 0 ? deficits.push(item) : surpluses.push(item));
+    }
 </script>
 
 
