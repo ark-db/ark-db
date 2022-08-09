@@ -16,7 +16,7 @@
     };
     function makeCounter(list) {
         return Object.entries(list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {}))
-                     .map(item => ({id: item[0], count: item[1]}))
+                     .map(([id, count]) => ({id, count}))
     };
     function convertToT3(counter) {
         let itemCounts = [];
