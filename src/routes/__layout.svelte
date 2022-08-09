@@ -62,7 +62,7 @@
         flex-direction: column;
         gap: 10px;
 	}
-	:global {
+	:global(:root) {
 		--dark-strong: #111827;
 		--dark-moderate: #1f2937;
 		--dark-mild: #3a4558;
