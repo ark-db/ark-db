@@ -1,7 +1,7 @@
+from pathlib import Path
 import requests
 from PIL import Image
 from io import BytesIO
-from pathlib import Path
 
 def format_cost(cost):
     if cost:
