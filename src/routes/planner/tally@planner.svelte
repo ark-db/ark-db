@@ -18,9 +18,9 @@
         return Object.entries(list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {}))
                      .map(item => ({id: item[0], count: item[1]}))
     };
-    
     function convertToT3(counter) {
         let itemCounts = [];
+        
         function asT3({ id, count }) {
             let { rarity, recipe = undefined } = items[id];
             if (rarity === 2) {
@@ -29,6 +29,7 @@
                 recipe.forEach(({ id, count: ingCount }) => asT3({id, count: ingCount*count}))
             }
         };
+
         counter.forEach(item => asT3(item))
         return makeCounter(itemCounts);
     };
