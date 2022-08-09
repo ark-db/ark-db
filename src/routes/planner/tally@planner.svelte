@@ -12,11 +12,11 @@
                                              .flat());
 
     function sortBySortId(counter) {
-        return counter.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId)
+        return counter.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
     };
     function makeCounter(list) {
         return Object.entries(list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {}))
-                     .map(([id, count]) => ({id, count}))
+                     .map(([id, count]) => ({id, count}));
     };
     function convertToT3(counter) {
         let itemCounts = [];
@@ -26,11 +26,11 @@
             if (rarity === 2) {
                 itemCounts.push({ id, count });
             } else if (rarity > 2 && recipe) {
-                recipe.forEach(({ id, count: ingCount }) => asT3({id, count: ingCount*count}))
+                recipe.forEach(({ id, count: ingCount }) => asT3({id, count: ingCount*count}));
             }
         };
 
-        counter.forEach(item => asT3(item))
+        counter.forEach(item => asT3(item));
         return makeCounter(itemCounts);
     };
 </script>
