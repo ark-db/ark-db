@@ -9,8 +9,8 @@ def format_cost(cost):
     return []
 
 def save_image(url, type, id):
-    target_path = f"./src/lib/images/{type}/{id}.webp"
-    if Path(target_path).is_file():
+    target_path = Path(f"./src/lib/images/{type}/{id}.webp")
+    if target_path.is_file():
         pass
     elif (res := requests.get(url)):
         Image.open(BytesIO(res.content)) \

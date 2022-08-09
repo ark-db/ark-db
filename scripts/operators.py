@@ -1,8 +1,6 @@
 import utils
 import requests
 from collections import defaultdict
-from PIL import Image
-from io import BytesIO
 import json
 
 chars = (
