@@ -49,14 +49,13 @@
 {:else}
     <p class="placeholder">No upgrades found</p>
 {/if}
+
 <h1>Inventory</h1>
 <section class="items">
     {#each $inventory as { id, count }}
-        {@const min = 0}
-        {@const max = 999999}
         <div>
             <ItemIcon {id} {count} --size="100px" />
-            <NumberInput {min} {max} bind:value={count} />
+            <NumberInput min={0} max={999999} bind:value={count} />
         </div>
     {/each}
 </section>
