@@ -105,7 +105,7 @@
 
 <h1 class="title">Comparison</h1>
 <section class="items">
-    {#each sortBySortId(compare($inventory, itemCounter)) as item}
+    {#each sortBySortId(compare($inventory, itemCounter).filter(({ count }) => count !== 0)) as item}
         <ItemIcon {...item} --size="100px" />
     {/each}
 </section>
