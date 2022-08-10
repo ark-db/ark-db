@@ -56,7 +56,7 @@
             if (stock[id] < 0) {
                 let { rarity, recipe = undefined } = items[id];
                 if (rarity > 2 && recipe) {
-                    recipe.forEach(({ id: matId, count: matCount}) => getDeficits(matId, matCount*-stock[id]));
+                    recipe.forEach(({ id: matId, count}) => getDeficits(matId, count*-stock[id]));
                     stock[id] = 0;
                 } else {
                     deficits.add(id);
