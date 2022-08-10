@@ -14,13 +14,16 @@
     function sortBySortId(list) {
         return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
     };
+
     function normalize(counter) {
         return Object.entries(counter)
                      .map(([id, count]) => ({id, count}))
     }
+
     function makeCounter(list) {
         return list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
     };
+
     function convertToT3(list) {
         let itemCounts = {};
         
@@ -36,12 +39,22 @@
         list.forEach(item => asT3(item));
         return normalize(itemCounts);
     };
+    
     function compare(inv, counter) {
-        let deficits = [], surpluses = [];
-        inv.map(({ id, count }) => ({id, count: count - (counter[id] ?? 0)}))
-           .filter(({ count }) => count !== 0)
-           .forEach(item => item.count < 0 ? deficits.push(item) : surpluses.push(item));
-    }
+        let stock = inv.map(({ id, count }) => ({id, count: count - (counter[id] ?? 0)}));
+                       
+        let deficit = stock.filter(({ id, count }) => items[id]?.recipe && count < 0)
+                           .sort((prev, curr) => items[curr.id].rarity - items[prev.id].rarity);
+
+        stock = Object.fromEntries(stock.map(({ id, count }) => [id, count]));
+
+        for (let { id, count } of deficit) {
+            let factor = Math.min(-count, Math.floor(Math.min(...items[id].recipe.map(({ id: matId, count: matCount }) => stock[matId]/matCount))));
+            stock[id] += factor;
+            items[id].recipe.forEach(({ id: matId, count: matCount }) => stock[matId] -= factor*matCount);
+        }
+        return stock;
+    };
 </script>
 
 
@@ -85,6 +98,12 @@
     {/each}
 </section>
 
+<h1>Comparison</h1>
+<section class="items">
+    {#each sortBySortId(normalize(compare($inventory, itemCounter))) as item}
+        <ItemIcon {...item} --size="100px" />
+    {/each}
+</section>
 
 
 <style>
