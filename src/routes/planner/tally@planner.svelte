@@ -82,8 +82,16 @@
         <h1 class="title">Upgrade Costs</h1>
         {#if Object.keys(itemCounter).length > 0}
             {@const list = normalize(itemCounter)}
+            {@const itemDiffs = compare($inventory, itemCounter)}
             <section class="items">
                 {#each sortBySortId($makeT3 ? convertToT3(list) : list) as item}
+                    <ItemIcon {...item} --size="100px" />
+                {/each}
+            </section>
+
+            <h1 class="title">Comparison</h1>
+            <section class="items">
+                {#each sortBySortId($makeT3 ? convertToT3(itemDiffs) : itemDiffs) as item}
                     <ItemIcon {...item} --size="100px" />
                 {/each}
             </section>
@@ -91,12 +99,7 @@
             <p class="placeholder">No upgrades found</p>
         {/if}
 
-        <h1 class="title">Comparison</h1>
-        <section class="items">
-            {#each sortBySortId(compare($inventory, itemCounter)) as item}
-                <ItemIcon {...item} --size="100px" />
-            {/each}
-        </section>
+        
     </div>
     <div>
         <h1 class="title">Inventory</h1>
