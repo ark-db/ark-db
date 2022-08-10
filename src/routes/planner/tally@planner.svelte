@@ -39,7 +39,7 @@
         list.forEach(item => asT3(item));
         return normalize(itemCounts);
     };
-    
+
     function compare(inv, counter) {
         let stock = inv.map(({ id, count }) => ({id, count: count - (counter[id] ?? 0)}));
                        
@@ -53,7 +53,7 @@
             stock[id] += factor;
             items[id].recipe.forEach(({ id: matId, count: matCount }) => stock[matId] -= factor*matCount);
         }
-        return stock;
+        return normalize(stock);
     };
 </script>
 
@@ -100,7 +100,7 @@
 
 <h1>Comparison</h1>
 <section class="items">
-    {#each sortBySortId(normalize(compare($inventory, itemCounter))) as item}
+    {#each sortBySortId(compare($inventory, itemCounter)) as item}
         <ItemIcon {...item} --size="100px" />
     {/each}
 </section>
