@@ -92,19 +92,25 @@
 <div id="group">
     <div>
         <h1 class="title">Upgrade Costs</h1>
-        {#if Object.keys(itemCounter).length > 0}
+        {#if itemCounter.length > 0}
+            {@const items = sortItems($makeT3 ? convertToT3(itemCounter) : itemCounter)}
+            {@const deficits = sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter))}
             <section class="items">
-                {#each sortItems($makeT3 ? convertToT3(itemCounter) : itemCounter) as item}
+                {#each items as item}
                     <ItemIcon {...item} --size="100px" />
                 {/each}
             </section>
 
             <h1 class="title">Item Deficits</h1>
-            <section class="items">
-                {#each sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter)) as item}
-                    <ItemIcon {...item} --size="100px" />
-                {/each}
-            </section>
+            {#if deficits.length > 0}
+                <section class="items">
+                    {#each deficits as item}
+                        <ItemIcon {...item} --size="100px" />
+                    {/each}
+                </section>
+            {:else}
+                <p class="placeholder">No deficits!</p>
+            {/if}
         {:else}
             <p class="placeholder">No upgrades found</p>
         {/if}
