@@ -43,8 +43,8 @@
     };
 
     function getDeficits(inv, costs) {
-        let invDict = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
-        return costs.map(({ id, count }) => ({id, count: invDict[id] - count}))
+        let stock = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
+        return costs.map(({ id, count }) => ({id, count: stock[id] - count}))
                     .filter(({ id, count }) => id !== "4001" && count < 0);
     }
 
@@ -120,10 +120,10 @@
     <div>
         <h1 class="title">Inventory</h1>
         <section class="items">
-            {#each $inventory as { id, count }}
+            {#each $inventory as item}
                 <div>
-                    <ItemIcon {id} {count} --size="100px" />
-                    <NumberInput {min} {max} bind:value={count} />
+                    <ItemIcon {...item} --size="100px" />
+                    <NumberInput {min} {max} bind:value={item.count} />
                 </div>
             {/each}
         </section>
