@@ -41,7 +41,8 @@
     };
 
     function compare(inv, counter) {
-        let stock = inv.map(({ id, count }) => ({id, count: count - (counter[id] ?? 0)}));
+        let stock = inv.filter(({ count }) => count >= min && count <= max)
+                       .map(({ id, count }) => ({id, count: count - (counter[id] ?? 0)}));
                        
         let deficit = stock.filter(({ id, count }) => items[id]?.recipe && count < 0)
                            .sort((prev, curr) => items[curr.id].rarity - items[prev.id].rarity);
@@ -134,7 +135,6 @@
         background-color: rgba(151, 255, 148, 0.7);
     }
     #group {
-        padding: 5px;
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
