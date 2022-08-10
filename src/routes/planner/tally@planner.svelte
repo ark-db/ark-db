@@ -7,9 +7,11 @@
     const min = 0;
     const max = 999999;
 
-    $: itemCounter = makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
-                                             .map(upgrade => upgrade.cost)
-                                             .flat());
+    $: itemCounter = normalize(
+            makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
+                                    .map(upgrade => upgrade.cost)
+                                    .flat())
+        );
 
     function sortBySortId(list) {
         return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
@@ -40,22 +42,30 @@
         return normalize(itemCounts);
     };
 
-    function compare(inv, counter) {
-        let stock = inv.filter(({ count }) => count >= min && count <= max)
-                       .map(({ id, count }) => ({id, count: count - (counter[id] ?? 0)}));
-                       
-        let deficit = stock.filter(({ id, count }) => items[id]?.recipe && count < 0)
-                           .sort((prev, curr) => items[curr.id].rarity - items[prev.id].rarity);
+    function compare(inv, costs) {
+        let invDict = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
+        return costs.filter(({ id }) => id !== "4001").map(({ id, count }) => ({id, count: invDict[id] - count}));
+    }
 
-        stock = Object.fromEntries(stock.map(({ id, count }) => [id, count]));
+    function compareAsT3(inv, costs) {
+        let deficits = new Set();
+        let stock = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
 
-        for (let { id, count } of deficit) {
-            let factor = Math.min(-count, Math.floor(Math.min(...items[id].recipe.map(({ id: matId, count: matCount }) => stock[matId]/matCount))));
-            stock[id] += factor;
-            items[id].recipe.forEach(({ id: matId, count: matCount }) => stock[matId] -= factor*matCount);
+        function getDeficits(mat, qty) {
+            stock[mat.id] -= qty;
+            if (stock[mat.id] < 0) {
+                let { rarity, recipe = undefined } = items[mat.id];
+                if (rarity > 2 && recipe) {
+                    recipe.forEach(ing => getDeficits(ing, ing.count*-stock[mat.id]));
+                } else {
+                    deficits.add(mat.id);
+                }
+            }
         }
-        return normalize(stock).filter(({ count }) => count !== 0);
-    };
+
+        costs.forEach(item => getDeficits(item, item.count));
+        return normalize(stock).filter(item => deficits.has(item.id))
+    }
 </script>
 
 
@@ -81,17 +91,15 @@
     <div>
         <h1 class="title">Upgrade Costs</h1>
         {#if Object.keys(itemCounter).length > 0}
-            {@const list = normalize(itemCounter)}
-            {@const itemDiffs = compare($inventory, itemCounter)}
             <section class="items">
-                {#each sortBySortId($makeT3 ? convertToT3(list) : list) as item}
+                {#each sortBySortId($makeT3 ? convertToT3(itemCounter) : itemCounter) as item}
                     <ItemIcon {...item} --size="100px" />
                 {/each}
             </section>
 
             <h1 class="title">Comparison</h1>
             <section class="items">
-                {#each sortBySortId($makeT3 ? convertToT3(itemDiffs) : itemDiffs) as item}
+                {#each sortBySortId($makeT3 ? compareAsT3($inventory, itemCounter) : compare($inventory, itemCounter)) as item}
                     <ItemIcon {...item} --size="100px" />
                 {/each}
             </section>
