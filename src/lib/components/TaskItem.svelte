@@ -16,7 +16,7 @@
         <div class="info">
             <div class="top">
                 <OperatorIcon {charId} --size="60px" --border="0px" />
-                <div class="title">
+                <div class="upgrade-desc">
                     <h3>{operators[charId].name}</h3>
                     <p>{name}</p>
                 </div>
@@ -64,7 +64,7 @@
         align-items: center;
         column-gap: 0.75em;
     }
-    .title {
+    .upgrade-desc {
         display: flex;
         flex-direction: column;
         justify-content: center;

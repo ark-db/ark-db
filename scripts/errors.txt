@@ -1,2 +1,0 @@
-modules: uniequip_002_mm
-modules: uniequip_003_mgllan

@@ -7,20 +7,67 @@
     const min = 0;
     const max = 999999;
 
-    $: itemCounter = makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
-                                             .map(upgrade => upgrade.cost)
-                                             .flat());
+    $: itemCounter = normalize(
+            makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
+                                    .map(upgrade => upgrade.cost)
+                                    .flat())
+        );
+
+    function sortItems(list) {
+        return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
+    };
+
+    function normalize(counter) {
+        return Object.entries(counter)
+                     .map(([id, count]) => ({id, count}))
+    }
 
     function makeCounter(list) {
-        return Object.entries(list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {}))
-                     .map(item => ({id: item[0], count: item[1]}))
-                     .sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
+        return list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
     };
+
     function convertToT3(list) {
-        return makeCounter(list.map(item => ([...items[item.id]?.asT3?.map(mat => ({id: mat.id, count: mat.count * item.count})) ?? []]))
-                               .filter(item => item.length)
-                               .flat());
+        let itemCounts = {};
+        
+        function convert({ id, count }) {
+            let { rarity, recipe = undefined } = items[id];
+            if (rarity === 2) {
+                itemCounts[id] = (itemCounts[id] ?? 0) + count;
+            } else if (rarity > 2 && recipe) {
+                recipe.forEach(({ id, count: ingCount }) => convert({id, count: ingCount*count}));
+            }
+        };
+
+        list.forEach(item => convert(item));
+        return normalize(itemCounts);
     };
+
+    function getDeficits(inv, costs) {
+        let stock = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
+        return costs.map(({ id, count }) => ({id, count: stock[id] - count}))
+                    .filter(({ id, count }) => id !== "4001" && count < 0);
+    }
+
+    function getDeficitsT3(inv, costs) {
+        let deficits = new Set();
+        let stock = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
+
+        function searchForDeficits(id, qtyNeeded) {
+            stock[id] -= qtyNeeded;
+            if (stock[id] < 0) {
+                let { rarity, recipe = undefined } = items[id];
+                if (rarity > 2 && recipe) {
+                    recipe.forEach(({ id: matId, count}) => searchForDeficits(matId, count*-stock[id]));
+                    stock[id] = 0;
+                } else {
+                    deficits.add(id);
+                }
+            }
+        }
+
+        costs.forEach(({ id, count }) => searchForDeficits(id, count));
+        return normalize(stock).filter(({ id }) => deficits.has(id));
+    }
 </script>
 
 
@@ -38,30 +85,48 @@
     </div>
     <div>
         <input id="convert-t3" type="checkbox" bind:checked={$makeT3}>
-        <label for="convert-t3">Convert materials to T3</label>
+        <label for="convert-t3">Reduce items to T3</label>
     </div>
 </section>
 
-<h1>Upgrade Costs</h1>
-{#if itemCounter.length > 0}
-    <section class="items">
-        {#each $makeT3 ? convertToT3(itemCounter) : itemCounter as item}
-            <ItemIcon {...item} --size="100px" />
-        {/each}
-    </section>
-{:else}
-    <p class="placeholder">No upgrades found</p>
-{/if}
+<div id="group">
+    <div>
+        <h1 class="title">Upgrade Costs</h1>
+        {#if itemCounter.length > 0}
+            {@const items = sortItems($makeT3 ? convertToT3(itemCounter) : itemCounter)}
+            {@const deficits = sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter))}
+            <section class="items">
+                {#each items as item}
+                    <ItemIcon {...item} --size="100px" />
+                {/each}
+            </section>
 
-<h1>Inventory</h1>
-<section class="items">
-    {#each $inventory as { id, count }}
-        <div>
-            <ItemIcon {id} {count} --size="100px" />
-            <NumberInput {min} {max} bind:value={count} />
-        </div>
-    {/each}
-</section>
+            <h1 class="title">Item Deficits</h1>
+            {#if deficits.length > 0}
+                <section class="items">
+                    {#each deficits as item}
+                        <ItemIcon {...item} --size="100px" />
+                    {/each}
+                </section>
+            {:else}
+                <p class="placeholder">No deficits!</p>
+            {/if}
+        {:else}
+            <p class="placeholder">No upgrades found</p>
+        {/if}
+    </div>
+    <div>
+        <h1 class="title">Inventory</h1>
+        <section class="items">
+            {#each $inventory as item}
+                <div>
+                    <ItemIcon {...item} --size="100px" />
+                    <NumberInput {min} {max} bind:value={item.count} />
+                </div>
+            {/each}
+        </section>
+    </div>
+</div>
 
 
 
@@ -86,9 +151,22 @@
     #ready {
         background-color: rgba(151, 255, 148, 0.7);
     }
+    #group {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    #group > div {
+        flex: 1 1 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
     .items {
         margin-top: 15px;
         padding: 10px;
+        border-radius: 8px;
         background-color: var(--light-strong);
         display: grid;
         grid-template-columns: repeat(auto-fit, 100px);

@@ -57,7 +57,7 @@
 	main {
 		margin: auto;
         padding: 5px;
-		max-width: clamp(1200px, 70vw, 1800px);
+		max-width: clamp(1200px, 80vw, 1600px);
 		display: flex;
         flex-direction: column;
         gap: 10px;
@@ -75,7 +75,7 @@
 		--green-moderate: #4ade80;
 		--green-mild: #69e896;
 	}
-	:global(main > h1) {
+	:global(.title) {
         margin: 0.6em 0 0.2em 0;
         text-align: center;
 		color: var(--light-moderate);
