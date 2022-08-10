@@ -75,7 +75,7 @@
 		--green-moderate: #4ade80;
 		--green-mild: #69e896;
 	}
-	:global(main > h1) {
+	:global(.title) {
         margin: 0.6em 0 0.2em 0;
         text-align: center;
 		color: var(--light-moderate);

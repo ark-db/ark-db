@@ -76,7 +76,7 @@
     </div>
 </section>
 
-<h1>Upgrade Costs</h1>
+<h1 class="title">Upgrade Costs</h1>
 {#if Object.keys(itemCounter).length > 0}
     {@const list = normalize(itemCounter)}
     <section class="items">
@@ -88,7 +88,7 @@
     <p class="placeholder">No upgrades found</p>
 {/if}
 
-<h1>Inventory</h1>
+<h1 class="title">Inventory</h1>
 <section class="items">
     {#each $inventory as { id, count }}
         <div>
@@ -98,7 +98,7 @@
     {/each}
 </section>
 
-<h1>Comparison</h1>
+<h1 class="title">Comparison</h1>
 <section class="items">
     {#each sortBySortId(compare($inventory, itemCounter)) as item}
         <ItemIcon {...item} --size="100px" />
