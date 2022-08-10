@@ -51,21 +51,21 @@
         let deficits = new Set();
         let stock = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
 
-        function getDeficits(mat, qty) {
-            stock[mat.id] -= qty;
-            if (stock[mat.id] < 0) {
-                let { rarity, recipe = undefined } = items[mat.id];
+        function getDeficits(id, qtyNeeded) {
+            stock[id] -= qtyNeeded;
+            if (stock[id] < 0) {
+                let { rarity, recipe = undefined } = items[id];
                 if (rarity > 2 && recipe) {
-                    recipe.forEach(ing => getDeficits(ing, ing.count*-stock[mat.id]));
-                    stock[mat.id] = 0;
+                    recipe.forEach(({ id: matId, count: matCount}) => getDeficits(matId, matCount*-stock[id]));
+                    stock[id] = 0;
                 } else {
-                    deficits.add(mat.id);
+                    deficits.add(id);
                 }
             }
         }
 
-        costs.forEach(item => getDeficits(item, item.count));
-        return normalize(stock).filter(item => deficits.has(item.id))
+        costs.forEach(({ id, count }) => getDeficits(id, count));
+        return normalize(stock).filter(({ id }) => deficits.has(id));
     }
 </script>
 
