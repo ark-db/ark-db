@@ -34,9 +34,9 @@ base_data = (
             .json()
 )
 
-recipes = base_data["manufactFormulas"] | base_data["workshopFormulas"]
+recipes = list(base_data["manufactFormulas"].values()) + list(base_data["workshopFormulas"].values())
 
-item_id_to_recipe_cost = {recipes[id]["itemId"]: recipes[id]["costs"] for id in recipes}
+item_id_to_recipe_cost = {recipe["itemId"]: recipe["costs"] for recipe in recipes}
 
 item_data = defaultdict(dict)
 
