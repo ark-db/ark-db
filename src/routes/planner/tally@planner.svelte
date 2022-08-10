@@ -114,8 +114,6 @@
         {:else}
             <p class="placeholder">No upgrades found</p>
         {/if}
-
-        
     </div>
     <div>
         <h1 class="title">Inventory</h1>
@@ -160,7 +158,7 @@
         gap: 10px;
     }
     #group > div {
-        flex: 1 1 0;
+        flex: 1 1 50%;
         display: flex;
         flex-direction: column;
         justify-content: center;
