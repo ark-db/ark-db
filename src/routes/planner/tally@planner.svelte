@@ -44,7 +44,7 @@
 
     function compare(inv, costs) {
         let invDict = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
-        return costs.filter(({ id }) => id !== "4001").map(({ id, count }) => ({id, count: invDict[id] - count}));
+        return costs.map(({ id, count }) => ({id, count: invDict[id] - count})).filter(({ id, count }) => id !== "4001" && count < 0);
     }
 
     function compareAsT3(inv, costs) {
@@ -98,7 +98,7 @@
                 {/each}
             </section>
 
-            <h1 class="title">Comparison</h1>
+            <h1 class="title">Item Deficit</h1>
             <section class="items">
                 {#each sortBySortId($makeT3 ? compareAsT3($inventory, itemCounter) : compare($inventory, itemCounter)) as item}
                     <ItemIcon {...item} --size="100px" />
