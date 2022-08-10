@@ -17,6 +17,11 @@ VALID_ITEMS = (
     "4001", "32001",
 )
 
+EXCLUDED_RECIPES = (
+    "3211", "3221", "3231", "3241", "3251", "3261", "3271", "3281",
+    "3212", "3222", "3232", "3242", "3252", "3262", "3272", "3282",
+)
+
 cn_items = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/item_table.json")
             .json()
@@ -36,7 +41,7 @@ base_data = (
 
 recipes = list(base_data["manufactFormulas"].values()) + list(base_data["workshopFormulas"].values())
 
-item_id_to_recipe_cost = {recipe["itemId"]: recipe["costs"] for recipe in recipes}
+item_id_to_recipe_cost = {id: recipe["costs"] for recipe in recipes if (id := recipe["itemId"]) not in EXCLUDED_RECIPES}
 
 item_data = defaultdict(dict)
 
