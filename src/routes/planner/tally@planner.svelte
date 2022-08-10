@@ -13,7 +13,7 @@
                                     .flat())
         );
 
-    function sortBySortId(list) {
+    function sortItems(list) {
         return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
     };
 
@@ -29,34 +29,35 @@
     function convertToT3(list) {
         let itemCounts = {};
         
-        function asT3({ id, count }) {
+        function convert({ id, count }) {
             let { rarity, recipe = undefined } = items[id];
             if (rarity === 2) {
                 itemCounts[id] = (itemCounts[id] ?? 0) + count;
             } else if (rarity > 2 && recipe) {
-                recipe.forEach(({ id, count: ingCount }) => asT3({id, count: ingCount*count}));
+                recipe.forEach(({ id, count: ingCount }) => convert({id, count: ingCount*count}));
             }
         };
 
-        list.forEach(item => asT3(item));
+        list.forEach(item => convert(item));
         return normalize(itemCounts);
     };
 
-    function compare(inv, costs) {
+    function getDeficits(inv, costs) {
         let invDict = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
-        return costs.map(({ id, count }) => ({id, count: invDict[id] - count})).filter(({ id, count }) => id !== "4001" && count < 0);
+        return costs.map(({ id, count }) => ({id, count: invDict[id] - count}))
+                    .filter(({ id, count }) => id !== "4001" && count < 0);
     }
 
-    function compareAsT3(inv, costs) {
+    function getDeficitsT3(inv, costs) {
         let deficits = new Set();
         let stock = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
 
-        function getDeficits(id, qtyNeeded) {
+        function searchForDeficits(id, qtyNeeded) {
             stock[id] -= qtyNeeded;
             if (stock[id] < 0) {
                 let { rarity, recipe = undefined } = items[id];
                 if (rarity > 2 && recipe) {
-                    recipe.forEach(({ id: matId, count}) => getDeficits(matId, count*-stock[id]));
+                    recipe.forEach(({ id: matId, count}) => searchForDeficits(matId, count*-stock[id]));
                     stock[id] = 0;
                 } else {
                     deficits.add(id);
@@ -64,7 +65,7 @@
             }
         }
 
-        costs.forEach(({ id, count }) => getDeficits(id, count));
+        costs.forEach(({ id, count }) => searchForDeficits(id, count));
         return normalize(stock).filter(({ id }) => deficits.has(id));
     }
 </script>
@@ -93,14 +94,14 @@
         <h1 class="title">Upgrade Costs</h1>
         {#if Object.keys(itemCounter).length > 0}
             <section class="items">
-                {#each sortBySortId($makeT3 ? convertToT3(itemCounter) : itemCounter) as item}
+                {#each sortItems($makeT3 ? convertToT3(itemCounter) : itemCounter) as item}
                     <ItemIcon {...item} --size="100px" />
                 {/each}
             </section>
 
-            <h1 class="title">Item Deficit</h1>
+            <h1 class="title">Item Deficits</h1>
             <section class="items">
-                {#each sortBySortId($makeT3 ? compareAsT3($inventory, itemCounter) : compare($inventory, itemCounter)) as item}
+                {#each sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter)) as item}
                     <ItemIcon {...item} --size="100px" />
                 {/each}
             </section>
