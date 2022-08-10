@@ -78,37 +78,38 @@
 
 <div id="group">
     <div>
-    <h1 class="title">Upgrade Costs</h1>
-    {#if Object.keys(itemCounter).length > 0}
-        {@const list = normalize(itemCounter)}
+        <h1 class="title">Upgrade Costs</h1>
+        {#if Object.keys(itemCounter).length > 0}
+            {@const list = normalize(itemCounter)}
+            <section class="items">
+                {#each sortBySortId($makeT3 ? convertToT3(list) : list) as item}
+                    <ItemIcon {...item} --size="100px" />
+                {/each}
+            </section>
+        {:else}
+            <p class="placeholder">No upgrades found</p>
+        {/if}
+
+        <h1 class="title">Comparison</h1>
         <section class="items">
-            {#each sortBySortId($makeT3 ? convertToT3(list) : list) as item}
+            {#each sortBySortId(compare($inventory, itemCounter).filter(({ count }) => count !== 0)) as item}
                 <ItemIcon {...item} --size="100px" />
             {/each}
         </section>
-    {:else}
-        <p class="placeholder">No upgrades found</p>
-    {/if}
     </div>
     <div>
-    <h1 class="title">Inventory</h1>
-    <section class="items">
-        {#each $inventory as { id, count }}
-            <div>
-                <ItemIcon {id} {count} --size="100px" />
-                <NumberInput {min} {max} bind:value={count} />
-            </div>
-        {/each}
-    </section>
+        <h1 class="title">Inventory</h1>
+        <section class="items">
+            {#each $inventory as { id, count }}
+                <div>
+                    <ItemIcon {id} {count} --size="100px" />
+                    <NumberInput {min} {max} bind:value={count} />
+                </div>
+            {/each}
+        </section>
     </div>
 </div>
 
-<h1 class="title">Comparison</h1>
-<section class="items">
-    {#each sortBySortId(compare($inventory, itemCounter).filter(({ count }) => count !== 0)) as item}
-        <ItemIcon {...item} --size="100px" />
-    {/each}
-</section>
 
 
 <style>
@@ -137,7 +138,7 @@
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
-        gap: 5px;
+        gap: 10px;
     }
     #group > div {
         flex: 1 1 0;
