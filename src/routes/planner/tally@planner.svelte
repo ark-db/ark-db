@@ -76,27 +76,32 @@
     </div>
 </section>
 
-<h1 class="title">Upgrade Costs</h1>
-{#if Object.keys(itemCounter).length > 0}
-    {@const list = normalize(itemCounter)}
+<div id="group">
+    <div>
+    <h1 class="title">Upgrade Costs</h1>
+    {#if Object.keys(itemCounter).length > 0}
+        {@const list = normalize(itemCounter)}
+        <section class="items">
+            {#each sortBySortId($makeT3 ? convertToT3(list) : list) as item}
+                <ItemIcon {...item} --size="100px" />
+            {/each}
+        </section>
+    {:else}
+        <p class="placeholder">No upgrades found</p>
+    {/if}
+    </div>
+    <div>
+    <h1 class="title">Inventory</h1>
     <section class="items">
-        {#each sortBySortId($makeT3 ? convertToT3(list) : list) as item}
-            <ItemIcon {...item} --size="100px" />
+        {#each $inventory as { id, count }}
+            <div>
+                <ItemIcon {id} {count} --size="100px" />
+                <NumberInput {min} {max} bind:value={count} />
+            </div>
         {/each}
     </section>
-{:else}
-    <p class="placeholder">No upgrades found</p>
-{/if}
-
-<h1 class="title">Inventory</h1>
-<section class="items">
-    {#each $inventory as { id, count }}
-        <div>
-            <ItemIcon {id} {count} --size="100px" />
-            <NumberInput {min} {max} bind:value={count} />
-        </div>
-    {/each}
-</section>
+    </div>
+</div>
 
 <h1 class="title">Comparison</h1>
 <section class="items">
@@ -127,9 +132,23 @@
     #ready {
         background-color: rgba(151, 255, 148, 0.7);
     }
+    #group {
+        padding: 5px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    #group > div {
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
     .items {
         margin-top: 15px;
         padding: 10px;
+        border-radius: 8px;
         background-color: var(--light-strong);
         display: grid;
         grid-template-columns: repeat(auto-fit, 100px);
