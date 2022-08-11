@@ -1,5 +1,5 @@
 <svelte:head>
-    <title>ArkDB Upgrade Planner</title>
+    <title>Upgrade Planner</title>
     <meta name="description" content="An Arknights operator upgrade planner." />
 </svelte:head>
 

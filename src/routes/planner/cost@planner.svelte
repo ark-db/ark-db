@@ -1,5 +1,5 @@
 <svelte:head>
-    <title>ArkDB Upgrade Cost Calculator</title>
+    <title>Cost Calculator</title>
     <meta name="description" content="A calculator for upgrade costs of operators in Arknights." />
 </svelte:head>
 
