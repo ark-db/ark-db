@@ -6,6 +6,7 @@
     export let splitByStatus;
     export let showCost;
     export let name, cost, charId, id, ready;
+    id; // stops SvelteKit from complaining
 </script>
 
 <section class:ready={ready}>
