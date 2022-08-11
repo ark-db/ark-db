@@ -17,7 +17,7 @@
     <img src={bgSrc} alt="background" />
     <img src={itemSrc} alt={name} />
     {#if count !== undefined}
-        <p>{compactNum.format(count)}</p>
+        <p class:neg={count < 0}>{compactNum.format(count)}</p>
     {/if}
 </div>
 
@@ -43,5 +43,8 @@
         color: white;
         font-weight: 300;
         font-size: clamp(85%, 1em, calc(var(--size) / 5))
+    }
+    .neg {
+        color: rgb(255, 61, 61);
     }
 </style>

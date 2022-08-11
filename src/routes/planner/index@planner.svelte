@@ -96,7 +96,7 @@
 {/if}
 {/key}
 
-<h1>Upgrades</h1>
+<h1 class="title">Upgrades</h1>
 {#if $allSelected.length > 0}
     <section id="taskboard">
     {#if $splitByStatus}
