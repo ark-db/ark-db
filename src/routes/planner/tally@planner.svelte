@@ -1,3 +1,8 @@
+<svelte:head>
+    <title>ArkDB Upgrade Cost Calculator</title>
+    <meta name="description" content="A calculator for upgrade costs of operators in Arknights." />
+</svelte:head>
+
 <script>
     import { allSelected, inventory, costFilter, makeT3 } from "../stores.js";
     import items from "$lib/data/items.json";

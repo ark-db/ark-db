@@ -1,6 +1,6 @@
 <svelte:head>
-    <title>Upgrade Planner - ArkDB</title>
-    <meta name="description" content="Arknights operator upgrade cost calculator and planner" />
+    <title>ArkDB Upgrade Planner</title>
+    <meta name="description" content="An Arknights operator upgrade planner." />
 </svelte:head>
 
 <script>

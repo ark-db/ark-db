@@ -1,5 +1,5 @@
 <svelte:head>
-    <title>ArkDB</title>
+    <title>ArkDB - Arknights Tools</title>
     <meta name="description" content="Utility website for Arknights players" />
 </svelte:head>
 
