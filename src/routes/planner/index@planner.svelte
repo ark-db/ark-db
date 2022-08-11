@@ -218,16 +218,15 @@
     }
     #taskboard {
         margin-top: 15px;
-        padding: 5px;
+        padding: 10px;
         border: 1px solid var(--light-moderate);
         background-color: var(--dark-moderate);
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 5px;
     }
     #taskboard section {
         flex: 1 1 0;
-        padding: 5px;
         display: flex;
         flex-direction: column;
         row-gap: 5px;
