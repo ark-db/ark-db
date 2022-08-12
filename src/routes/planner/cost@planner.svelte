@@ -108,9 +108,10 @@
             <p class="placeholder">No upgrades found</p>
         {/if}
     </div>
-    <div>
-        {#if itemCounter.length > 0}
-            {@const deficits = sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter))}
+    
+    {#if itemCounter.length > 0}
+        {@const deficits = sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter))}
+        <div>
             <h1 class="title">Item Deficits</h1>
             {#if deficits.length > 0}
                 <section class="items">
@@ -121,8 +122,8 @@
             {:else}
                 <p class="placeholder">No deficits!</p>
             {/if}
-        {/if}
-    </div>
+        </div>
+    {/if}
 </div>
 
 <h1 class="title">Inventory</h1>
