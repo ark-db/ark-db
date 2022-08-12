@@ -94,18 +94,23 @@
     </div>
 </section>
 
-<div id="group">
+<div id="costs">
     <div>
         <h1 class="title">Upgrade Costs</h1>
         {#if itemCounter.length > 0}
-            {@const items = sortItems($makeT3 ? convertToT3(itemCounter) : itemCounter)}
-            {@const deficits = sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter))}
+            {@const costs = sortItems($makeT3 ? convertToT3(itemCounter) : itemCounter)}
             <section class="items">
-                {#each items as item}
+                {#each costs as item}
                     <ItemIcon {...item} --size="100px" />
                 {/each}
             </section>
-
+        {:else}
+            <p class="placeholder">No upgrades found</p>
+        {/if}
+    </div>
+    <div>
+        {#if itemCounter.length > 0}
+            {@const deficits = sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter))}
             <h1 class="title">Item Deficits</h1>
             {#if deficits.length > 0}
                 <section class="items">
@@ -116,22 +121,19 @@
             {:else}
                 <p class="placeholder">No deficits!</p>
             {/if}
-        {:else}
-            <p class="placeholder">No upgrades found</p>
         {/if}
     </div>
-    <div>
-        <h1 class="title">Inventory</h1>
-        <section class="items">
-            {#each $inventory as item}
-                <div>
-                    <ItemIcon {...item} --size="100px" />
-                    <NumberInput {min} {max} bind:value={item.count} />
-                </div>
-            {/each}
-        </section>
-    </div>
 </div>
+
+<h1 class="title">Inventory</h1>
+<section class="items">
+    {#each $inventory as item}
+        <div>
+            <ItemIcon {...item} --size="100px" />
+            <NumberInput {min} {max} bind:value={item.count} />
+        </div>
+    {/each}
+</section>
 
 
 
@@ -156,14 +158,14 @@
     #ready {
         background-color: rgba(151, 255, 148, 0.7);
     }
-    #group {
+    #costs {
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
-        gap: 10px;
+        gap: 20px;
     }
-    #group > div {
-        flex: 1 1 50%;
+    #costs > div {
+        flex: 1 1 0;
         display: flex;
         flex-direction: column;
         justify-content: center;
