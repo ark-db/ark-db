@@ -6,9 +6,7 @@
 <h1>ArkDB</h1>
 <h2>A utility website for Arknights players</h2>
 <p>v0.5.0-beta</p>
-<a href="https://form.typeform.com/to/gSMV12RK"
-   target="_blank"
-   rel="noreferrer">
+<a href="https://form.typeform.com/to/gSMV12RK" target="_blank" rel="noreferrer">
     Submit feedback
 </a>
 
