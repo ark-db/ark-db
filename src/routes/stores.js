@@ -14,4 +14,5 @@ export const inventory = writable(
 export const splitByStatus = writable(false);
 export const showCost = writable(false);
 export const costFilter = writable([false]);
+export const itemFilter = writable(["material", "skill", "module", "chip", "misc"]);
 export const makeT3 = writable(false);

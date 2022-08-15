@@ -4,7 +4,7 @@
 </svelte:head>
 
 <script>
-    import { allSelected, inventory, costFilter, makeT3 } from "../stores.js";
+    import { allSelected, inventory, costFilter, itemFilter, makeT3 } from "../stores.js";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import NumberInput from "$lib/components/NumberInput.svelte";
@@ -15,8 +15,9 @@
     $: itemCounter = normalize(
             makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
                                     .map(upgrade => upgrade.cost)
-                                    .flat())
-        );
+                                    .flat()
+                                    .filter(({ id }) => $itemFilter.includes(items[id].type)))
+            );
 
     function sortItems(list) {
         return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
@@ -77,7 +78,7 @@
 
 
 
-<section id="settings">
+<section class="settings">
     <div id="filter">
         <div>
             <input id="show-notready" type="checkbox" bind:group={$costFilter} value={false}>
@@ -91,6 +92,28 @@
     <div>
         <input id="convert-t3" type="checkbox" bind:checked={$makeT3}>
         <label for="convert-t3">Reduce items to T3</label>
+    </div>
+</section>
+<section class="settings">
+    <div>
+        <input id="show-material" type="checkbox" bind:group={$itemFilter} value={"material"}>
+        <label for="show-material">Show materials</label>
+    </div>
+    <div>
+        <input id="show-skill" type="checkbox" bind:group={$itemFilter} value={"skill"}>
+        <label for="show-skill">Show skillbooks</label>
+    </div>
+    <div>
+        <input id="show-chip" type="checkbox" bind:group={$itemFilter} value={"chip"}>
+        <label for="show-chip">Show chip items</label>
+    </div>
+    <div>
+        <input id="show-module" type="checkbox" bind:group={$itemFilter} value={"module"}>
+        <label for="show-module">Show module items</label>
+    </div>
+    <div>
+        <input id="show-misc" type="checkbox" bind:group={$itemFilter} value={"misc"}>
+        <label for="show-misc">Show miscellaneous</label>
     </div>
 </section>
 
@@ -139,7 +162,7 @@
 
 
 <style>
-    #settings {
+    .settings {
         padding: calc(1em + 2.25px);
         background-color: var(--light-strong);
         display: flex;
@@ -150,7 +173,6 @@
     #filter {
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
         gap: 1em 3em;
     }
     #notready {
