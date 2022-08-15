@@ -45,16 +45,16 @@
 <ol on:mouseenter={setActiveCategory} on:mouseleave={unsetActiveCategory}>
     {#if category.data.length > 1}
         <li>
-            <input type="checkbox" class="select-all" checked={selectedNames.size === names.length} on:change={onSelectAll}>
-            <label for="select-all">
+            <label>
+                <input type="checkbox" checked={selectedNames.size === names.length} on:change={onSelectAll}>
                 <strong>Select All</strong>
             </label>
         </li>
     {/if}
     {#each names as name}
         <li>
-            <input type="checkbox" id={name} value={name} checked={selectedNames.has(name)} on:change={onCheckName}>
-            <label for={name}>
+            <label>
+                <input type="checkbox" value={name} checked={selectedNames.has(name)} on:change={onCheckName}>
                 {name}
             </label>
         </li>

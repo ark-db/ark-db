@@ -1,5 +1,5 @@
 <svelte:head>
-    <title>ArkDB</title>
+    <title>ArkDB - Arknights Tools</title>
     <meta name="description" content="Utility website for Arknights players" />
 </svelte:head>
 
@@ -32,6 +32,7 @@
         margin: 5em 30vw;
         padding: 10px;
         border-radius: 6px;
+        outline: white solid 1px;
         background-color: var(--dark-moderate);
         display: block;
         text-align: center;

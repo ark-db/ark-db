@@ -5,8 +5,8 @@
 
 
 <nav>
-    <a href="/planner" class:active={$page.url.pathname === "/planner"}>Goal Tracker</a>
-    <a href="/planner/tally" class:active={$page.url.pathname === "/planner/tally"}>Cost Tracker</a>
+    <a href="/planner" class:active={$page.url.pathname === "/planner"}>Upgrade Planner</a>
+    <a href="/planner/cost" class:active={$page.url.pathname === "/planner/cost"}>Cost Calculator</a>
 </nav>
 
 <slot />

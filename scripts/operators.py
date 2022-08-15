@@ -33,7 +33,8 @@ name_changes = {
     "char_115_headbr": "Zima",
     "char_195_glassb": "Istina",
     "char_197_poca": "Rosa",
-    "char_1001_amiya2": "Amiya (Guard)"
+    "char_1001_amiya2": "Amiya (Guard)",
+    "char_4055_bgsnow": "Pozyomka",
 }
 
 char_data = defaultdict(dict)

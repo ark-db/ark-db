@@ -1,5 +1,10 @@
+<svelte:head>
+    <title>Cost Calculator</title>
+    <meta name="description" content="A calculator for upgrade costs of operators in Arknights." />
+</svelte:head>
+
 <script>
-    import { allSelected, inventory, costFilter, makeT3 } from "../stores.js";
+    import { allSelected, inventory, costFilter, itemFilter, makeT3 } from "../stores.js";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import NumberInput from "$lib/components/NumberInput.svelte";
@@ -10,8 +15,9 @@
     $: itemCounter = normalize(
             makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
                                     .map(upgrade => upgrade.cost)
-                                    .flat())
-        );
+                                    .flat()
+                                    .filter(({ id }) => $itemFilter.includes(items[id].type)))
+            );
 
     function sortItems(list) {
         return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
@@ -72,35 +78,64 @@
 
 
 
-<section id="settings">
+<section class="settings">
     <div id="filter">
-        <div>
-            <input id="show-notready" type="checkbox" bind:group={$costFilter} value={false}>
-            <label for="show-notready">Include <span id="notready">unprepared</span> upgrades</label>
-        </div>
-        <div>
-            <input id="show-ready" type="checkbox" bind:group={$costFilter} value={true}>
-            <label for="show-ready">Include <span id="ready">prepared</span> upgrades</label>
-        </div>
+        <label>
+            <input type="checkbox" bind:group={$costFilter} value={false}>
+            Include <span id="notready">unprepared</span> upgrades
+        </label>
+        <label>
+            <input type="checkbox" bind:group={$costFilter} value={true}>
+            Include <span id="ready">prepared</span> upgrades
+        </label>
     </div>
-    <div>
-        <input id="convert-t3" type="checkbox" bind:checked={$makeT3}>
-        <label for="convert-t3">Reduce items to T3</label>
-    </div>
+    <label>
+        <input type="checkbox" bind:checked={$makeT3} disabled={!$itemFilter.includes("material")}>
+        Reduce items to T3
+    </label>
 </section>
 
-<div id="group">
+<section class="settings">
+    <label>
+        <input type="checkbox" bind:group={$itemFilter} value={"material"}>
+        Show materials
+    </label>
+    <label>
+        <input type="checkbox" bind:group={$itemFilter} value={"skill"}>
+        Show skillbooks
+    </label>
+    <label>
+        <input type="checkbox" bind:group={$itemFilter} value={"chip"}>
+        Show chip items
+    </label>
+    <label>
+        <input type="checkbox" bind:group={$itemFilter} value={"module"}>
+        Show module items
+    </label>
+    <label>
+        <input type="checkbox" bind:group={$itemFilter} value={"misc"}>
+        Show miscellaneous
+    </label>
+</section>
+
+<section id="costs">
     <div>
         <h1 class="title">Upgrade Costs</h1>
         {#if itemCounter.length > 0}
-            {@const items = sortItems($makeT3 ? convertToT3(itemCounter) : itemCounter)}
-            {@const deficits = sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter))}
+            {@const costs = sortItems($makeT3 ? convertToT3(itemCounter) : itemCounter)}
             <section class="items">
-                {#each items as item}
+                {#each costs as item}
                     <ItemIcon {...item} --size="100px" />
                 {/each}
             </section>
-
+        {:else}
+            <p class="placeholder">No upgrades found</p>
+        {/if}
+    </div>
+    
+    {#if itemCounter.length > 0}
+        {@const deficits = sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter))}
+        <div>
             <h1 class="title">Item Deficits</h1>
             {#if deficits.length > 0}
                 <section class="items">
@@ -111,27 +146,24 @@
             {:else}
                 <p class="placeholder">No deficits!</p>
             {/if}
-        {:else}
-            <p class="placeholder">No upgrades found</p>
-        {/if}
-    </div>
-    <div>
-        <h1 class="title">Inventory</h1>
-        <section class="items">
-            {#each $inventory as item}
-                <div>
-                    <ItemIcon {...item} --size="100px" />
-                    <NumberInput {min} {max} bind:value={item.count} />
-                </div>
-            {/each}
-        </section>
-    </div>
-</div>
+        </div>
+    {/if}
+</section>
+
+<h1 class="title">Inventory</h1>
+<section class="items">
+    {#each $inventory as item}
+        <div>
+            <ItemIcon {...item} --size="100px" />
+            <NumberInput {min} {max} bind:value={item.count} />
+        </div>
+    {/each}
+</section>
 
 
 
 <style>
-    #settings {
+    .settings {
         padding: calc(1em + 2.25px);
         background-color: var(--light-strong);
         display: flex;
@@ -142,7 +174,6 @@
     #filter {
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
         gap: 1em 3em;
     }
     #notready {
@@ -151,14 +182,14 @@
     #ready {
         background-color: rgba(151, 255, 148, 0.7);
     }
-    #group {
+    #costs {
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
-        gap: 10px;
+        gap: 20px;
     }
-    #group > div {
-        flex: 1 1 50%;
+    #costs > div {
+        flex: 1 1 0;
         display: flex;
         flex-direction: column;
         justify-content: center;

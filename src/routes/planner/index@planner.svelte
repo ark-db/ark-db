@@ -1,6 +1,6 @@
 <svelte:head>
-    <title>Upgrade Planner - ArkDB</title>
-    <meta name="description" content="Arknights operator upgrade cost calculator and planner" />
+    <title>Upgrade Planner</title>
+    <meta name="description" content="An Arknights operator upgrade planner." />
 </svelte:head>
 
 <script>
@@ -57,14 +57,14 @@
 <section id="top">
     <SearchBar {selectedChar} />
     <section id="settings">
-        <div>
-            <input id="split-status" type="checkbox" bind:checked={$splitByStatus}>
-            <label for="split-status">Organize upgrades by status</label>
-        </div>
-        <div>
-            <input id="show-cost" type="checkbox" bind:checked={$showCost}>
-            <label for="show-cost">Show upgrade costs</label>
-        </div>
+        <label>
+            <input type="checkbox" bind:checked={$splitByStatus}>
+            Organize upgrades by status
+        </label>
+        <label>
+            <input type="checkbox" bind:checked={$showCost}>
+            Show upgrade costs
+        </label>
     </section>
 </section>
 
@@ -150,11 +150,11 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
         gap: 1em;
     }
     #settings {
-        flex-grow: 1;
+        margin-right: calc(1em - 7.75px);
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -218,16 +218,15 @@
     }
     #taskboard {
         margin-top: 15px;
-        padding: 5px;
+        padding: 10px;
         border: 1px solid var(--light-moderate);
         background-color: var(--dark-moderate);
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 5px;
     }
     #taskboard section {
         flex: 1 1 0;
-        padding: 5px;
         display: flex;
         flex-direction: column;
         row-gap: 5px;

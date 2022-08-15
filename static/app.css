@@ -3,3 +3,7 @@
 :root {
     font-family: 'Inter var', sans-serif;
 }
+
+[data-svelte-typeahead] {
+    z-index: 1;
+}

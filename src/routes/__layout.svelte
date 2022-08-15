@@ -25,6 +25,7 @@
 <style>
 	header {
 		background-color: var(--dark-moderate);
+		box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.75);
 		display: flex;
         gap: 1em;
 	}
@@ -57,15 +58,15 @@
 	main {
 		margin: auto;
         padding: 5px;
-		max-width: clamp(1200px, 80vw, 1600px);
+		max-width: clamp(800px, 90vw, 1500px);
 		display: flex;
         flex-direction: column;
         gap: 10px;
 	}
 	:global(:root) {
-		--dark-strong: #111827;
-		--dark-moderate: #1f2937;
-		--dark-mild: #3a4558;
+		--dark-strong: #161921;
+		--dark-moderate: #27292c;
+		--dark-mild: #3f4652;
 		--med-strong: #d1d5db;
 		--med-moderate: #d4d4d8;
 		--med-mild: #e4e4e7;

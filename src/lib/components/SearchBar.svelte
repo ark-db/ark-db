@@ -21,13 +21,15 @@
     on:select={({ detail }) => $selectedChar = detail.original}
 >
     <svelte:fragment slot="no-results">
-        No results found for "{value}"
+        <div id="notfound">
+            No results found for "{value}"
+        </div>
     </svelte:fragment>
     {stripTags(result.string)}
 </Typeahead>
 
 <style>
-    :global([data-svelte-typeahead]) {
-        z-index: 1;
-}
+    #notfound {
+        overflow-wrap: anywhere;
+    }
 </style>

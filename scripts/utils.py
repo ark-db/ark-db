@@ -16,5 +16,6 @@ def save_image(url, type, id):
         Image.open(BytesIO(res.content)) \
              .convert("RGBA") \
              .save(target_path, "webp")
-    else:
-        raise RuntimeError(f"Image \"{id}\" of type \"{type}\" could not be retrieved")
+    else: # current missing: Manticore, Mizuki modules
+        #raise RuntimeError(f"Image \"{id}\" of type \"{type}\" could not be retrieved")
+        print(f"{type}: {id}")
