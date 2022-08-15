@@ -80,44 +80,45 @@
 
 <section class="settings">
     <div id="filter">
-        <div>
-            <input id="show-notready" type="checkbox" bind:group={$costFilter} value={false}>
-            <label for="show-notready">Include <span id="notready">unprepared</span> upgrades</label>
-        </div>
-        <div>
-            <input id="show-ready" type="checkbox" bind:group={$costFilter} value={true}>
-            <label for="show-ready">Include <span id="ready">prepared</span> upgrades</label>
-        </div>
+        <label>
+            <input type="checkbox" bind:group={$costFilter} value={false}>
+            Include <span id="notready">unprepared</span> upgrades
+        </label>
+        <label>
+            <input type="checkbox" bind:group={$costFilter} value={true}>
+            Include <span id="ready">prepared</span> upgrades
+        </label>
     </div>
-    <div>
-        <input id="convert-t3" type="checkbox" bind:checked={$makeT3} disabled={!$itemFilter.includes("material")}>
-        <label for="convert-t3">Reduce items to T3</label>
-    </div>
-</section>
-<section class="settings">
-    <div>
-        <input id="show-material" type="checkbox" bind:group={$itemFilter} value={"material"}>
-        <label for="show-material">Show materials</label>
-    </div>
-    <div>
-        <input id="show-skill" type="checkbox" bind:group={$itemFilter} value={"skill"}>
-        <label for="show-skill">Show skillbooks</label>
-    </div>
-    <div>
-        <input id="show-chip" type="checkbox" bind:group={$itemFilter} value={"chip"}>
-        <label for="show-chip">Show chip items</label>
-    </div>
-    <div>
-        <input id="show-module" type="checkbox" bind:group={$itemFilter} value={"module"}>
-        <label for="show-module">Show module items</label>
-    </div>
-    <div>
-        <input id="show-misc" type="checkbox" bind:group={$itemFilter} value={"misc"}>
-        <label for="show-misc">Show miscellaneous</label>
-    </div>
+    <label>
+        <input type="checkbox" bind:checked={$makeT3} disabled={!$itemFilter.includes("material")}>
+        Reduce items to T3
+    </label>
 </section>
 
-<div id="costs">
+<section class="settings">
+    <label>
+        <input type="checkbox" bind:group={$itemFilter} value={"material"}>
+        Show materials
+    </label>
+    <label>
+        <input type="checkbox" bind:group={$itemFilter} value={"skill"}>
+        Show skillbooks
+    </label>
+    <label>
+        <input type="checkbox" bind:group={$itemFilter} value={"chip"}>
+        Show chip items
+    </label>
+    <label>
+        <input type="checkbox" bind:group={$itemFilter} value={"module"}>
+        Show module items
+    </label>
+    <label>
+        <input type="checkbox" bind:group={$itemFilter} value={"misc"}>
+        Show miscellaneous
+    </label>
+</section>
+
+<section id="costs">
     <div>
         <h1 class="title">Upgrade Costs</h1>
         {#if itemCounter.length > 0}
@@ -147,7 +148,7 @@
             {/if}
         </div>
     {/if}
-</div>
+</section>
 
 <h1 class="title">Inventory</h1>
 <section class="items">
