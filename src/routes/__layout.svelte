@@ -91,7 +91,8 @@
         background-image: url("$lib/images/main-dark.svg");
 		background-repeat: no-repeat;
         background-attachment: fixed;
-        background-size: cover;
+        background-size: 110%;
+		background-position: center;
 	}
 	:global(input[type=checkbox]) {
 		max-width: 20px;
