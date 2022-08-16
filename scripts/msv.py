@@ -11,13 +11,17 @@ class Region(Enum):
 MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"]
 
+def is_valid_stage(stage):
+    stage_id = stage["stageId"]
+    return stage_id.startswith(("main", "sub", "wk")) or stage_id.endswith("perm")
+
 def get_drop_data(region: Region) -> pd.DataFrame:
     current_stages = (
         requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region.value}")
                 .json()
                 ["matrix"]
     )
-    current_stage_ids = set(stage["stageId"] for stage in current_stages)
+    current_stage_ids = set(stage["stageId"] for stage in filter(is_valid_stage, current_stages))
     stages = (
         pd.DataFrame(data=requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
                                   .json()
