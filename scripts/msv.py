@@ -7,6 +7,8 @@ class Region(Enum):
     GLOBAL = "US"
     CN = "CN"
 
+MIN_RUN_THRESHOLD = 100
+
 def get_drop_data(region: Region) -> pd.DataFrame:
     current_stages = set(map(
         lambda entry: entry["stageId"],
@@ -18,9 +20,9 @@ def get_drop_data(region: Region) -> pd.DataFrame:
         pd.DataFrame(requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
                              .json()
                              ["matrix"])
-          .query("stageId in @current_stages")
+          .query("stageId in @current_stages \
+                  and times >= @MIN_RUN_THRESHOLD")
     )
     print(stages.head())
-    #return pd.merge(all_stages, current_stages, )
 
 get_drop_data(Region.GLOBAL)
