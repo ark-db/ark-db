@@ -1,3 +1,4 @@
+import utils
 from enum import Enum
 import requests
 import pandas as pd
@@ -8,6 +9,7 @@ class Region(Enum):
     CN = "CN"
 
 MIN_RUN_THRESHOLD = 100
+ALLOWED_ITEMS = utils.VALID_ITEMS["material"]
 
 def get_drop_data(region: Region) -> pd.DataFrame:
     current_stages = (
@@ -22,7 +24,8 @@ def get_drop_data(region: Region) -> pd.DataFrame:
                                   ["matrix"],
                      columns=["stageId", "itemId", "times", "quantity"])
           .query("stageId in @current_stage_ids \
-                  and times >= @MIN_RUN_THRESHOLD")
+                  and times >= @MIN_RUN_THRESHOLD \
+                  and itemId in @ALLOWED_ITEMS")
     )
     print(stages.head())
 
