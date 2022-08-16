@@ -35,6 +35,8 @@ def get_drop_data(region: Region) -> pd.DataFrame:
                   and times >= @MIN_RUN_THRESHOLD \
                   and itemId in @ALLOWED_ITEMS")
           .pipe(trim_stage_ids)
+          .assign(drop_rate = lambda df: df["quantity"] / df["times"])
+          .drop(["quantity", "times"], axis=1)
     )
     return stages
 
