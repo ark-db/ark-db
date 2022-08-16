@@ -43,4 +43,33 @@ def get_drop_data(region: Region) -> pd.DataFrame:
     )
     return stages
 
-print(get_drop_data(Region.CN))
+drop_matrix = get_drop_data(Region.CN)
+
+
+
+def patch_stage_costs(df):
+    MISSING_STAGE_COSTS = {
+        "a003_f03": 15, # OF-F3
+        "a003_f04": 18, # OF-F4
+    }
+    stages, sanity_costs = MISSING_STAGE_COSTS.keys(), MISSING_STAGE_COSTS.values()
+    df.loc[stages, "apCost"] = sanity_costs
+    return df
+
+stages = (
+    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/stage_table.json")
+            .json()
+            ["stages"]
+            .values()
+)
+
+sanity_costs = (
+    pd.DataFrame(data=stages,
+                 columns=["stageId", "apCost"])
+      .set_index("stageId")
+      .reindex(drop_matrix.index)
+      .pipe(patch_stage_costs)
+      .to_numpy()
+)
+
+print(sanity_costs)
