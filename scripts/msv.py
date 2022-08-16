@@ -10,7 +10,7 @@ class Region(Enum):
 def get_drop_data(region: Region) -> pd.DataFrame:
     current_stages = set(map(
         lambda entry: entry["stageId"],
-        requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region}")
+        requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region.value}")
                 .json()
                 ["matrix"]
     ))
@@ -23,4 +23,4 @@ def get_drop_data(region: Region) -> pd.DataFrame:
     print(stages.head())
     #return pd.merge(all_stages, current_stages, )
 
-get_drop_data(Region.GLOBAL.value)
+get_drop_data(Region.GLOBAL)
