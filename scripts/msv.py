@@ -4,12 +4,21 @@ import requests
 import pandas as pd
 from scipy.optimize import linprog
 
-class Region(Enum):
-    GLOBAL = "US"
-    CN = "CN"
-
+EXP_DEVALUE_FACTOR = 0.8
 MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"]
+
+class Region(Enum):
+    GLOBAL = {
+        "server": "US",
+        "lmd_value": 30/7500, # CE-5
+        "exp_value": EXP_DEVALUE_FACTOR * 30/7400, # LS-5
+    }
+    CN = {
+        "server": "CN",
+        "lmd_value": 36/10000, # CE-6
+        "exp_value": EXP_DEVALUE_FACTOR * 36/10000 # LS-6
+    }
 
 def is_valid_stage(stage):
     stage_id = stage["stageId"]
@@ -21,7 +30,7 @@ def trim_stage_ids(df):
 
 def get_drop_data(region: Region) -> pd.DataFrame:
     current_stages = (
-        requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region.value}")
+        requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region.value['server']}")
                 .json()
                 ["matrix"]
     )
