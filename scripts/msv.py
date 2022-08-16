@@ -51,7 +51,7 @@ def patch_stage_costs(df):
         "a003_f03": 15, # OF-F3
         "a003_f04": 18, # OF-F4
     }
-    stages, sanity_costs = MISSING_STAGE_COSTS.keys(), MISSING_STAGE_COSTS.values()
+    stages, sanity_costs = zip(*MISSING_STAGE_COSTS.items())
     df.loc[stages, "apCost"] = sanity_costs
     return df
 
@@ -69,6 +69,5 @@ sanity_costs = (
       .reindex(drop_matrix.index)
       .pipe(patch_stage_costs)
       .to_numpy()
+      #.flatten()
 )
-
-print(sanity_costs)
