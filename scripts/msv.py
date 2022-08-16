@@ -6,7 +6,7 @@ from scipy.optimize import linprog
 
 EXP_DEVALUE_FACTOR = 0.8
 MIN_RUN_THRESHOLD = 100
-ALLOWED_ITEMS = utils.VALID_ITEMS["material"]
+ALLOWED_ITEMS = utils.VALID_ITEMS["material"] + utils.VALID_ITEMS["misc"]
 
 class Region(Enum):
     GLOBAL = {
