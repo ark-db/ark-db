@@ -37,6 +37,9 @@ def get_drop_data(region: Region) -> pd.DataFrame:
           .pipe(trim_stage_ids)
           .assign(drop_rate = lambda df: df["quantity"] / df["times"])
           .drop(["quantity", "times"], axis=1)
+          .pivot(index="stageId",
+                 columns="itemId",
+                 values="drop_rate")
     )
     return stages
 
