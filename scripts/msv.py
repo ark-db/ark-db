@@ -20,13 +20,13 @@ class Region(Enum):
         "exp_value": EXP_DEVALUE_FACTOR * 36/10000 # LS-6
     }
 
-def is_valid_stage(stage):
+def is_valid_stage(stage: dict) -> bool:
     stage_id = stage["stageId"]
     return stage_id.startswith(("main", "sub", "wk")) or stage_id.endswith("perm")
 
-def trim_stage_ids(df):
-    df["stageId"] = df["stageId"].str.removesuffix("_perm")
-    return df
+def trim_stage_ids(stages: pd.DataFrame) -> pd.DataFrame:
+    stages["stageId"] = stages["stageId"].str.removesuffix("_perm")
+    return stages
 
 def get_drop_data(region: Region) -> pd.DataFrame:
     current_stages = (
@@ -55,14 +55,14 @@ drop_matrix = get_drop_data(Region.CN)
 
 
 
-def patch_stage_costs(df):
+def patch_stage_costs(stages: pd.DataFrame) -> pd.DataFrame:
     MISSING_STAGE_COSTS = {
         "a003_f03": 15, # OF-F3
         "a003_f04": 18, # OF-F4
     }
-    stages, sanity_costs = zip(*MISSING_STAGE_COSTS.items())
-    df.loc[stages, "apCost"] = sanity_costs
-    return df
+    stage_ids, sanity_costs = zip(*MISSING_STAGE_COSTS.items())
+    stages.loc[stage_ids, "apCost"] = sanity_costs
+    return stages
 
 stages = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/stage_table.json")
