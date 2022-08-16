@@ -20,6 +20,7 @@ def get_drop_data(region: Region) -> pd.DataFrame:
         pd.DataFrame(requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
                              .json()
                              ["matrix"])
+          .drop(["stdDev", "start", "end"], axis=1)
           .query("stageId in @current_stage_ids \
                   and times >= @MIN_RUN_THRESHOLD")
     )
