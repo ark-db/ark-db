@@ -26,7 +26,7 @@ def get_drop_data(region: Region) -> pd.DataFrame:
                 ["matrix"]
     )
     current_stage_ids = set(stage["stageId"] for stage in filter(is_valid_stage, current_stages))
-    stages = (
+    drop_data = (
         pd.DataFrame(data=requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
                                   .json()
                                   ["matrix"],
@@ -40,7 +40,7 @@ def get_drop_data(region: Region) -> pd.DataFrame:
                  columns="itemId",
                  values="drop_rate")
     )
-    return stages
+    return drop_data
 
 drop_matrix = get_drop_data(Region.CN)
 
