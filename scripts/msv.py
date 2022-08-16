@@ -15,6 +15,10 @@ def is_valid_stage(stage):
     stage_id = stage["stageId"]
     return stage_id.startswith(("main", "sub", "wk")) or stage_id.endswith("perm")
 
+def trim_stage_ids(df):
+    df["stageId"] = df["stageId"].str.removesuffix("_perm")
+    return df
+
 def get_drop_data(region: Region) -> pd.DataFrame:
     current_stages = (
         requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region.value}")
@@ -30,7 +34,8 @@ def get_drop_data(region: Region) -> pd.DataFrame:
           .query("stageId in @current_stage_ids \
                   and times >= @MIN_RUN_THRESHOLD \
                   and itemId in @ALLOWED_ITEMS")
+          .pipe(trim_stage_ids)
     )
-    print(stages.head())
+    return stages
 
-get_drop_data(Region.GLOBAL)
+print(get_drop_data(Region.CN))
