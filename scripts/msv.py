@@ -17,10 +17,10 @@ def get_drop_data(region: Region) -> pd.DataFrame:
     )
     current_stage_ids = set(stage["stageId"] for stage in current_stages)
     stages = (
-        pd.DataFrame(requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
-                             .json()
-                             ["matrix"])
-          .drop(["stdDev", "start", "end"], axis=1)
+        pd.DataFrame(data=requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
+                                  .json()
+                                  ["matrix"],
+                     columns=["stageId", "itemId", "times", "quantity"])
           .query("stageId in @current_stage_ids \
                   and times >= @MIN_RUN_THRESHOLD")
     )
