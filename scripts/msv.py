@@ -7,6 +7,7 @@ from scipy.optimize import linprog
 EXP_DEVALUE_FACTOR = 0.8
 MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"] + utils.VALID_ITEMS["misc"]
+PURE_GOLD_TO_EXP = 1000/(3/1.2) # value of pure gold = value of exp produced in factory for the same duration as 1 pure gold
 
 class Region(Enum):
     GLOBAL = {
@@ -51,10 +52,6 @@ def get_drop_data(region: Region) -> pd.DataFrame:
     )
     return drop_data
 
-drop_matrix = get_drop_data(Region.CN)
-
-
-
 def patch_stage_costs(stages: pd.DataFrame) -> pd.DataFrame:
     MISSING_STAGE_COSTS = {
         "a003_f03": 15, # OF-F3
@@ -63,6 +60,8 @@ def patch_stage_costs(stages: pd.DataFrame) -> pd.DataFrame:
     stage_ids, sanity_costs = zip(*MISSING_STAGE_COSTS.items())
     stages.loc[stage_ids, "apCost"] = sanity_costs
     return stages
+
+drop_matrix = get_drop_data(Region.CN)
 
 stages = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/stage_table.json")
