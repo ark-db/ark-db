@@ -7,7 +7,7 @@ from scipy.optimize import linprog
 MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"] + utils.VALID_ITEMS["misc"]
 BYPRODUCT_RATE_BONUS = 1.8
-PURE_GOLD_TO_EXP = 1000/(3/1.2) # value of pure gold = value of exp produced in factory for the same duration as 1 pure gold
+# PURE_GOLD_TO_EXP = 1000/(3/1.2) # value of pure gold = value of exp produced in factory for the same duration as 1 pure gold
 # EXP_DEVALUE_FACTOR = 0.8
 
 class Region(Enum):
@@ -17,10 +17,6 @@ class Region(Enum):
 def is_valid_stage(stage: dict) -> bool:
     stage_id = stage["stageId"]
     return stage_id.startswith(("main", "sub", "wk")) or stage_id.endswith("perm")
-
-def trim_stage_ids(stages: pd.DataFrame) -> pd.DataFrame:
-    stages["stageId"] = stages["stageId"].str.removesuffix("_perm")
-    return stages
 
 def get_drop_data(region: Region) -> pd.DataFrame:
     current_stages = (
@@ -37,11 +33,11 @@ def get_drop_data(region: Region) -> pd.DataFrame:
           .query("stageId in @current_stage_ids \
                   and times >= @MIN_RUN_THRESHOLD \
                   and itemId in @ALLOWED_ITEMS")
-          .pipe(trim_stage_ids)
           .assign(drop_rate = lambda df: df["quantity"] / df["times"])
           .pivot(index="stageId",
                  columns="itemId",
                  values="drop_rate")
+          .rename(index=lambda id: id.removesuffix("_perm"))
     )
     return drop_data
 
@@ -62,6 +58,7 @@ def fill_diagonal(df, values):
 
 
 drop_matrix = get_drop_data(Region.CN)
+
 
 stages = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/stage_table.json")
@@ -93,7 +90,7 @@ recipe_data = (
                       meta=["itemId", "count", "extraOutcomeRate"],
                       record_prefix="bp_")
       .assign(total_bp_weight = lambda df: df.groupby("itemId")
-                                            ["bp_weight"]
+                                             ["bp_weight"]
                                              .transform("sum"))
       .assign(bp_sanity_coeff = lambda df: BYPRODUCT_RATE_BONUS *
                                            df["extraOutcomeRate"] *
