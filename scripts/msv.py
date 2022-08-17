@@ -80,7 +80,7 @@ def get_stage_data(region: Region) -> tuple[pd.DataFrame, pd.Series]:
           .pivot(index="stageId",
                  columns="itemId",
                  values="drop_rate")
-          .assign(lmd = lambda df: sanity_costs.reindex(df.index)["apCost"] * 12)
+          .assign(lmd = sanity_costs["apCost"] * 12)
           .pipe(patch_lmd_stages)
           .rename(columns={"lmd": "4001"})
     )
@@ -95,13 +95,6 @@ def fill_diagonal(df: pd.DataFrame, values: pd.Index) -> pd.DataFrame:
 
 drop_matrix, sanity_costs = get_stage_data(Region.CN)
 
-print(drop_matrix.at["main_10-07", "4001"])
-print(drop_matrix.at["wk_melee_6", "4001"])
-print(drop_matrix)
-print(sanity_costs)
-
-
-'''
 recipes = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
             .json()
@@ -140,8 +133,7 @@ recipe_matrix = (
       #.to_numpy(na_value=0)
 )
 
-print(recipe_matrix)
-'''
+#print(recipe_matrix)
 
 
 '''
