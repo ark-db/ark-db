@@ -113,6 +113,23 @@ recipes = (
             .values()
 )
 
+recipe_matrix = (
+    pd.json_normalize(data=recipes,
+                      record_path="costs",
+                      meta=["itemId", "count", "goldCost"],
+                      record_prefix="ing_")
+      .pipe(lambda df: df[df["itemId"].isin(ALLOWED_ITEMS)])
+      .pivot(index=["itemId", "count", "goldCost"],
+             columns="ing_id",
+             values="ing_count")
+      .reset_index("goldCost")
+      .rename(columns={"goldCost": "4001"})
+      .reindex(columns=ALLOWED_ITEMS)
+      .pipe(patch_mat_relations)
+      .pipe(lambda df: -df)
+      .pipe(fill_diagonal)
+)
+
 recipe_data = (
     pd.json_normalize(data=recipes,
                       record_path="extraOutcomeGroup",
@@ -129,28 +146,11 @@ recipe_data = (
       .pivot(index="itemId",
              columns="bp_itemId",
              values="bp_sanity_coeff")
-      .reindex(columns=ALLOWED_ITEMS)
+      .reindex(index=recipe_matrix.index.get_level_values("itemId"), columns=ALLOWED_ITEMS)
 )
 
-recipe_matrix = (
-    pd.json_normalize(data=recipes,
-                      record_path="costs",
-                      meta=["itemId", "count", "goldCost"],
-                      record_prefix="ing_")
-      .pipe(lambda df: df[df["itemId"].isin(ALLOWED_ITEMS)])
-      .pivot(index=["itemId", "count", "goldCost"],
-             columns="ing_id",
-             values="ing_count")
-      .reset_index("goldCost")
-      .rename(columns={"goldCost": "4001"})
-      .reindex(columns=ALLOWED_ITEMS)
-      .pipe(patch_mat_relations)
-      .pipe(lambda df: -df)
-      .pipe(fill_diagonal)
-      #.to_numpy(na_value=0)
-)
-
-print(recipe_matrix)
+item_equiv_matrix = recipe_matrix.to_numpy(na_value=0) + recipe_data.to_numpy(na_value=0)
+#print(item_equiv_matrix)
 
 '''
 def finalize_drops(df):
