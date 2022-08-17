@@ -7,6 +7,32 @@ from scipy.optimize import linprog
 MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"] + utils.VALID_ITEMS["misc"]
 BYPRODUCT_RATE_BONUS = 1.8
+LMD_STAGES = {
+    "wk_melee_1": 1700,
+    "wk_melee_2": 2800,
+    "wk_melee_3": 4100,
+    "wk_melee_4": 5700,
+    "wk_melee_5": 7500,
+    "wk_melee_6": 10000,
+
+    "main_01-01": 660,
+    "main_02-07": 1500,
+    "sub_02-02": 1020,
+    "main_03-06": 2040,
+    "main_04-01": 2700,
+    "sub_04-2-3": 3480,
+    "sub_05-1-2": 2700,
+    "sub_05-2-1": 1216,
+    "main_06-01": 1216,
+    "sub_06-2-2": 2700,
+    "sub_07-1-1": 2700,
+    "sub_07-1-2": 1216,
+    "main_08-01": 2700,
+    "main_08-04": 1216,
+    "main_09-01": 2700,
+    "main_10-07": 3480,
+    "tough_10-07": 3480,
+}
 # PURE_GOLD_TO_EXP = 1000/(3/1.2) # value of pure gold = value of exp produced in factory for the same duration as 1 pure gold
 # EXP_DEVALUE_FACTOR = 0.8
 
@@ -15,15 +41,22 @@ class Region(Enum):
     CN = "CN"
 
 def is_valid_stage(stage_id: str) -> bool:
-    return stage_id.startswith(("main", "sub", "wk")) or stage_id.endswith("perm")
+    return stage_id.startswith(("main", "tough", "sub", "wk")) or stage_id.endswith("perm")
 
-def get_drop_data(region: Region) -> pd.DataFrame:
+def patch_lmd_stages(df: pd.DataFrame) -> pd.DataFrame:
+    for stage_id, lmd in LMD_STAGES.items():
+        df.at[stage_id, "lmd"] = lmd
+    return df
+
+def get_stage_data(region: Region) -> tuple[pd.DataFrame, pd.Series]:
     current_drops = (
         requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region.value}")
                 .json()
                 ["matrix"]
     )
+
     current_stage_ids = set(item["stageId"] for item in current_drops if is_valid_stage(item["stageId"]))
+
     drop_data = (
         pd.DataFrame(data=requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
                                   .json()
@@ -36,9 +69,26 @@ def get_drop_data(region: Region) -> pd.DataFrame:
           .pivot(index="stageId",
                  columns="itemId",
                  values="drop_rate")
-          #.rename(index=lambda id: id.removesuffix("_perm"))
     )
-    return drop_data
+
+    stages = (
+        requests.get("https://penguin-stats.io/PenguinStats/api/v2/stages")
+                .json()
+    )
+
+    sanity_costs = (
+        pd.DataFrame(data=stages,
+                     columns=["stageId", "apCost"])
+          .set_index("stageId")
+    )
+
+    drop_data = (
+        drop_data.assign(lmd = sanity_costs.reindex(drop_data.index)["apCost"] * 12)
+                 .pipe(patch_lmd_stages)
+                 .rename(columns={"lmd": "4001"})
+    )
+
+    return drop_data, sanity_costs.reindex(drop_data.index)
 
 def fill_diagonal(df: pd.DataFrame, values: pd.Index) -> pd.DataFrame:
     for id, val in zip(df.index, values):
@@ -47,26 +97,13 @@ def fill_diagonal(df: pd.DataFrame, values: pd.Index) -> pd.DataFrame:
 
 
 
-drop_matrix = get_drop_data(Region.CN)
+drop_matrix, sanity_costs = get_stage_data(Region.CN)
 
-stages = (
-    requests.get("https://penguin-stats.io/PenguinStats/api/v2/stages")
-            .json()
-)
-
-sanity_costs = (
-    pd.DataFrame(data=stages,
-                 columns=["stageId", "apCost"])
-      .set_index("stageId")
-      .reindex(drop_matrix.index)
-      #.to_numpy()
-      #.flatten()
-)
-
+print(drop_matrix.at["main_10-07", "4001"])
+print(drop_matrix.at["wk_melee_6", "4001"])
+print(drop_matrix)
 print(sanity_costs)
 
-#drop_matrix.assign(lmd = sanity_costs["apCost"] * 12)
-print(drop_matrix)
 
 '''
 recipes = (
