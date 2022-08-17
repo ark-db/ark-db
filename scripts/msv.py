@@ -71,5 +71,5 @@ sanity_costs = (
       .reindex(drop_matrix.index)
       .pipe(patch_stage_costs)
       .to_numpy()
-      #.flatten()
+      .flatten()
 )
