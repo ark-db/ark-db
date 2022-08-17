@@ -33,7 +33,12 @@ LMD_STAGES = {
     "main_10-07": 3480,
     "tough_10-07": 3480,
 }
-# PURE_GOLD_TO_EXP = 1000/(3/1.2) # value of pure gold = value of exp produced in factory for the same duration as 1 pure gold
+MAT_RELATIONS = { # relationships between exp cards + pure gold; base unit is Drill Battle Record (200 exp)
+    "2002": 2,
+    "2003": 5,
+    "2004": 10,
+    "3003": 2, # value of pure gold = value of exp produced in factory for the same duration as 1 pure gold
+}
 # EXP_DEVALUE_FACTOR = 0.8
 
 class Region(Enum):
@@ -87,9 +92,14 @@ def get_stage_data(region: Region) -> tuple[pd.DataFrame, pd.Series]:
     )
     return drop_data, sanity_costs.reindex(drop_data.index)
 
+def patch_mat_relations(df):
+    for item_id, count in MAT_RELATIONS.items():
+        df.at[(item_id, 1), "2001"] = count
+    return df
+
 def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
-    for id, val in zip(df.index.get_level_values("itemId"), df.index.get_level_values("count")):
-        df.at[id, id] = val
+    for item_id, count in zip(df.index.get_level_values("itemId"), df.index.get_level_values("count")):
+        df.at[item_id, item_id] = count
     return df
 
 
@@ -133,8 +143,9 @@ recipe_matrix = (
              values="ing_count")
       .reset_index("goldCost")
       .rename(columns={"goldCost": "4001"})
-      .pipe(lambda df: -df)
       .reindex(columns=ALLOWED_ITEMS)
+      .pipe(patch_mat_relations)
+      .pipe(lambda df: -df)
       .pipe(fill_diagonal)
       #.to_numpy(na_value=0)
 )
