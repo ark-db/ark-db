@@ -92,7 +92,7 @@ def get_stage_data(region: Region) -> tuple[pd.DataFrame, pd.Series]:
     )
     return drop_data, sanity_costs.reindex(drop_data.index)
 
-def patch_mat_relations(df):
+def patch_mat_relations(df: pd.DataFrame) -> pd.DataFrame:
     for item_id, count in MAT_RELATIONS.items():
         df.at[(item_id, 1), "2001"] = count
     return df
@@ -104,7 +104,7 @@ def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
 
 
 
-#drop_matrix, sanity_costs = get_stage_data(Region.CN)
+drop_matrix, sanity_costs = get_stage_data(Region.CN)
 
 recipes = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
