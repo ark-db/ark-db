@@ -49,9 +49,10 @@ class Region(Enum):
 def is_valid_stage(stage_id: str) -> bool:
     return stage_id.startswith(("main", "tough", "sub", "wk")) or stage_id.endswith("perm")
 
-def patch_lmd_stages(df: pd.DataFrame) -> pd.DataFrame:
+def patch_lmd_stages(df: pd.DataFrame, valid_stages: set) -> pd.DataFrame:
     for stage_id, lmd in LMD_STAGES.items():
-        df.at[stage_id, "lmd"] = lmd
+        if stage_id in valid_stages:
+            df.at[stage_id, "lmd"] = lmd
     return df
 
 def get_stage_data(region: Region) -> tuple[pd.DataFrame, pd.Series]:
@@ -87,7 +88,7 @@ def get_stage_data(region: Region) -> tuple[pd.DataFrame, pd.Series]:
                  columns="itemId",
                  values="drop_rate")
           .assign(lmd = sanity_costs["apCost"] * 12)
-          .pipe(patch_lmd_stages)
+          .pipe(patch_lmd_stages, current_stage_ids)
           .rename(columns={"lmd": "4001"})
           .reindex(columns=ALLOWED_ITEMS)
     )
@@ -105,7 +106,7 @@ def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
 
 
 
-drop_matrix, sanity_costs = get_stage_data(Region.CN)
+drop_matrix, sanity_costs = get_stage_data(Region.GLOBAL)
 
 recipes = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
