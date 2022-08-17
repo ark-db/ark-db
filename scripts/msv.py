@@ -106,7 +106,7 @@ def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
 
 
 
-drop_matrix, sanity_costs = get_stage_data(Region.GLOBAL)
+drop_data, sanity_costs = get_stage_data(Region.GLOBAL)
 
 recipes = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
@@ -154,13 +154,10 @@ byproduct_value_matrix = (
 item_equiv_matrix = recipe_matrix.to_numpy(na_value=0) + byproduct_value_matrix.to_numpy(na_value=0)
 num_rows, _ = item_equiv_matrix.shape
 
-def finalize_drops(df):
-    matrix = df.to_numpy(na_value=0)
-    return matrix, -matrix.sum(axis=0)
+drop_matrix = drop_data.to_numpy(na_value=0)
+sanity_profit = -drop_matrix.sum(axis=0)
 
-stage_drops, sanity_profit = finalize_drops(drop_matrix)
-
-sln = linprog(sanity_profit, stage_drops, sanity_costs.to_numpy(), item_equiv_matrix, np.zeros(num_rows)).x
+sln = linprog(sanity_profit, drop_matrix, sanity_costs.to_numpy().flatten(), item_equiv_matrix, np.zeros(num_rows)).x
 
 import pprint
 pprint.pprint({item_id: msv for item_id, msv in zip(ALLOWED_ITEMS, sln)})
