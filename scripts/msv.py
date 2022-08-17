@@ -15,17 +15,16 @@ class Region(Enum):
     GLOBAL = "US"
     CN = "CN"
 
-def is_valid_stage(stage: dict) -> bool:
-    stage_id = stage["stageId"]
+def is_valid_stage(stage_id: str) -> bool:
     return stage_id.startswith(("main", "sub", "wk")) or stage_id.endswith("perm")
 
 def get_drop_data(region: Region) -> pd.DataFrame:
-    current_stages = (
+    current_drops = (
         requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region.value}")
                 .json()
                 ["matrix"]
     )
-    current_stage_ids = set(stage["stageId"] for stage in current_stages if is_valid_stage(stage))
+    current_stage_ids = set(item["stageId"] for item in current_drops if is_valid_stage(item["stageId"]))
     drop_data = (
         pd.DataFrame(data=requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
                                   .json()
