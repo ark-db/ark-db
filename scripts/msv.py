@@ -10,16 +10,8 @@ ALLOWED_ITEMS = utils.VALID_ITEMS["material"] + utils.VALID_ITEMS["misc"]
 PURE_GOLD_TO_EXP = 1000/(3/1.2) # value of pure gold = value of exp produced in factory for the same duration as 1 pure gold
 
 class Region(Enum):
-    GLOBAL = {
-        "server": "US",
-        "lmd_value": 30/7500, # CE-5
-        "exp_value": EXP_DEVALUE_FACTOR * 30/7400, # LS-5
-    }
-    CN = {
-        "server": "CN",
-        "lmd_value": 36/10000, # CE-6
-        "exp_value": EXP_DEVALUE_FACTOR * 36/10000 # LS-6
-    }
+    GLOBAL = "US"
+    CN = "CN"
 
 def is_valid_stage(stage: dict) -> bool:
     stage_id = stage["stageId"]
@@ -31,7 +23,7 @@ def trim_stage_ids(stages: pd.DataFrame) -> pd.DataFrame:
 
 def get_drop_data(region: Region) -> pd.DataFrame:
     current_stages = (
-        requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region.value['server']}")
+        requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region.value}")
                 .json()
                 ["matrix"]
     )
@@ -60,6 +52,8 @@ def patch_stage_costs(stages: pd.DataFrame) -> pd.DataFrame:
     stage_ids, sanity_costs = zip(*MISSING_STAGE_COSTS.items())
     stages.loc[stage_ids, "apCost"] = sanity_costs
     return stages
+
+
 
 drop_matrix = get_drop_data(Region.CN)
 
