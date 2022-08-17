@@ -36,18 +36,9 @@ def get_drop_data(region: Region) -> pd.DataFrame:
           .pivot(index="stageId",
                  columns="itemId",
                  values="drop_rate")
-          .rename(index=lambda id: id.removesuffix("_perm"))
+          #.rename(index=lambda id: id.removesuffix("_perm"))
     )
     return drop_data
-
-def patch_stage_costs(stages: pd.DataFrame) -> pd.DataFrame:
-    MISSING_STAGE_COSTS = {
-        "a003_f03": 15, # OF-F3
-        "a003_f04": 18, # OF-F4
-    }
-    stage_ids, sanity_costs = zip(*MISSING_STAGE_COSTS.items())
-    stages.loc[stage_ids, "apCost"] = sanity_costs
-    return stages
 
 def fill_diagonal(df: pd.DataFrame, values: pd.Index) -> pd.DataFrame:
     for id, val in zip(df.index, values):
@@ -59,10 +50,8 @@ def fill_diagonal(df: pd.DataFrame, values: pd.Index) -> pd.DataFrame:
 drop_matrix = get_drop_data(Region.CN)
 
 stages = (
-    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/stage_table.json")
+    requests.get("https://penguin-stats.io/PenguinStats/api/v2/stages")
             .json()
-            ["stages"]
-            .values()
 )
 
 sanity_costs = (
@@ -70,11 +59,16 @@ sanity_costs = (
                  columns=["stageId", "apCost"])
       .set_index("stageId")
       .reindex(drop_matrix.index)
-      .pipe(patch_stage_costs)
-      .to_numpy()
-      .flatten()
+      #.to_numpy()
+      #.flatten()
 )
 
+print(sanity_costs)
+
+#drop_matrix.assign(lmd = sanity_costs["apCost"] * 12)
+print(drop_matrix)
+
+'''
 recipes = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
             .json()
@@ -114,7 +108,7 @@ recipe_matrix = (
 )
 
 print(recipe_matrix)
-
+'''
 
 
 '''
