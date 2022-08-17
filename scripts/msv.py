@@ -94,7 +94,7 @@ def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
 
 
 
-drop_matrix, sanity_costs = get_stage_data(Region.CN)
+#drop_matrix, sanity_costs = get_stage_data(Region.CN)
 
 recipes = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
@@ -134,11 +134,12 @@ recipe_matrix = (
       .reset_index("goldCost")
       .rename(columns={"goldCost": "4001"})
       .pipe(lambda df: -df)
+      .reindex(columns=ALLOWED_ITEMS)
       .pipe(fill_diagonal)
       #.to_numpy(na_value=0)
 )
 
-#print(recipe_matrix)
+print(recipe_matrix)
 
 '''
 def finalize_drops(df):
