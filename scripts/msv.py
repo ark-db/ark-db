@@ -87,8 +87,8 @@ def get_stage_data(region: Region) -> tuple[pd.DataFrame, pd.Series]:
     )
     return drop_data, sanity_costs.reindex(drop_data.index)
 
-def fill_diagonal(df: pd.DataFrame, values: pd.Index) -> pd.DataFrame:
-    for id, val in zip(df.index, values):
+def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
+    for id, val in zip(df.index.get_level_values("itemId"), df.index.get_level_values("count")):
         df.at[id, id] = val
     return df
 
@@ -122,23 +122,23 @@ recipe_data = (
       .reindex(columns=ALLOWED_ITEMS)
 )
 
-'''
 recipe_matrix = (
     pd.json_normalize(data=recipes,
                       record_path="costs",
-                      meta=["itemId", "goldCost"])
-      .pivot(index=["itemId", "goldCost"],
-             columns="id",
-             values="count")
+                      meta=["itemId", "count", "goldCost"],
+                      record_prefix="ing_")
+      .pipe(lambda df: df[df["itemId"].isin(ALLOWED_ITEMS)])
+      .pivot(index=["itemId", "count", "goldCost"],
+             columns="ing_id",
+             values="ing_count")
       .reset_index("goldCost")
       .rename(columns={"goldCost": "4001"})
       .pipe(lambda df: -df)
-      .pipe(fill_diagonal, recipe_data.index.get_level_values("count"))
+      .pipe(fill_diagonal)
       #.to_numpy(na_value=0)
 )
 
 #print(recipe_matrix)
-'''
 
 '''
 def finalize_drops(df):
