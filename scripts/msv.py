@@ -106,8 +106,6 @@ def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
 
 
 
-drop_data, sanity_costs = get_stage_data(Region.GLOBAL)
-
 recipes = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
             .json()
@@ -153,6 +151,10 @@ byproduct_value_matrix = (
 
 item_equiv_matrix = recipe_matrix.to_numpy(na_value=0) + byproduct_value_matrix.to_numpy(na_value=0)
 num_rows, _ = item_equiv_matrix.shape
+
+
+
+drop_data, sanity_costs = get_stage_data(Region.GLOBAL)
 
 drop_matrix = drop_data.to_numpy(na_value=0)
 sanity_profit = -drop_matrix.sum(axis=0)
