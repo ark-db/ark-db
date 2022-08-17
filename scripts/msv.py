@@ -1,4 +1,3 @@
-from operator import is_
 import utils
 from enum import Enum
 import requests
@@ -50,7 +49,7 @@ def patch_stage_costs(stages: pd.DataFrame) -> pd.DataFrame:
     stages.loc[stage_ids, "apCost"] = sanity_costs
     return stages
 
-def fill_diagonal(df, values):
+def fill_diagonal(df: pd.DataFrame, values: pd.Index) -> pd.DataFrame:
     for id, val in zip(df.index, values):
         df.at[id, id] = val
     return df
@@ -107,7 +106,7 @@ recipe_matrix = (
       .pivot(index=["itemId", "goldCost"],
              columns="id",
              values="count")
-      .reset_index(1)
+      .reset_index("goldCost")
       .rename(columns={"goldCost": "4001"})
       .pipe(lambda df: -df)
       .pipe(fill_diagonal, recipe_data.index.get_level_values("count"))
