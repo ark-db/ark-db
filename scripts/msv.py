@@ -4,10 +4,11 @@ import requests
 import pandas as pd
 from scipy.optimize import linprog
 
-EXP_DEVALUE_FACTOR = 0.8
 MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"] + utils.VALID_ITEMS["misc"]
+BYPRODUCT_RATE_BONUS = 1.8
 PURE_GOLD_TO_EXP = 1000/(3/1.2) # value of pure gold = value of exp produced in factory for the same duration as 1 pure gold
+# EXP_DEVALUE_FACTOR = 0.8
 
 class Region(Enum):
     GLOBAL = "US"
@@ -53,6 +54,11 @@ def patch_stage_costs(stages: pd.DataFrame) -> pd.DataFrame:
     stages.loc[stage_ids, "apCost"] = sanity_costs
     return stages
 
+def fill_diagonal(df, values):
+    for id, val in zip(df.index, values):
+        df.at[id, id] = val
+    return df
+
 
 
 drop_matrix = get_drop_data(Region.CN)
@@ -73,3 +79,56 @@ sanity_costs = (
       .to_numpy()
       .flatten()
 )
+
+recipes = (
+    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
+            .json()
+            ["workshopFormulas"]
+            .values()
+)
+
+recipe_data = (
+    pd.json_normalize(data=recipes,
+                      record_path="extraOutcomeGroup",
+                      meta=["itemId", "count", "extraOutcomeRate"],
+                      record_prefix="bp_")
+      .assign(total_bp_weight = lambda df: df.groupby("itemId")
+                                            ["bp_weight"]
+                                             .transform("sum"))
+      .assign(bp_sanity_coeff = lambda df: BYPRODUCT_RATE_BONUS *
+                                           df["extraOutcomeRate"] *
+                                           df["bp_weight"] /
+                                           df["total_bp_weight"])
+      .pivot(index=["itemId", "count"],
+             columns="bp_itemId",
+             values="bp_sanity_coeff")
+)
+
+recipe_matrix = (
+    pd.json_normalize(data=recipes,
+                      record_path="costs",
+                      meta=["itemId", "goldCost"])
+      .pivot(index=["itemId", "goldCost"],
+             columns="id",
+             values="count")
+      .reset_index(1)
+      .rename(columns={"goldCost": "4001"})
+      .pipe(lambda df: -df)
+      .pipe(fill_diagonal, recipe_data.index.get_level_values("count"))
+      #.to_numpy(na_value=0)
+)
+
+print(recipe_matrix)
+
+
+
+'''
+def finalize_drops(df):
+    matrix = df.to_numpy(na_value=0)
+    return matrix, -matrix.sum(axis=0)
+
+stage_drops, sanity_profit = finalize_drops(drop_matrix)
+item_equiv_matrix = recipe_matrix + recipe_data.to_numpy(na_value=0)
+
+sln = linprog(sanity_profit, stage_drops, sanity_costs, item_equiv_matrix, <something with np.zeros>).x
+'''
