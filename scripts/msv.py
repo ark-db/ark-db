@@ -57,20 +57,6 @@ def get_stage_data(region: Region) -> tuple[pd.DataFrame, pd.Series]:
 
     current_stage_ids = set(item["stageId"] for item in current_drops if is_valid_stage(item["stageId"]))
 
-    drop_data = (
-        pd.DataFrame(data=requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
-                                  .json()
-                                  ["matrix"],
-                     columns=["stageId", "itemId", "times", "quantity"])
-          .query("stageId in @current_stage_ids \
-                  and times >= @MIN_RUN_THRESHOLD \
-                  and itemId in @ALLOWED_ITEMS")
-          .assign(drop_rate = lambda df: df["quantity"] / df["times"])
-          .pivot(index="stageId",
-                 columns="itemId",
-                 values="drop_rate")
-    )
-
     stages = (
         requests.get("https://penguin-stats.io/PenguinStats/api/v2/stages")
                 .json()
@@ -83,11 +69,21 @@ def get_stage_data(region: Region) -> tuple[pd.DataFrame, pd.Series]:
     )
 
     drop_data = (
-        drop_data.assign(lmd = sanity_costs.reindex(drop_data.index)["apCost"] * 12)
-                 .pipe(patch_lmd_stages)
-                 .rename(columns={"lmd": "4001"})
+        pd.DataFrame(data=requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
+                                  .json()
+                                  ["matrix"],
+                     columns=["stageId", "itemId", "times", "quantity"])
+          .query("stageId in @current_stage_ids \
+                  and times >= @MIN_RUN_THRESHOLD \
+                  and itemId in @ALLOWED_ITEMS")
+          .assign(drop_rate = lambda df: df["quantity"] / df["times"])
+          .pivot(index="stageId",
+                 columns="itemId",
+                 values="drop_rate")
+          .assign(lmd = lambda df: sanity_costs.reindex(df.index)["apCost"] * 12)
+          .pipe(patch_lmd_stages)
+          .rename(columns={"lmd": "4001"})
     )
-
     return drop_data, sanity_costs.reindex(drop_data.index)
 
 def fill_diagonal(df: pd.DataFrame, values: pd.Index) -> pd.DataFrame:
