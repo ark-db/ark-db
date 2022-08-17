@@ -1,3 +1,4 @@
+from operator import is_
 import utils
 from enum import Enum
 import requests
@@ -24,7 +25,7 @@ def get_drop_data(region: Region) -> pd.DataFrame:
                 .json()
                 ["matrix"]
     )
-    current_stage_ids = set(stage["stageId"] for stage in filter(is_valid_stage, current_stages))
+    current_stage_ids = set(stage["stageId"] for stage in current_stages if is_valid_stage(stage))
     drop_data = (
         pd.DataFrame(data=requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
                                   .json()
@@ -58,7 +59,6 @@ def fill_diagonal(df, values):
 
 
 drop_matrix = get_drop_data(Region.CN)
-
 
 stages = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/stage_table.json")
