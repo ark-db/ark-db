@@ -2,6 +2,7 @@ import utils
 from enum import Enum
 import requests
 import pandas as pd
+import numpy as np
 from scipy.optimize import linprog
 
 MIN_RUN_THRESHOLD = 100
@@ -130,7 +131,7 @@ recipe_matrix = (
       .pipe(fill_diagonal)
 )
 
-recipe_data = (
+byproduct_value_matrix = (
     pd.json_normalize(data=recipes,
                       record_path="extraOutcomeGroup",
                       meta=["itemId", "extraOutcomeRate"],
@@ -149,16 +150,16 @@ recipe_data = (
       .reindex(index=recipe_matrix.index.get_level_values("itemId"), columns=ALLOWED_ITEMS)
 )
 
-item_equiv_matrix = recipe_matrix.to_numpy(na_value=0) + recipe_data.to_numpy(na_value=0)
-#print(item_equiv_matrix)
+item_equiv_matrix = recipe_matrix.to_numpy(na_value=0) + byproduct_value_matrix.to_numpy(na_value=0)
+num_rows, _ = item_equiv_matrix.shape
 
-'''
 def finalize_drops(df):
     matrix = df.to_numpy(na_value=0)
     return matrix, -matrix.sum(axis=0)
 
 stage_drops, sanity_profit = finalize_drops(drop_matrix)
-item_equiv_matrix = recipe_matrix + recipe_data.to_numpy(na_value=0)
 
-sln = linprog(sanity_profit, stage_drops, sanity_costs, item_equiv_matrix, <something with np.zeros>).x
-'''
+sln = linprog(sanity_profit, stage_drops, sanity_costs.to_numpy(), item_equiv_matrix, np.zeros(num_rows)).x
+
+import pprint
+pprint.pprint({item_id: msv for item_id, msv in zip(ALLOWED_ITEMS, sln)})
