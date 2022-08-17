@@ -157,9 +157,10 @@ num_rows, _ = item_equiv_matrix.shape
 drop_data, sanity_costs = get_stage_data(Region.GLOBAL)
 
 drop_matrix = drop_data.to_numpy(na_value=0)
-sanity_profit = -drop_matrix.sum(axis=0)
+sanity_cost_vec = sanity_costs.to_numpy().flatten()
 
-sln = linprog(sanity_profit, drop_matrix, sanity_costs.to_numpy().flatten(), item_equiv_matrix, np.zeros(num_rows)).x
+sanity_values = linprog(-drop_matrix.sum(axis=0), drop_matrix, sanity_cost_vec, item_equiv_matrix, np.zeros(num_rows)).x
 
-import pprint
-pprint.pprint({item_id: msv for item_id, msv in zip(ALLOWED_ITEMS, sln)})
+stage_effs = (drop_matrix.dot(sanity_values) - sanity_cost_vec) / sanity_cost_vec + 1
+
+print(stage_effs)
