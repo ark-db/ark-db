@@ -83,6 +83,7 @@ def get_stage_data(region: Region) -> tuple[pd.DataFrame, pd.Series]:
           .assign(lmd = sanity_costs["apCost"] * 12)
           .pipe(patch_lmd_stages)
           .rename(columns={"lmd": "4001"})
+          .reindex(columns=ALLOWED_ITEMS)
     )
     return drop_data, sanity_costs.reindex(drop_data.index)
 
@@ -105,8 +106,9 @@ recipes = (
 recipe_data = (
     pd.json_normalize(data=recipes,
                       record_path="extraOutcomeGroup",
-                      meta=["itemId", "count", "extraOutcomeRate"],
+                      meta=["itemId", "extraOutcomeRate"],
                       record_prefix="bp_")
+      .pipe(lambda df: df[df["itemId"].isin(ALLOWED_ITEMS)])
       .assign(total_bp_weight = lambda df: df.groupby("itemId")
                                              ["bp_weight"]
                                              .transform("sum"))
@@ -114,11 +116,13 @@ recipe_data = (
                                            df["extraOutcomeRate"] *
                                            df["bp_weight"] /
                                            df["total_bp_weight"])
-      .pivot(index=["itemId", "count"],
+      .pivot(index="itemId",
              columns="bp_itemId",
              values="bp_sanity_coeff")
+      .reindex(columns=ALLOWED_ITEMS)
 )
 
+'''
 recipe_matrix = (
     pd.json_normalize(data=recipes,
                       record_path="costs",
@@ -134,7 +138,7 @@ recipe_matrix = (
 )
 
 #print(recipe_matrix)
-
+'''
 
 '''
 def finalize_drops(df):
