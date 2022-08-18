@@ -124,17 +124,16 @@ num_rows, _ = item_equiv_matrix.shape
 
 
 
-stages = (
+all_stages = (
     requests.get("https://penguin-stats.io/PenguinStats/api/v2/stages")
             .json()
 )
+
 sanity_costs = (
-    pd.DataFrame(data=stages,
+    pd.DataFrame(data=all_stages,
                  columns=["stageId", "apCost"])
       .set_index("stageId")
 )
-
-
 
 all_drops = (
     pd.DataFrame(data=requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
