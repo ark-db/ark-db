@@ -187,6 +187,7 @@ drop_data = (
              .pipe(patch_lmd_stages, valid_stage_ids)
              .rename(columns={"lmd": "4001"})
              .reindex(columns=ALLOWED_ITEMS)
+             .fillna(0)
 )
 
 sanity_cost_vec = (
@@ -196,7 +197,7 @@ sanity_cost_vec = (
               .flatten()
 )
 
-drop_matrix = drop_data.to_numpy(na_value=0)
+drop_matrix = drop_data.to_numpy()
 
 sanity_values = (
     linprog(-drop_matrix.sum(axis=0),
@@ -213,8 +214,19 @@ top_stages = (
     pd.DataFrame(data=stage_effs,
                  columns=["efficiency"])
       .set_index(drop_data.index)
-      .assign(code = stage_data["code"])
-      .sort_values(by="efficiency", ascending=False)
+      .merge(stage_data, on="stageId")
+      .reset_index()
+      #.sort_values(by="efficiency", ascending=False)
 )
 
-print(top_stages)
+farming_stages = defaultdict(list)
+
+for stage in top_stages.itertuples(index=False):
+    for main_drop in stage_drops[stage.stageId]:
+        drop_rate = drop_data.at[stage.stageId, main_drop]
+        farming_stages[main_drop].append({
+            "stage": stage.code,
+            "efficiency": round(stage.efficiency, 3),
+            "rate": round(drop_rate, 3),
+            "espd": round(stage.apCost / drop_rate, 2)
+        })
