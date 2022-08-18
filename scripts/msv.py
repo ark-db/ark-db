@@ -179,4 +179,9 @@ sanity_values = (
 
 stage_effs = (drop_matrix.dot(sanity_values) - sanity_cost_vec) / sanity_cost_vec + 1
 
-print(stage_effs)
+top_stages = (
+    pd.DataFrame(stage_effs)
+      .set_index(drop_data.index)
+)
+
+print(top_stages)
