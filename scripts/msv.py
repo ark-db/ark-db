@@ -35,7 +35,7 @@ class Region(Enum):
     GLOBAL = "US"
     CN = "CN"
 
-def patch_mat_relations(df: pd.DataFrame) -> pd.DataFrame:
+def update_material_relations(df: pd.DataFrame) -> pd.DataFrame:
     # relationships between exp cards + pure gold; base unit is Drill Battle Record (200 exp)
     MAT_RELATIONS = {
         "2002": 2,
@@ -64,7 +64,7 @@ def get_stage_ids(region: Region) -> set[str]:
     current_stage_ids = set(item["stageId"] for item in current_drops if is_valid_stage(item["stageId"]))
     return current_stage_ids
 
-def patch_lmd_stages(df: pd.DataFrame, valid_stages: set) -> pd.DataFrame:
+def update_lmd_stages(df: pd.DataFrame, valid_stages: set) -> pd.DataFrame:
     LMD_STAGES = {
         "wk_melee_1": 1700,
         "wk_melee_2": 2800,
@@ -97,7 +97,7 @@ def patch_lmd_stages(df: pd.DataFrame, valid_stages: set) -> pd.DataFrame:
 
 
 
-all_drops = (
+drop_data = (
     pd.DataFrame(data=drops,
                  columns=["stageId", "itemId", "times", "quantity"])
       .query("times >= @MIN_RUN_THRESHOLD \
@@ -120,7 +120,7 @@ for stage in stages:
     if (not stage.get("dropInfos")) or stage["stageId"] == "recruit":
         stage.update({"dropInfos": []})
 
-main_stage_drops = (
+main_drops = (
     pd.json_normalize(data=stages,
                       record_path="dropInfos",
                       meta="stageId")
@@ -129,10 +129,10 @@ main_stage_drops = (
       .pipe(lambda df: df[~df["itemId"].isna()])
 )
 
-stage_drops = defaultdict(list)
+main_drops_by_stage = defaultdict(list)
 
-for entry in main_stage_drops.itertuples(index=False):
-    stage_drops[entry.stageId].append(entry.itemId)
+for entry in main_drops.itertuples(index=False):
+    main_drops_by_stage[entry.stageId].append(entry.itemId)
 
 
 
@@ -148,7 +148,7 @@ recipe_matrix = (
       .reset_index("goldCost")
       .rename(columns={"goldCost": "4001"})
       .reindex(columns=ALLOWED_ITEMS)
-      .pipe(patch_mat_relations)
+      .pipe(update_material_relations)
       .pipe(lambda df: -df)
       .pipe(fill_diagonal)
 )
@@ -169,7 +169,8 @@ byproduct_value_matrix = (
       .pivot(index="itemId",
              columns="bp_itemId",
              values="bp_sanity_coeff")
-      .reindex(index=recipe_matrix.index.get_level_values("itemId"), columns=ALLOWED_ITEMS)
+      .reindex(index=recipe_matrix.index.get_level_values("itemId"),
+               columns=ALLOWED_ITEMS)
 )
 
 item_equiv_matrix = recipe_matrix.to_numpy(na_value=0) + byproduct_value_matrix.to_numpy(na_value=0)
@@ -181,10 +182,10 @@ num_rows, _ = item_equiv_matrix.shape
 
 valid_stage_ids = get_stage_ids(Region.GLOBAL)
 
-drop_data = (
-    all_drops.pipe(lambda df: df[df.index.isin(valid_stage_ids)])
+curr_drop_data = (
+    drop_data.pipe(lambda df: df[df.index.isin(valid_stage_ids)])
              .assign(lmd = stage_data["apCost"] * 12)
-             .pipe(patch_lmd_stages, valid_stage_ids)
+             .pipe(update_lmd_stages, valid_stage_ids)
              .rename(columns={"lmd": "4001"})
              .reindex(columns=ALLOWED_ITEMS)
              .fillna(0)
@@ -192,12 +193,12 @@ drop_data = (
 
 sanity_cost_vec = (
     stage_data["apCost"]
-              .reindex(drop_data.index)
+              .reindex(curr_drop_data.index)
               .to_numpy()
               .flatten()
 )
 
-drop_matrix = drop_data.to_numpy()
+drop_matrix = curr_drop_data.to_numpy()
 
 sanity_values = (
     linprog(-drop_matrix.sum(axis=0),
@@ -208,24 +209,25 @@ sanity_values = (
     .x
 )
 
-stage_effs = (drop_matrix.dot(sanity_values) - sanity_cost_vec) / sanity_cost_vec + 1
+stage_effics = (drop_matrix.dot(sanity_values) - sanity_cost_vec) / sanity_cost_vec + 1
 
-top_stages = (
-    pd.DataFrame(data=stage_effs,
-                 columns=["efficiency"])
-      .set_index(drop_data.index)
+farming_stages = (
+    pd.DataFrame(data=stage_effics,
+                 columns=["effic"])
+      .set_index(curr_drop_data.index)
       .merge(stage_data, on="stageId")
       .reset_index()
 )
 
-farming_stages = defaultdict(list)
+farming_stages_by_item = defaultdict(list)
 
-for stage in top_stages.itertuples(index=False):
-    for main_drop in stage_drops[stage.stageId]:
-        if (drop_rate := drop_data.at[stage.stageId, main_drop]) > 0:
-            farming_stages[main_drop].append({
+for stage in farming_stages.itertuples(index=False):
+    for main_drop in main_drops_by_stage[stage.stageId]:
+        drop_rate = curr_drop_data.at[stage.stageId, main_drop]
+        if drop_rate > 0:
+            farming_stages_by_item[main_drop].append({
                 "stage": stage.code,
-                "efficiency": round(stage.efficiency, 3),
+                "effic": round(stage.effic, 3),
                 "rate": round(drop_rate, 3),
                 "espd": round(stage.apCost / drop_rate, 2)
             })
