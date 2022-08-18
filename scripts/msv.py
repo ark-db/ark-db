@@ -1,15 +1,68 @@
 import utils
-from enum import Enum
 import requests
 import pandas as pd
 from collections import defaultdict
+from enum import Enum
 import numpy as np
 from scipy.optimize import linprog
 
+MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"] + utils.VALID_ITEMS["misc"]
 BYPRODUCT_RATE_BONUS = 1.8
-MIN_RUN_THRESHOLD = 100
 # EXP_DEVALUE_FACTOR = 0.8
+
+recipes = (
+    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
+            .json()
+            ["workshopFormulas"]
+            .values()
+)
+
+drops = (
+    requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
+            .json()
+            ["matrix"]
+)
+
+all_drops = (
+    pd.DataFrame(data=drops,
+                 columns=["stageId", "itemId", "times", "quantity"])
+      .query("times >= @MIN_RUN_THRESHOLD \
+              and itemId in @ALLOWED_ITEMS")
+)
+
+stages = (
+    requests.get("https://penguin-stats.io/PenguinStats/api/v2/stages")
+            .json()
+)
+
+stage_data = (
+    pd.DataFrame(data=stages,
+                 columns=["stageId", "code", "apCost"])
+      .set_index("stageId")
+)
+
+
+
+for stage in stages:
+    if (not stage.get("dropInfos")) or stage["stageId"] == "recruit":
+        stage.update({"dropInfos": []})
+
+stage_drops = defaultdict(list)
+
+main_stage_drops = (
+    pd.json_normalize(data=stages,
+                      record_path="dropInfos",
+                      meta="stageId")
+      .pipe(lambda df: df[df["dropType"] == "NORMAL_DROP"])
+      .filter(["stageId", "itemId"])
+      .pipe(lambda df: df[~df["itemId"].isna()])
+)
+
+for entry in main_stage_drops.itertuples(index=False):
+    stage_drops[entry.stageId].append(entry.itemId)
+
+
 
 class Region(Enum):
     GLOBAL = "US"
@@ -77,13 +130,6 @@ def patch_lmd_stages(df: pd.DataFrame, valid_stages: set) -> pd.DataFrame:
 
 
 
-recipes = (
-    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
-            .json()
-            ["workshopFormulas"]
-            .values()
-)
-
 recipe_matrix = (
     pd.json_normalize(data=recipes,
                       record_path="costs",
@@ -125,47 +171,7 @@ num_rows, _ = item_equiv_matrix.shape
 
 
 
-all_stages = (
-    requests.get("https://penguin-stats.io/PenguinStats/api/v2/stages")
-            .json()
-)
-
-stage_data = (
-    pd.DataFrame(data=all_stages,
-                 columns=["stageId", "code", "apCost"])
-      .set_index("stageId")
-)
-
-for stage in all_stages:
-    if (not stage.get("dropInfos")) or stage["stageId"] == "recruit":
-        stage.update({"dropInfos": []})
-
-stage_drops = defaultdict(list)
-
-main_stage_drops = (
-    pd.json_normalize(data=all_stages,
-                      record_path="dropInfos",
-                      meta="stageId")
-      .pipe(lambda df: df[df["dropType"] == "NORMAL_DROP"])
-      .filter(["stageId", "itemId"])
-      .pipe(lambda df: df[~df["itemId"].isna()])
-)
-
-for entry in main_stage_drops.itertuples(index=False):
-    stage_drops[entry.stageId].append(entry.itemId)
-
-
-
-all_drops = (
-    pd.DataFrame(data=requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
-                              .json()
-                              ["matrix"],
-                 columns=["stageId", "itemId", "times", "quantity"])
-      .query("times >= @MIN_RUN_THRESHOLD \
-              and itemId in @ALLOWED_ITEMS")
-)
-            
-
+# TODO: iterate through regions
 
 valid_stage_ids = get_stage_ids(Region.GLOBAL)
 
