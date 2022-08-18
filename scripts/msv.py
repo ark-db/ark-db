@@ -213,7 +213,7 @@ top_stages = (
     pd.DataFrame(data=stage_effs,
                  columns=["efficiency"])
       .set_index(drop_data.index)
-      .assign(name = stage_data["code"])
+      .assign(code = stage_data["code"])
       .sort_values(by="efficiency", ascending=False)
 )
 
