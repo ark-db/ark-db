@@ -2,6 +2,7 @@ import utils
 from enum import Enum
 import requests
 import pandas as pd
+from collections import defaultdict
 import numpy as np
 from scipy.optimize import linprog
 
@@ -131,9 +132,29 @@ all_stages = (
 
 sanity_costs = (
     pd.DataFrame(data=all_stages,
-                 columns=["stageId", "apCost"])
+                 columns=["stageId", "code", "apCost"])
       .set_index("stageId")
 )
+
+for stage in all_stages:
+    if (not stage.get("dropInfos")) or stage["stageId"] == "recruit":
+        stage.update({"dropInfos": []})
+
+main_stage_drops = defaultdict(list)
+
+stage_data = (
+    pd.json_normalize(data=all_stages,
+                      record_path="dropInfos",
+                      meta="stageId")
+      .pipe(lambda df: df[df["dropType"] == "NORMAL_DROP"])
+      .filter(["stageId", "itemId"])
+      .pipe(lambda df: df[~df["itemId"].isna()])
+)
+
+for entry in stage_data.itertuples(index=False):
+    main_stage_drops[entry.stageId].append(entry.itemId)
+
+
 
 all_drops = (
     pd.DataFrame(data=requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
