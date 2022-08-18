@@ -222,10 +222,10 @@ farming_stages = defaultdict(list)
 
 for stage in top_stages.itertuples(index=False):
     for main_drop in stage_drops[stage.stageId]:
-        drop_rate = drop_data.at[stage.stageId, main_drop]
-        farming_stages[main_drop].append({
-            "stage": stage.code,
-            "efficiency": round(stage.efficiency, 3),
-            "rate": round(drop_rate, 3),
-            "espd": round(stage.apCost / drop_rate, 2)
-        })
+        if (drop_rate := drop_data.at[stage.stageId, main_drop]) > 0:
+            farming_stages[main_drop].append({
+                "stage": stage.code,
+                "efficiency": round(stage.efficiency, 3),
+                "rate": round(drop_rate, 3),
+                "espd": round(stage.apCost / drop_rate, 2)
+            })
