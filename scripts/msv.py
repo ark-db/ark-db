@@ -24,43 +24,10 @@ drops = (
             ["matrix"]
 )
 
-all_drops = (
-    pd.DataFrame(data=drops,
-                 columns=["stageId", "itemId", "times", "quantity"])
-      .query("times >= @MIN_RUN_THRESHOLD \
-              and itemId in @ALLOWED_ITEMS")
-)
-
 stages = (
     requests.get("https://penguin-stats.io/PenguinStats/api/v2/stages")
             .json()
 )
-
-stage_data = (
-    pd.DataFrame(data=stages,
-                 columns=["stageId", "code", "apCost"])
-      .set_index("stageId")
-)
-
-
-
-for stage in stages:
-    if (not stage.get("dropInfos")) or stage["stageId"] == "recruit":
-        stage.update({"dropInfos": []})
-
-stage_drops = defaultdict(list)
-
-main_stage_drops = (
-    pd.json_normalize(data=stages,
-                      record_path="dropInfos",
-                      meta="stageId")
-      .pipe(lambda df: df[df["dropType"] == "NORMAL_DROP"])
-      .filter(["stageId", "itemId"])
-      .pipe(lambda df: df[~df["itemId"].isna()])
-)
-
-for entry in main_stage_drops.itertuples(index=False):
-    stage_drops[entry.stageId].append(entry.itemId)
 
 
 
@@ -127,6 +94,41 @@ def patch_lmd_stages(df: pd.DataFrame, valid_stages: set) -> pd.DataFrame:
         if stage_id in valid_stages:
             df.at[stage_id, "lmd"] = lmd
     return df
+
+
+
+all_drops = (
+    pd.DataFrame(data=drops,
+                 columns=["stageId", "itemId", "times", "quantity"])
+      .query("times >= @MIN_RUN_THRESHOLD \
+              and itemId in @ALLOWED_ITEMS")
+)
+
+
+
+stage_data = (
+    pd.DataFrame(data=stages,
+                 columns=["stageId", "code", "apCost"])
+      .set_index("stageId")
+)
+
+for stage in stages:
+    if (not stage.get("dropInfos")) or stage["stageId"] == "recruit":
+        stage.update({"dropInfos": []})
+
+main_stage_drops = (
+    pd.json_normalize(data=stages,
+                      record_path="dropInfos",
+                      meta="stageId")
+      .pipe(lambda df: df[df["dropType"] == "NORMAL_DROP"])
+      .filter(["stageId", "itemId"])
+      .pipe(lambda df: df[~df["itemId"].isna()])
+)
+
+stage_drops = defaultdict(list)
+
+for entry in main_stage_drops.itertuples(index=False):
+    stage_drops[entry.stageId].append(entry.itemId)
 
 
 
