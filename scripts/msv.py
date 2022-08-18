@@ -146,10 +146,9 @@ all_drops = (
             
 
 
-
 current_stage_ids = get_stage_ids(Region.GLOBAL)
 
-drop_data = (
+drop_matrix = (
     all_drops.pipe(lambda df: df[df["stageId"].isin(current_stage_ids)])
              .assign(drop_rate = lambda df: df["quantity"] / df["times"])
              .pivot(index="stageId",
@@ -159,18 +158,23 @@ drop_data = (
              .pipe(patch_lmd_stages, current_stage_ids)
              .rename(columns={"lmd": "4001"})
              .reindex(columns=ALLOWED_ITEMS)
+             .to_numpy(na_value=0)
 )
 
-sanity_costs = sanity_costs.reindex(drop_data.index)
+sanity_cost_vec = (
+    sanity_costs.reindex(current_stage_ids)
+                .to_numpy()
+                .flatten()
+)
 
-
-
-
-
-drop_matrix = drop_data.to_numpy(na_value=0)
-sanity_cost_vec = sanity_costs.to_numpy().flatten()
-
-sanity_values = linprog(-drop_matrix.sum(axis=0), drop_matrix, sanity_cost_vec, item_equiv_matrix, np.zeros(num_rows)).x
+sanity_values = (
+    linprog(-drop_matrix.sum(axis=0),
+            drop_matrix,
+            sanity_cost_vec,
+            item_equiv_matrix,
+            np.zeros(num_rows))
+    .x
+)
 
 stage_effs = (drop_matrix.dot(sanity_values) - sanity_cost_vec) / sanity_cost_vec + 1
 
