@@ -216,7 +216,6 @@ top_stages = (
       .set_index(drop_data.index)
       .merge(stage_data, on="stageId")
       .reset_index()
-      #.sort_values(by="efficiency", ascending=False)
 )
 
 farming_stages = defaultdict(list)
