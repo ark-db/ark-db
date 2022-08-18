@@ -210,8 +210,11 @@ sanity_values = (
 stage_effs = (drop_matrix.dot(sanity_values) - sanity_cost_vec) / sanity_cost_vec + 1
 
 top_stages = (
-    pd.DataFrame(stage_effs)
+    pd.DataFrame(data=stage_effs,
+                 columns=["efficiency"])
       .set_index(drop_data.index)
+      .assign(name = stage_data["code"])
+      .sort_values(by="efficiency", ascending=False)
 )
 
 print(top_stages)
