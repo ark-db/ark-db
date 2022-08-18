@@ -140,9 +140,9 @@ for stage in all_stages:
     if (not stage.get("dropInfos")) or stage["stageId"] == "recruit":
         stage.update({"dropInfos": []})
 
-main_stage_drops = defaultdict(list)
+stage_drops = defaultdict(list)
 
-stage_data = (
+main_stage_drops = (
     pd.json_normalize(data=all_stages,
                       record_path="dropInfos",
                       meta="stageId")
@@ -151,8 +151,8 @@ stage_data = (
       .pipe(lambda df: df[~df["itemId"].isna()])
 )
 
-for entry in stage_data.itertuples(index=False):
-    main_stage_drops[entry.stageId].append(entry.itemId)
+for entry in main_stage_drops.itertuples(index=False):
+    stage_drops[entry.stageId].append(entry.itemId)
 
 
 
