@@ -132,7 +132,7 @@ all_stages = (
 
 sanity_costs = (
     pd.DataFrame(data=all_stages,
-                 columns=["stageId", "code", "apCost"])
+                 columns=["stageId", "apCost"])
       .set_index("stageId")
 )
 
