@@ -130,9 +130,9 @@ all_stages = (
             .json()
 )
 
-sanity_costs = (
+stage_data = (
     pd.DataFrame(data=all_stages,
-                 columns=["stageId", "apCost"])
+                 columns=["stageId", "code", "apCost"])
       .set_index("stageId")
 )
 
@@ -175,16 +175,17 @@ drop_data = (
              .pivot(index="stageId",
                     columns="itemId",
                     values="drop_rate")
-             .assign(lmd = sanity_costs["apCost"] * 12)
+             .assign(lmd = stage_data["apCost"] * 12)
              .pipe(patch_lmd_stages, valid_stage_ids)
              .rename(columns={"lmd": "4001"})
              .reindex(columns=ALLOWED_ITEMS)
 )
 
 sanity_cost_vec = (
-    sanity_costs.reindex(drop_data.index)
-                .to_numpy()
-                .flatten()
+    stage_data["apCost"]
+              .reindex(drop_data.index)
+              .to_numpy()
+              .flatten()
 )
 
 drop_matrix = drop_data.to_numpy(na_value=0)
