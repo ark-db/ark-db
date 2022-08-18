@@ -102,6 +102,10 @@ all_drops = (
                  columns=["stageId", "itemId", "times", "quantity"])
       .query("times >= @MIN_RUN_THRESHOLD \
               and itemId in @ALLOWED_ITEMS")
+      .assign(drop_rate = lambda df: df["quantity"] / df["times"])
+      .pivot(index="stageId",
+             columns="itemId",
+             values="drop_rate")
 )
 
 
@@ -178,11 +182,7 @@ num_rows, _ = item_equiv_matrix.shape
 valid_stage_ids = get_stage_ids(Region.GLOBAL)
 
 drop_data = (
-    all_drops.pipe(lambda df: df[df["stageId"].isin(valid_stage_ids)])
-             .assign(drop_rate = lambda df: df["quantity"] / df["times"])
-             .pivot(index="stageId",
-                    columns="itemId",
-                    values="drop_rate")
+    all_drops.pipe(lambda df: df[df.index.isin(valid_stage_ids)])
              .assign(lmd = stage_data["apCost"] * 12)
              .pipe(patch_lmd_stages, valid_stage_ids)
              .rename(columns={"lmd": "4001"})
