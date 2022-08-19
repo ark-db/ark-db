@@ -233,8 +233,11 @@ for region in Region:
                     "rate": round(drop_rate, 3),
                     "espd": round(stage.apCost / drop_rate, 2)
                 })
-    
-    all_farming_stages.update({region.name: farming_stages_by_item})
+
+    all_farming_stages.update({
+        region.name: [{"itemId": item, "stages": stages} 
+                      for item, stages in farming_stages_by_item.items()]
+    })
 
 with open("./src/lib/data/farming.json", "w") as f:
     json.dump(all_farming_stages, f)
