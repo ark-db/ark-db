@@ -26,4 +26,4 @@ export const makeT3 = writable(false);
 
 
 // farming
-export const region = writable("global");
+export const region = writable("glb");

@@ -33,7 +33,7 @@ stages = (
 
 
 class Region(Enum):
-    GLOBAL = "US"
+    GLB = "US"
     CN = "CN"
 
 def update_mat_relations(df: pd.DataFrame) -> pd.DataFrame:
