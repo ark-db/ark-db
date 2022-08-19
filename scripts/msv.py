@@ -178,56 +178,59 @@ num_rows, _ = item_rel_matrix.shape
 
 
 
-# TODO: iterate through regions
+all_farming_stages = dict()
 
-valid_stage_ids = get_stage_ids(Region.GLOBAL)
+for region in Region:
+    valid_stage_ids = get_stage_ids(region)
 
-curr_drop_data = (
-    drop_data.pipe(lambda df: df[df.index.isin(valid_stage_ids)])
-             .assign(lmd = stage_data["apCost"] * 12)
-             .pipe(update_lmd_stages, valid_stage_ids)
-             .rename(columns={"lmd": "4001"})
-             .reindex(columns=ALLOWED_ITEMS)
-             .fillna(0)
-)
+    curr_drop_data = (
+        drop_data.pipe(lambda df: df[df.index.isin(valid_stage_ids)])
+                 .assign(lmd = stage_data["apCost"] * 12)
+                 .pipe(update_lmd_stages, valid_stage_ids)
+                 .rename(columns={"lmd": "4001"})
+                 .reindex(columns=ALLOWED_ITEMS)
+                 .fillna(0)
+    )
 
-sanity_cost_vec = (
-    stage_data["apCost"]
-              .reindex(curr_drop_data.index)
-              .to_numpy()
-              .flatten()
-)
+    sanity_cost_vec = (
+        stage_data["apCost"]
+                  .reindex(curr_drop_data.index)
+                  .to_numpy()
+                  .flatten()
+    )
 
-drop_matrix = curr_drop_data.to_numpy()
+    drop_matrix = curr_drop_data.to_numpy()
 
-sanity_values = (
-    linprog(-drop_matrix.sum(axis=0),
-            drop_matrix,
-            sanity_cost_vec,
-            item_rel_matrix,
-            np.zeros(num_rows))
-    .x
-)
+    sanity_values = (
+        linprog(-drop_matrix.sum(axis=0),
+                drop_matrix,
+                sanity_cost_vec,
+                item_rel_matrix,
+                np.zeros(num_rows))
+        .x
+    )
 
-stage_effics = (drop_matrix.dot(sanity_values) - sanity_cost_vec) / sanity_cost_vec + 1
+    stage_effics = (drop_matrix.dot(sanity_values) - sanity_cost_vec) / sanity_cost_vec + 1
 
-farming_stages = (
-    pd.DataFrame(data=stage_effics,
-                 columns=["effic"])
-      .set_index(curr_drop_data.index)
-      .merge(stage_data, on="stageId")
-      .reset_index()
-)
+    farming_stages = (
+        pd.DataFrame(data=stage_effics,
+                     columns=["effic"])
+          .set_index(curr_drop_data.index)
+          .merge(stage_data, on="stageId")
+          .reset_index()
+    )
 
-farming_stages_by_item = defaultdict(list)
+    farming_stages_by_item = defaultdict(list)
 
-for stage in farming_stages.itertuples(index=False):
-    for main_drop in main_drops_by_stage[stage.stageId]:
-        drop_rate = curr_drop_data.at[stage.stageId, main_drop]
-        if drop_rate > 0:
-            farming_stages_by_item[main_drop].append({
-                "stage": stage.code,
-                "effic": round(stage.effic, 3),
-                "rate": round(drop_rate, 3),
-                "espd": round(stage.apCost / drop_rate, 2)
-            })
+    for stage in farming_stages.itertuples(index=False):
+        for main_drop in main_drops_by_stage[stage.stageId]:
+            drop_rate = curr_drop_data.at[stage.stageId, main_drop]
+            if drop_rate > 0:
+                farming_stages_by_item[main_drop].append({
+                    "stage": stage.code,
+                    "effic": round(stage.effic, 3),
+                    "rate": round(drop_rate, 3),
+                    "espd": round(stage.apCost / drop_rate, 2)
+                })
+    
+    all_farming_stages.update({region.value: farming_stages_by_item})
