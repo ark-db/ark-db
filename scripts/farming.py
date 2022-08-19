@@ -236,7 +236,7 @@ for region in Region:
 
     all_farming_stages.update({
         region.name.lower(): [
-            {"itemId": item, "stages": stages} 
+            {"id": item, "stages": stages} 
             for item, stages in farming_stages_by_item.items()
         ]
     })
