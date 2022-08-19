@@ -11,17 +11,18 @@
     import farming from "$lib/data/farming.json";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
-
-    let farmingItems = Object.values(items)
-                             .filter(({ item }) => item.type === "material" || item.type === "misc")
 </script>
 
-<section class="settings">
-
-</section>
+<p>Lorem Ipsum</p>
 
 <section class="items">
-    {#each farmingItems as item}
-        {{}}
+    {#each farming[$region].sort((prev, curr) => items[prev.itemId].sortId - items[curr.itemId].sortId) as { itemId, stages }}
+        <ItemIcon id={itemId} />
     {/each}
 </section>
+
+<style>
+    .items {
+        padding: 0;
+    }
+</style>
