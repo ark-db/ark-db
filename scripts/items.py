@@ -1,6 +1,5 @@
 import utils
 import requests
-from collections import defaultdict
 import json
 
 EXCLUDED_RECIPES = (
@@ -27,20 +26,21 @@ base_data = (
 
 recipes = list(base_data["manufactFormulas"].values()) + list(base_data["workshopFormulas"].values())
 
-item_id_to_recipe_cost = {id: recipe["costs"] for recipe in recipes if (id := recipe["itemId"]) not in EXCLUDED_RECIPES}
+item_id_to_recipe_cost = {id: recipe["costs"]
+                          for recipe in recipes if (id := recipe["itemId"]) not in EXCLUDED_RECIPES}
 
-all_item_data = defaultdict(dict)
+all_item_data = dict()
 
 for type, items in utils.VALID_ITEMS.items():
     for id in items:
         data = cn_items[id]
-        all_item_data[id] = {
-            "itemId": data["itemId"],
-            "name": en_items.get(id, cn_items[id])["name"],
-            "type": type,
-            "rarity": data["rarity"],
-            "sortId": data["sortId"],
-        }
+        all_item_data.update({
+            id: {"itemId": data["itemId"], # TODO: check if this is redundant
+                 "name": en_items.get(id, cn_items[id])["name"],
+                 "type": type,
+                 "rarity": data["rarity"],
+                 "sortId": data["sortId"],}
+        })
         if (cost := item_id_to_recipe_cost.get(id)):
             all_item_data[id].update({"recipe": utils.format_cost(cost)})
 
