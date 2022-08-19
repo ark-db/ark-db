@@ -8,7 +8,7 @@ from scipy.optimize import linprog
 
 MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"] + utils.VALID_ITEMS["misc"]
-BYPRODUCT_RATE_BONUS = 1.8
+BYPROD_RATE_BONUS = 1.8
 # EXP_DEVALUE_FACTOR = 0.8
 
 recipes = (
@@ -35,7 +35,7 @@ class Region(Enum):
     GLOBAL = "US"
     CN = "CN"
 
-def update_material_relations(df: pd.DataFrame) -> pd.DataFrame:
+def update_mat_relations(df: pd.DataFrame) -> pd.DataFrame:
     # relationships between exp cards + pure gold; base unit is Drill Battle Record (200 exp)
     MAT_RELATIONS = {
         "2002": 2,
@@ -140,40 +140,40 @@ recipe_matrix = (
     pd.json_normalize(data=recipes,
                       record_path="costs",
                       meta=["itemId", "count", "goldCost"],
-                      record_prefix="ing_")
+                      record_prefix="ingred_")
       .pipe(lambda df: df[df["itemId"].isin(ALLOWED_ITEMS)])
       .pivot(index=["itemId", "count", "goldCost"],
-             columns="ing_id",
-             values="ing_count")
+             columns="ingred_id",
+             values="ingred_count")
       .reset_index("goldCost")
       .rename(columns={"goldCost": "4001"})
       .reindex(columns=ALLOWED_ITEMS)
-      .pipe(update_material_relations)
+      .pipe(update_mat_relations)
       .pipe(lambda df: -df)
       .pipe(fill_diagonal)
 )
 
-byproduct_value_matrix = (
+byprod_value_matrix = (
     pd.json_normalize(data=recipes,
                       record_path="extraOutcomeGroup",
                       meta=["itemId", "extraOutcomeRate"],
-                      record_prefix="bp_")
+                      record_prefix="byprod_")
       .pipe(lambda df: df[df["itemId"].isin(ALLOWED_ITEMS)])
-      .assign(total_bp_weight = lambda df: df.groupby("itemId")
-                                             ["bp_weight"]
-                                             .transform("sum"))
-      .assign(bp_sanity_coeff = lambda df: BYPRODUCT_RATE_BONUS *
-                                           df["extraOutcomeRate"] *
-                                           df["bp_weight"] /
-                                           df["total_bp_weight"])
+      .assign(total_weight = lambda df: df.groupby("itemId")
+                                          ["byprod_weight"]
+                                          .transform("sum"))
+      .assign(byprod_value = lambda df: BYPROD_RATE_BONUS *
+                                        df["extraOutcomeRate"] *
+                                        df["byprod_weight"] /
+                                        df["total_weight"])
       .pivot(index="itemId",
-             columns="bp_itemId",
-             values="bp_sanity_coeff")
+             columns="byprod_itemId",
+             values="byprod_value")
       .reindex(index=recipe_matrix.index.get_level_values("itemId"),
                columns=ALLOWED_ITEMS)
 )
 
-item_equiv_matrix = recipe_matrix.to_numpy(na_value=0) + byproduct_value_matrix.to_numpy(na_value=0)
+item_equiv_matrix = recipe_matrix.to_numpy(na_value=0) + byprod_value_matrix.to_numpy(na_value=0)
 num_rows, _ = item_equiv_matrix.shape
 
 
