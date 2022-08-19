@@ -5,6 +5,7 @@ import pandas as pd
 from collections import defaultdict
 from scipy.optimize import linprog
 import numpy as np
+import json
 
 MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"] + utils.VALID_ITEMS["misc"]
@@ -234,3 +235,6 @@ for region in Region:
                 })
     
     all_farming_stages.update({region.value: farming_stages_by_item})
+
+with open("./src/lib/data/farming.json", "w") as f:
+    json.dump(all_farming_stages, f)
