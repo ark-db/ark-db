@@ -235,8 +235,10 @@ for region in Region:
                 })
 
     all_farming_stages.update({
-        region.name: [{"itemId": item, "stages": stages} 
-                      for item, stages in farming_stages_by_item.items()]
+        region.name.lower(): [
+            {"itemId": item, "stages": stages} 
+            for item, stages in farming_stages_by_item.items()
+        ]
     })
 
 with open("./src/lib/data/farming.json", "w") as f:
