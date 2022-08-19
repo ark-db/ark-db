@@ -33,20 +33,22 @@ all_item_data = dict()
 
 for type, items in utils.VALID_ITEMS.items():
     for id in items:
-        data = cn_items[id]
-        all_item_data.update({
-            id: {"itemId": data["itemId"], # TODO: check if this is redundant
-                 "name": en_items.get(id, cn_items[id])["name"],
-                 "type": type,
-                 "rarity": data["rarity"],
-                 "sortId": data["sortId"]
-            }
-        })
-        if (cost := item_id_to_recipe_cost.get(id)):
-            all_item_data[id].update({"recipe": utils.format_cost(cost)})
+        item_info = cn_items[id]
+        item_data = {
+            "itemId": item_info["itemId"], # TODO: check if this is redundant
+            "name": en_items.get(id, cn_items[id])["name"],
+            "type": type,
+            "rarity": item_info["rarity"],
+            "sortId": item_info["sortId"]
+        }
 
-        icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{data['iconId']}.png"
+        if (cost := item_id_to_recipe_cost.get(id)):
+            item_data.update({"recipe": utils.format_cost(cost)})
+
+        icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{item_info['iconId']}.png"
         utils.save_image(icon_url, "items", id)
+
+        all_item_data.update({id: item_data})
 
 with open("./src/lib/data/items.json", "w") as f:
     json.dump(all_item_data, f)
