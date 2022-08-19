@@ -1,10 +1,10 @@
 import utils
 import requests
+from enum import Enum
 import pandas as pd
 from collections import defaultdict
-from enum import Enum
-import numpy as np
 from scipy.optimize import linprog
+import numpy as np
 
 MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"] + utils.VALID_ITEMS["misc"]
