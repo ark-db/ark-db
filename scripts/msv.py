@@ -173,8 +173,8 @@ byprod_value_matrix = (
                columns=ALLOWED_ITEMS)
 )
 
-item_equiv_matrix = recipe_matrix.to_numpy(na_value=0) + byprod_value_matrix.to_numpy(na_value=0)
-num_rows, _ = item_equiv_matrix.shape
+item_rel_matrix = recipe_matrix.to_numpy(na_value=0) + byprod_value_matrix.to_numpy(na_value=0)
+num_rows, _ = item_rel_matrix.shape
 
 
 
@@ -204,7 +204,7 @@ sanity_values = (
     linprog(-drop_matrix.sum(axis=0),
             drop_matrix,
             sanity_cost_vec,
-            item_equiv_matrix,
+            item_rel_matrix,
             np.zeros(num_rows))
     .x
 )
