@@ -7,9 +7,21 @@
 </svelte:head>
 
 <script>
+    import { region } from "../stores.js";
     import farming from "$lib/data/farming.json";
     import items from "$lib/data/items.json";
-    import { region } from "../stores.js";
+    import ItemIcon from "$lib/components/ItemIcon.svelte";
+
+    let farmingItems = Object.values(items)
+                             .filter(({ item }) => item.type === "material" || item.type === "misc")
 </script>
 
-<p>Lorem ipsum</p>
+<section class="settings">
+
+</section>
+
+<section class="items">
+    {#each farmingItems as item}
+        {{}}
+    {/each}
+</section>
