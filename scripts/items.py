@@ -39,7 +39,8 @@ for type, items in utils.VALID_ITEMS.items():
                  "name": en_items.get(id, cn_items[id])["name"],
                  "type": type,
                  "rarity": data["rarity"],
-                 "sortId": data["sortId"],}
+                 "sortId": data["sortId"]
+            }
         })
         if (cost := item_id_to_recipe_cost.get(id)):
             all_item_data[id].update({"recipe": utils.format_cost(cost)})
