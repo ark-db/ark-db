@@ -4,7 +4,7 @@
     export let message;
 </script>
 
-<h1>
+<h1 class="title">
     {status} | {message}
 </h1>
 
