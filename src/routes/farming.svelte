@@ -14,8 +14,6 @@
     };
 </script>
 
-<p>Lorem Ipsum</p>
-
 <section class="items">
     {#each sortItems(farming[$region]) as { id, stages }}
         <ItemIcon {id} />
