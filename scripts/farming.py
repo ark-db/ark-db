@@ -10,6 +10,7 @@ import json
 MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"] + utils.VALID_ITEMS["misc"]
 BYPROD_RATE_BONUS = 1.8
+RECORDED_ITEMS = utils.VALID_ITEMS["material"]
 # EXP_DEVALUE_FACTOR = 0.8
 
 recipes = (
@@ -225,8 +226,7 @@ for region in Region:
 
     for stage in farming_stages.itertuples(index=False):
         for main_drop in main_drops_by_stage[stage.stageId]:
-            drop_rate = curr_drop_data.at[stage.stageId, main_drop]
-            if drop_rate > 0:
+            if main_drop in RECORDED_ITEMS and (drop_rate := curr_drop_data.at[stage.stageId, main_drop]) > 0:
                 farming_stages_by_item[main_drop].append({
                     "stage": stage.code,
                     "effic": round(stage.effic, 3),
