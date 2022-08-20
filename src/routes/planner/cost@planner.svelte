@@ -79,7 +79,7 @@
 
 
 <section class="settings">
-    <div id="filter">
+    <div id="filter-status">
         <label>
             <input type="checkbox" bind:group={$costFilter} value={false}>
             Include <span id="notready">unprepared</span> upgrades
@@ -171,7 +171,7 @@
         justify-content: space-between;
         gap: 1em 3em;
     }
-    #filter {
+    #filter-status {
         display: flex;
         flex-wrap: wrap;
         gap: 1em 3em;
