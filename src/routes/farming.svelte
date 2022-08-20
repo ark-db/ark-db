@@ -17,6 +17,9 @@
 <section class="items">
     {#each sortItems(farming[$region]) as { id, stages }}
         <ItemIcon {id} />
+        {#each stages.slice(0, 3) as stage}
+            {stage}
+        {/each}
     {/each}
 </section>
 
