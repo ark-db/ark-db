@@ -15,7 +15,7 @@
 
 <div>
     <img src={bgSrc} alt="background" />
-    <img src={itemSrc} alt={name} />
+    <img src={itemSrc} title={name} alt={name} />
     {#if count !== undefined}
         <p class:neg={count < 0}>{compactNum.format(count)}</p>
     {/if}
