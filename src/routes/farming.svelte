@@ -15,26 +15,35 @@
     };
 </script>
 
-<section class="grid">
+<div class="grid">
     {#each sortItems(farming[$region]) as { id, stages }}
         <div class="item">
-            <ItemIcon {id} --size="100px" />
-            {#each stages.slice(0, 3) as stage}
-                <FarmingStage {...stage} />
-            {/each}
+            <ItemIcon {id} --size="75px" />
+            <div class="stages">
+                {#each stages.slice(0, 3) as stage}
+                    <FarmingStage {...stage} />
+                {/each}
+            </div>
         </div>
     {/each}
-    </section>
+</div>
 
 <style>
     .grid {
+        margin: 2em 0;
         display: grid;
+        /**grid-template-columns: repeat(auto-fill, 25em);*/
         grid-template-columns: repeat(auto-fill, 30em);
-        gap: 1em;
+        gap: 2em 1em;
     }
     .item {
-        flex-grow: 1;
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
+    }
+    .stages {
+        margin-left: 0.75em;
+        display: flex;
+        gap: 1.5em;
     }
 </style>

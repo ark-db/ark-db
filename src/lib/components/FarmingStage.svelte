@@ -23,7 +23,7 @@
 <div class={categorize(effic)}>
     <h2>{stage}</h2>
     <div class="stats">
-        <p>{effic}</p>
+        <p>{effic === 1 ? effic.toFixed(1) : effic}</p>
         <p>{toPercent.format(rate)}</p>
         <p>{espd}</p>
     </div>
@@ -33,6 +33,7 @@
     .poor, .bad, .fair, .good, .great {
         display: flex;
         align-items: center;
+        gap: 0.5em;
     }
     .poor * {
         color: #e84141;
@@ -50,12 +51,15 @@
         color: #118fee;
     }
     h2 {
-        font-size: 2em;
+        font-size: 1.5em;
     }
     .stats {
-        flex-grow: 1;
         display: flex;
         flex-direction: column;
         justify-content: center;
+    }
+    p {
+        margin: 0.25em;
+        font-size: 0.7em;
     }
 </style>
