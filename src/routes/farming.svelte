@@ -4,7 +4,7 @@
 </svelte:head>
 
 <script>
-    import { region } from "./stores.js";
+    import { region, sortMode } from "./stores.js";
     import farming from "$lib/data/farming.json";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
@@ -13,17 +13,32 @@
     function sortItems(list) {
         return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
     };
+    function sortStages(stages, mode) {
+        return stages.sort((prev, curr) => (prev[mode] - curr[mode]) * (mode === "effic" ? -1 : 1))
+    }
 </script>
 
 <section class="content settings">
-    <label>
-        <input type=radio bind:group={$region} value={"glb"}>
-        US/JP/KR
-    </label>
-    <label>
-        <input type=radio bind:group={$region} value={"cn"}>
-        CN
-    </label>
+    <div class="group">
+        <label>
+            <input type=radio bind:group={$region} value={"glb"}>
+            US/JP/KR
+        </label>
+        <label>
+            <input type=radio bind:group={$region} value={"cn"}>
+            CN
+        </label>
+    </div>
+    <div class="group">
+        <label>
+            <input type=radio bind:group={$sortMode} value={"effic"}>
+            Sort by stage efficiency
+        </label>
+        <label>
+            <input type=radio bind:group={$sortMode} value={"espd"}>
+            Sort by expected sanity per drop
+        </label>
+    </div>
 </section>
 
 <section class="grid">
@@ -31,7 +46,7 @@
         <div class="item">
             <ItemIcon {id} --size="75px" />
             <div class="stages">
-                {#each stages.slice(0, 3) as stage}
+                {#each sortStages(stages, $sortMode).slice(0, 3) as stage}
                     <FarmingStage {...stage} />
                 {/each}
             </div>
@@ -44,6 +59,10 @@
         margin-top: 2em;
         padding: 1em;
         background-color: var(--light-strong);
+        display: flex;
+        justify-content: space-between;
+    }
+    .group {
         display: flex;
         gap: 2em;
     }
