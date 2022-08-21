@@ -1,18 +1,22 @@
 <script>
     import { page } from '$app/stores';
     const logo = "/favicon.svg"
+	let w;
 </script>
 
 
 
-<header>
-    <a href="/">
-		<img src={logo} alt="ArkDB">
-	</a>
+<header bind:clientWidth={w}>
+	{#if w > 450}
+    	<a href="/">
+			<img src={logo} alt="ArkDB">
+		</a>
+	{/if}
 
     <nav>
-        <a href="/" class:active={$page.url.pathname === '/'}>Home</a>
+        <a href="/" class:active={$page.url.pathname === "/"}>Home</a>
 		<a href="/planner" class:active={$page.url.pathname.startsWith("/planner")}>Planner</a>
+		<a href="/farming" class:active={$page.url.pathname === "/farming"}>Farming</a>
     </nav>
 </header>
 
@@ -27,16 +31,18 @@
 		background-color: var(--dark-moderate);
 		box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.75);
 		display: flex;
-        gap: 1em;
+		align-items: center;
 	}
 	img {
-		margin: 0 10px;
+		margin-left: 1em;
 		width: 100%;
 		max-width: 40px;
 		min-width: 40px;
 	}
 	nav {
+		padding: 1em;
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: 1em;
 	}
@@ -58,7 +64,7 @@
 	main {
 		margin: auto;
         padding: 5px;
-		max-width: clamp(800px, 90vw, 1500px);
+		max-width: clamp(800px, 100vw, 1500px);
 		display: flex;
         flex-direction: column;
         gap: 10px;
@@ -78,11 +84,12 @@
 	}
 	:global(.title) {
         margin: 0.6em 0 0.2em 0;
+		font-size: 2em;
         text-align: center;
 		color: var(--light-moderate);
 		text-shadow: 3px 3px var(--dark-strong);
     }
-	:global(main > section) {
+	:global(main > .content) {
 		border-radius: 8px;
 		box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.4);
 	}
@@ -99,7 +106,7 @@
         margin-right: 0.5em;
 	}
 	:global(.placeholder) {
-		margin: 15px;
+		margin: 1.5em 15px;
 		border: 1px dashed var(--light-moderate);
         border-radius: 10px;
         padding: 1em;

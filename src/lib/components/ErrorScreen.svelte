@@ -1,10 +1,9 @@
 <script>
     import src from "../images/skalter.webp";
-    export let status;
-    export let message;
+    export let status, message;
 </script>
 
-<h1>
+<h1 class="title">
     {status} | {message}
 </h1>
 

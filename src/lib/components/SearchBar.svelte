@@ -21,7 +21,7 @@
     on:select={({ detail }) => $selectedChar = detail.original}
 >
     <svelte:fragment slot="no-results">
-        <div id="notfound">
+        <div class="notfound">
             No results found for "{value}"
         </div>
     </svelte:fragment>
@@ -29,7 +29,7 @@
 </Typeahead>
 
 <style>
-    #notfound {
+    .notfound {
         overflow-wrap: anywhere;
     }
 </style>

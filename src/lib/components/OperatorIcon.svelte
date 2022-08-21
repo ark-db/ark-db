@@ -6,7 +6,7 @@
     $: ({ name, rarity } = operators[charId]);
 </script>
 
-<img class={rarity} {src} alt={name} />
+<img class={rarity} {src} title={name} alt={name} />
 
 <style>
     img {
