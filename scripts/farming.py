@@ -61,7 +61,7 @@ def get_stage_ids(region: Region) -> set[str]:
                 ["matrix"]
     )
     current_stage_ids = set(
-        item["stageId"] for item in current_drops if item["stageId"].startswith(("main", "tough", "sub", "wk", "act"))
+        item["stageId"] for item in current_drops if item["stageId"].startswith(("main", "sub", "wk", "act"))
     )
     return current_stage_ids
 
@@ -88,8 +88,7 @@ def update_lmd_stages(df: pd.DataFrame, valid_stages: set) -> pd.DataFrame:
         "main_08-01": 2700,
         "main_08-04": 1216,
         "main_09-01": 2700,
-        "main_10-07": 3480,
-        "tough_10-07": 3480,
+        "main_10-07": 3480, # same as tough_10-07
     }
     for stage_id, lmd in LMD_STAGES.items():
         if stage_id in valid_stages:
@@ -107,9 +106,12 @@ drop_data = (
       .pivot(index="stageId",
              columns="itemId",
              values="drop_rate")
+      .fillna(0)
+      .assign(norm_id = lambda df: df.index.str.replace("tough", "main"))
+      .groupby("norm_id")
+      .mean()
+      .rename_axis("stageId")
 )
-
-
 
 stage_data = (
     pd.DataFrame(data=stages,
@@ -190,7 +192,6 @@ for region in Region:
                  .pipe(update_lmd_stages, valid_stage_ids)
                  .rename(columns={"lmd": "4001"})
                  .reindex(columns=ALLOWED_ITEMS)
-                 .fillna(0)
     )
 
     sanity_cost_vec = (
@@ -200,7 +201,7 @@ for region in Region:
                   .flatten()
     )
 
-    drop_matrix = curr_drop_data.to_numpy()
+    drop_matrix = curr_drop_data.to_numpy(na_value=0)
 
     sanity_values = (
         linprog(-drop_matrix.sum(axis=0),
