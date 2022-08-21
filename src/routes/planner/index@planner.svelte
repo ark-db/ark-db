@@ -54,9 +54,9 @@
 
 <svelte:window bind:innerWidth={innerWidth} />
 
-<section id="top">
+<section class="content top">
     <SearchBar {selectedChar} />
-    <section id="settings">
+    <section class="settings">
         <label>
             <input type="checkbox" bind:checked={$splitByStatus}>
             Organize upgrades by status
@@ -70,7 +70,7 @@
 
 {#key $selectedChar}
 {#if $selectedChar?.charId !== undefined}
-    <section id="banner">
+    <section class="content banner">
         <div>
             <OperatorIcon charId={$selectedChar.charId} --size="100px" --border="7.5px" />
             <h1>{$selectedChar.name}</h1>
@@ -84,7 +84,7 @@
     </section>
 {/if}
 {#if $selectedChar?.upgrades !== undefined}
-    <section id="select">
+    <section class="content select">
         {#each $selectedChar.upgrades as category, idx}
             {#if category.data.length > 0}
                 <div>
@@ -98,7 +98,7 @@
 
 <h1 class="title">Upgrades</h1>
 {#if $allSelected.length > 0}
-    <section id="taskboard">
+    <section class="content taskboard">
     {#if $splitByStatus}
         {#if allNotReady.length > 0}
             <section use:dndzone={{items: allNotReady, flipDurationMs, dropFromOthersDisabled: true}}
@@ -144,7 +144,8 @@
 
 
 <style>
-    #top {
+    .top {
+        margin-bottom: 10px;
         padding: 10px;
         background-color: var(--light-strong);
         display: flex;
@@ -153,14 +154,14 @@
         justify-content: space-between;
         gap: 1em;
     }
-    #settings {
+    .settings {
         margin-right: calc(1em - 7.75px);
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         gap: 1em 3em;
     }
-    #banner {
+    .banner {
         padding: 10px;
         background-color: var(--light-strong);
         display: flex;
@@ -169,14 +170,14 @@
         justify-content: space-between;
         gap: 0.5em 2em;
     }
-    #banner div {
+    .banner div {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
         column-gap: 1em;
     }
-    #banner h1 {
+    .banner h1 {
         margin: 0.5em 0 0.5em 0;
         text-align: center;
         font-size: 2em;
@@ -205,7 +206,7 @@
     button:hover > p {
         color: white;
     }
-    #select {
+    .select {
         padding: 5px;
         background-color: var(--light-strong);
         display: flex;
@@ -213,10 +214,10 @@
         align-items: flex-start;
         justify-content: center;
     }
-    #select div {
+    .select div {
         flex-grow: 1;
     }
-    #taskboard {
+    .taskboard {
         margin-top: 15px;
         padding: 10px;
         border: 1px solid var(--light-moderate);
@@ -225,7 +226,7 @@
         flex-wrap: wrap;
         gap: 5px;
     }
-    #taskboard section {
+    .taskboard section {
         flex: 1 1 0;
         display: flex;
         flex-direction: column;

@@ -79,11 +79,12 @@
 	}
 	:global(.title) {
         margin: 0.6em 0 0.2em 0;
+		font-size: 2em;
         text-align: center;
 		color: var(--light-moderate);
 		text-shadow: 3px 3px var(--dark-strong);
     }
-	:global(main > section) {
+	:global(main > .content) {
 		border-radius: 8px;
 		box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.4);
 	}
@@ -100,7 +101,7 @@
         margin-right: 0.5em;
 	}
 	:global(.placeholder) {
-		margin: 15px;
+		margin: 1.5em 15px;
 		border: 1px dashed var(--light-moderate);
         border-radius: 10px;
         padding: 1em;

@@ -78,7 +78,7 @@
 
 
 
-<section class="settings">
+<section class="content settings">
     <div id="filter-status">
         <label>
             <input type="checkbox" bind:group={$costFilter} value={false}>
@@ -95,7 +95,7 @@
     </label>
 </section>
 
-<section class="settings">
+<section class="content settings">
     <label>
         <input type="checkbox" bind:group={$itemFilter} value={"material"}>
         Show materials
@@ -118,7 +118,7 @@
     </label>
 </section>
 
-<section id="costs">
+<section class="costs">
     <div>
         <h1 class="title">Upgrade Costs</h1>
         {#if itemCounter.length > 0}
@@ -151,7 +151,7 @@
 </section>
 
 <h1 class="title">Inventory</h1>
-<section class="items">
+<section class="content items">
     {#each $inventory as item}
         <div>
             <ItemIcon {...item} --size="100px" />
@@ -182,13 +182,13 @@
     #ready {
         background-color: rgba(151, 255, 148, 0.7);
     }
-    #costs {
+    .costs {
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
         gap: 20px;
     }
-    #costs > div {
+    .costs > div {
         flex: 1 1 0;
         display: flex;
         flex-direction: column;

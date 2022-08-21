@@ -17,15 +17,24 @@
 
 <section class="items">
     {#each sortItems(farming[$region]) as { id, stages }}
-        <ItemIcon {id} />
-        {#each stages.slice(0, 3) as stage}
-            <FarmingStage {...stage} />
-        {/each}
+        <div class="item">
+            <ItemIcon {id} --size="100px" />
+            {#each stages.slice(0, 3) as stage}
+                <FarmingStage {...stage} />
+            {/each}
+        </div>
     {/each}
-</section>
+    </section>
 
 <style>
     .items {
-        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1em;
+    }
+    .item {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
     }
 </style>
