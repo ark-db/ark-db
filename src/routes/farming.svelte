@@ -15,6 +15,17 @@
     };
 </script>
 
+<section class="content settings">
+    <label>
+        <input type=radio bind:group={$region} value={"glb"}>
+        US/JP/KR
+    </label>
+    <label>
+        <input type=radio bind:group={$region} value={"cn"}>
+        CN
+    </label>
+</section>
+
 <section class="grid">
     {#each sortItems(farming[$region]) as { id, stages }}
         <div class="item">
@@ -29,6 +40,13 @@
 </section>
 
 <style>
+    .settings {
+        margin-top: 2em;
+        padding: 1em;
+        background-color: var(--light-strong);
+        display: flex;
+        gap: 2em;
+    }
     .grid {
         margin: 2em 0;
         display: grid;
@@ -44,5 +62,8 @@
         display: flex;
         flex-wrap: wrap;
         gap: 0.5em 1.5em;
+    }
+    input[type=radio] {
+        transform: scale(1.25);
     }
 </style>
