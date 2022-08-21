@@ -8,6 +8,7 @@
     import farming from "$lib/data/farming.json";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
+    import FarmingStage from "$lib/components/FarmingStage.svelte";
 
     function sortItems(list) {
         return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
@@ -18,7 +19,7 @@
     {#each sortItems(farming[$region]) as { id, stages }}
         <ItemIcon {id} />
         {#each stages.slice(0, 3) as stage}
-            {stage}
+            <FarmingStage {...stage} />
         {/each}
     {/each}
 </section>
