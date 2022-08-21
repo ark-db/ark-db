@@ -15,7 +15,7 @@
     };
 </script>
 
-<div class="grid">
+<section class="grid">
     {#each sortItems(farming[$region]) as { id, stages }}
         <div class="item">
             <ItemIcon {id} --size="75px" />
@@ -26,7 +26,7 @@
             </div>
         </div>
     {/each}
-</div>
+</section>
 
 <style>
     .grid {
