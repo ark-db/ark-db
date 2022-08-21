@@ -59,7 +59,7 @@
 	main {
 		margin: auto;
         padding: 5px;
-		max-width: clamp(800px, 90vw, 1500px);
+		max-width: clamp(800px, 100vw, 1500px);
 		display: flex;
         flex-direction: column;
         gap: 10px;

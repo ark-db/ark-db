@@ -15,7 +15,7 @@
     };
 </script>
 
-<section class="items">
+<section class="grid">
     {#each sortItems(farming[$region]) as { id, stages }}
         <div class="item">
             <ItemIcon {id} --size="100px" />
@@ -27,9 +27,9 @@
     </section>
 
 <style>
-    .items {
-        display: flex;
-        flex-wrap: wrap;
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 30em);
         gap: 1em;
     }
     .item {
