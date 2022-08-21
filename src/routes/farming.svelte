@@ -32,18 +32,17 @@
     .grid {
         margin: 2em 0;
         display: grid;
-        /**grid-template-columns: repeat(auto-fill, 25em);*/
-        grid-template-columns: repeat(auto-fill, 30em);
-        gap: 2em 1em;
+        grid-template-columns: repeat(auto-fill, minmax(10em, 30em));
+        gap: 3em 1em;
     }
     .item {
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
     }
     .stages {
         margin-left: 0.75em;
         display: flex;
-        gap: 1.5em;
+        flex-wrap: wrap;
+        gap: 0.5em 1.5em;
     }
 </style>
