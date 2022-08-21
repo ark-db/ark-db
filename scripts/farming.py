@@ -54,16 +54,15 @@ def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
         df.at[item_id, item_id] = count
     return df
 
-def is_valid_stage(stage_id: str) -> bool:
-    return stage_id.startswith(("main", "tough", "sub", "wk")) or stage_id.endswith("perm")
-
 def get_stage_ids(region: Region) -> set[str]:
     current_drops = (
         requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region.value}")
                 .json()
                 ["matrix"]
     )
-    current_stage_ids = set(item["stageId"] for item in current_drops if is_valid_stage(item["stageId"]))
+    current_stage_ids = set(
+        item["stageId"] for item in current_drops if item["stageId"].startswith(("main", "tough", "sub", "wk", "act"))
+    )
     return current_stage_ids
 
 def update_lmd_stages(df: pd.DataFrame, valid_stages: set) -> pd.DataFrame:
