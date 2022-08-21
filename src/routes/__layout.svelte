@@ -1,14 +1,17 @@
 <script>
     import { page } from '$app/stores';
     const logo = "/favicon.svg"
+	let w;
 </script>
 
 
 
-<header>
-    <a href="/">
-		<img src={logo} alt="ArkDB">
-	</a>
+<header bind:clientWidth={w}>
+	{#if w > 450}
+    	<a href="/">
+			<img src={logo} alt="ArkDB">
+		</a>
+	{/if}
 
     <nav>
         <a href="/" class:active={$page.url.pathname === "/"}>Home</a>
@@ -28,16 +31,18 @@
 		background-color: var(--dark-moderate);
 		box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.75);
 		display: flex;
-        gap: 1em;
+		align-items: center;
 	}
 	img {
-		margin: 0 10px;
+		margin-left: 1em;
 		width: 100%;
 		max-width: 40px;
 		min-width: 40px;
 	}
 	nav {
+		padding: 1em;
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: 1em;
 	}
