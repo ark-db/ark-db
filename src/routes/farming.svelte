@@ -60,7 +60,9 @@
         padding: 1em;
         background-color: var(--light-strong);
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
+        gap: 1em;
     }
     .group {
         display: flex;
@@ -82,7 +84,12 @@
         flex-wrap: wrap;
         gap: 0.5em 1.5em;
     }
+    label {
+        display: flex;
+        align-items: center;
+    }
     input[type=radio] {
         transform: scale(1.25);
+        margin-right: 1em;
     }
 </style>
