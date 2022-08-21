@@ -36,19 +36,19 @@
         gap: 0.5em;
     }
     .poor * {
-        color: #e84141;
+        color: #f13737;
     }
     .bad * {
         color: #ff9505;
     }
     .fair * {
-        color: #ffb627;
+        color: #f3dc48;
     }
     .good * {
         color: #9be564;
     }
     .great * {
-        color: #118fee;
+        color: #00be43;
     }
     h2 {
         font-size: 1.5em;
