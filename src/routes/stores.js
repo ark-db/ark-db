@@ -19,7 +19,7 @@ const restrictedItems = ["4001",
 export const inventory = writable(
     Object.keys(items)
           .sort((prev, curr) => items[prev].sortId - items[curr].sortId)
-          .filter(id => !restricted.includes(id))
+          .filter(id => !restrictedItems.includes(id))
           .map(id => ({id, count: 0}))
 );
 
