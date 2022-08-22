@@ -5,7 +5,7 @@
 
 <h1 class="title">ArkDB</h1>
 <h2>A utility website for Arknights players</h2>
-<p>v0.6.0-beta</p>
+<p>v0.6.1-beta</p>
 <a href="https://form.typeform.com/to/gSMV12RK" target="_blank" rel="noreferrer">
     Submit feedback
 </a>
