@@ -1,10 +1,12 @@
 <script>
-    import src from "../images/skalter.webp";
-    export let status, message;
+    import { page } from '$app/stores';
+    import src from "$lib/images/skalter.webp";
 </script>
 
+
+
 <h1 class="title">
-    {status} | {message}
+    {$page.status} | {$page.error.message}
 </h1>
 
 <figure>
@@ -18,6 +20,8 @@
         </a>
     </figcaption>
 </figure>
+
+
 
 <style>
     h1 {
