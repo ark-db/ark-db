@@ -204,4 +204,9 @@
         justify-content: center;
         gap: 20px;
     }
+    .items > div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 </style>
