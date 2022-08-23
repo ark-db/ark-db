@@ -12,6 +12,7 @@ const config = {
 				"font-src": ["self", "https://rsms.me/inter/font-files/ *"],
 				"object-src": ["none"],
 				"base-uri": ["none"],
+				"frame-ancestors": ["none"],
 				"upgrade-insecure-requests": true,
 			},
 		},
