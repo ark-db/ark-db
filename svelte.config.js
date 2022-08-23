@@ -7,7 +7,11 @@ const config = {
 		csp: {
 			mode: "auto",
 			directives: {
-			    "script-src": ["self"],
+				"default-src": ["self"],
+				"style-src": ["self", "https://rsms.me/inter/inter.css"],
+				"script-src": ["nonce-{random}", "unsafe-inline"],
+				"object-src": ["none"],
+				"base-uri": ["none"],
 				"upgrade-insecure-requests": true,
 			},
 		},
