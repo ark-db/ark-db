@@ -4,6 +4,13 @@ import adapter from '@sveltejs/adapter-auto';
 const config = {
 	kit: {
 		adapter: adapter(),
+		csp: {
+			mode: "auto",
+			directives: {
+			    "script-src": ["self"],
+				"upgrade-insecure-requests": true,
+			},
+		},
 	}
 };
 
