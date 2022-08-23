@@ -4,7 +4,7 @@
 </svelte:head>
 
 <script>
-    import { allSelected, inventory, costFilter, itemFilter, makeT3 } from "../stores.js";
+    import { allSelected, inventory, costFilter, itemFilter, makeT3 } from "../../stores.js";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import NumberInput from "$lib/components/NumberInput.svelte";
@@ -206,6 +206,7 @@
     }
     .items > div {
         display: flex;
+        flex-direction: column;
         justify-content: center;
     }
 </style>

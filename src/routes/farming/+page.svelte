@@ -4,7 +4,7 @@
 </svelte:head>
 
 <script>
-    import { region, sortMode } from "./stores.js";
+    import { region, sortMode } from "../stores.js";
     import farming from "$lib/data/farming.json";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
