@@ -13,9 +13,9 @@
 
     const setActiveCategory = () => {
         if (category?.cls === "mastery") {
-            $activeCategory = `src/lib/images/skills/${category.skillId}.webp`;
+            $activeCategory = new URL(`../images/skills/${category.skillId}.webp`, import.meta.url).href;
         } else if (category?.cls === "module") {
-            $activeCategory = `src/lib/images/modules/${category.moduleId}.webp`;
+            $activeCategory = new URL(`../images/modules/${category.moduleId}.webp`, import.meta.url).href;
         }
     };
     const unsetActiveCategory = () => {
