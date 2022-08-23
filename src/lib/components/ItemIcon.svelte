@@ -1,11 +1,12 @@
 <script>
+    import { assets } from "$app/paths";
     import items from "../data/items.json";
     export let id;
     export let count = undefined;
 
-    $: itemSrc = new URL(`../images/items/${id}.webp`, import.meta.url).href;
-    $: ({ name, rarity } = items[id]);
-    $: bgSrc = new URL(`../images/rarities/${rarity}.webp`, import.meta.url).href;
+    let itemSrc = `${assets}/images/items/${id}.webp`;
+    let { name, rarity } = items[id];
+    let bgSrc = `${assets}/images/rarities/${rarity}.webp`;
 
     const compactNum = Intl.NumberFormat("en-US", {
         notation: "compact",
