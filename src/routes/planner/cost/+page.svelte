@@ -202,11 +202,11 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, 100px);
         justify-content: center;
-        gap: 20px;
+        gap: 30px;
     }
     .items > div {
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        align-items: center;
     }
 </style>
