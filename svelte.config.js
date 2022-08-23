@@ -8,7 +8,7 @@ const config = {
 			mode: "auto",
 			directives: {
 				"default-src": ["self"],
-				"style-src": ["self", "https://rsms.me/inter/inter.css"],
+				"style-src": ["self", "https://rsms.me/inter/*"],
 				"script-src": ["nonce-{random}", "unsafe-inline"],
 				"object-src": ["none"],
 				"base-uri": ["none"],
