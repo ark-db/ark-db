@@ -65,8 +65,8 @@
     }
     img {
         width: 100%;
-        max-width: 15px;
-        min-width: 15px;
+        max-width: 20px;
+        min-width: 20px;
     }
     /* Chrome, Safari, Edge, Opera */
     input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
