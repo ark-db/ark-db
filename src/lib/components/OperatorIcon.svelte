@@ -1,8 +1,9 @@
 <script>
+    import { assets } from "$app/paths";
     import operators from "../data/operators.json";
     export let charId;
     
-    let src = new URL(`../images/operators/${charId}.webp`, import.meta.url).href;
+    let src = `${assets}/images/operators/${charId}.webp`;
     let { name, rarity } = operators[charId];
 </script>
 
