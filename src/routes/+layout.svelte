@@ -1,13 +1,13 @@
 <script>
     import { page } from '$app/stores';
     import logo from "$lib/images/logo.svg";
-	let w;
+	let innerWidth;
 </script>
 
+<svelte:window bind:innerWidth={innerWidth} />
 
-
-<header bind:clientWidth={w}>
-	{#if w > 450}
+<header>
+	{#if innerWidth > 450}
     	<a href="/">
 			<img src={logo} alt="ArkDB">
 		</a>
