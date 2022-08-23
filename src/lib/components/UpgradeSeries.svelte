@@ -1,4 +1,5 @@
 <script>
+    import { assets } from "$app/paths";
     export let activeCategory, selectedUpgradeNames;
     export let category, idx;
 
@@ -13,9 +14,9 @@
 
     const setActiveCategory = () => {
         if (category?.cls === "mastery") {
-            $activeCategory = new URL(`../images/skills/${category.skillId}.webp`, import.meta.url).href;
+            $activeCategory = `${assets}/images/skills/${category.skillId}.webp`;
         } else if (category?.cls === "module") {
-            $activeCategory = new URL(`../images/modules/${category.moduleId}.webp`, import.meta.url).href;
+            $activeCategory = `${assets}/images/modules/${category.moduleId}.webp`;
         }
     };
     const unsetActiveCategory = () => {
