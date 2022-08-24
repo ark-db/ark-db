@@ -1,12 +1,16 @@
 <script>
-    import { assets } from "$app/paths";
+    import { onMount } from "svelte";
     import items from "../data/items.json";
     export let id;
     export let count = undefined;
 
-    let itemSrc = `${assets}/images/items/${id}.webp`;
     let { name, rarity } = items[id];
-    let bgSrc = `${assets}/images/rarities/${rarity}.webp`;
+    let itemSrc, bgSrc;
+
+    onMount(async () => {
+        itemSrc = (await import(`../images/items/${id}.webp`)).default;
+        bgSrc = (await import(`../images/rarities/${rarity}.webp`)).default;
+    });
 
     const compactNum = Intl.NumberFormat("en-US", {
         notation: "compact",

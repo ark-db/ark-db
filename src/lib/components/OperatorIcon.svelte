@@ -1,10 +1,14 @@
 <script>
-    import { assets } from "$app/paths";
+    import { onMount } from "svelte";
     import operators from "../data/operators.json";
     export let charId;
-    
-    let src = `${assets}/images/operators/${charId}.webp`;
+
     let { name, rarity } = operators[charId];
+    let src;
+
+    onMount(async () => {
+        src = (await import(`../images/operators/${charId}.webp`)).default;
+    });
 </script>
 
 <img class={rarity} {src} title={name} alt={name} />

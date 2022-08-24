@@ -1,5 +1,4 @@
 <script>
-    import { assets } from "$app/paths";
     export let activeCategory, selectedUpgradeNames;
     export let category, idx;
 
@@ -12,11 +11,11 @@
         return temp;
     }
 
-    const setActiveCategory = () => {
+    const setActiveCategory = async () => {
         if (category?.cls === "mastery") {
-            $activeCategory = `${assets}/images/skills/${category.skillId}.webp`;
+            $activeCategory = (await import(`../images/skills/${category.skillId}.webp`)).default;
         } else if (category?.cls === "module") {
-            $activeCategory = `${assets}/images/modules/${category.moduleId}.webp`;
+            $activeCategory = (await import(`../images/modules/${category.moduleId}.webp`)).default;
         }
     };
     const unsetActiveCategory = () => {
