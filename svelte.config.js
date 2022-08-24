@@ -13,6 +13,7 @@ const config = {
 				"object-src": ["none"],
 				"base-uri": ["none"],
 				"frame-ancestors": ["none"],
+				"referrer": ["no-referrer", "strict-origin-when-cross-origin"],
 				"upgrade-insecure-requests": true,
 			},
 		},
