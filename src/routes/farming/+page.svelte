@@ -62,7 +62,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
-        gap: 1em;
+        gap: 1em 2em;
     }
     .group {
         display: flex;
@@ -72,6 +72,7 @@
         margin: 2em 0;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(10em, 30em));
+        justify-content: center;
         gap: 3em 1em;
     }
     .item {

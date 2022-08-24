@@ -31,6 +31,7 @@
     img {
         grid-area: 1 / 1 / 2 / 2;
         place-self: center;
+        width: auto;
         max-width: var(--size);
         max-height: var(--size);
     }

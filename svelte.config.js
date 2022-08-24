@@ -7,7 +7,12 @@ const config = {
 		csp: {
 			mode: "auto",
 			directives: {
-			    "script-src": ["self"],
+				"default-src": ["self"],
+				"style-src": ["self", "https://rsms.me/inter/inter.css"],
+				"font-src": ["self", "https://rsms.me/inter/font-files/ *"],
+				"object-src": ["none"],
+				"base-uri": ["none"],
+				"frame-ancestors": ["none"],
 				"upgrade-insecure-requests": true,
 			},
 		},
