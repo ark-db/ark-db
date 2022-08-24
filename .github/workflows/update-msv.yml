@@ -30,8 +30,8 @@ jobs:
       run: ./scripts/farming.py
     
     - name: Commit updates
-        run: |
-          git config --global user.name "Castle-3"
-          git config --global user.email "closure@users.noreply.github.com"
-          git commit -am "Update material sanity values"
-          git push
+      run: |
+        git config --global user.name "Castle-3"
+        git config --global user.email "closure@users.noreply.github.com"
+        git commit -am "Update material sanity values"
+        git push
