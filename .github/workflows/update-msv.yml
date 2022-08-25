@@ -21,13 +21,11 @@ jobs:
         python-version: "3.x"
         cache: "poetry"
 
-    - name: Install requirements
+    - name: Run script
       run: |
         cd scripts
         poetry install
-    
-    - name: Run script
-      run: ./scripts/farming.py
+        poetry run python farming.py
     
     - name: Commit updates
       run: |
