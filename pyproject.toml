@@ -2,7 +2,7 @@
 name = "ark-db"
 version = "0.1.0"
 description = "Updates ark-db data"
-authors = ["astralsky <88992929+astral4@users.noreply.github.com>"]
+authors = ["astral4 <88992929+astral4@users.noreply.github.com>"]
 license = "GNU General Public License v3.0"
 
 [tool.poetry.dependencies]
