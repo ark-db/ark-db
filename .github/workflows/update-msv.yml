@@ -12,21 +12,20 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    - name: Install Poetry
+      run: pipx install poetry
+
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: "3.x"
+        cache: "poetry"
 
-    - name: Cache virtualenv
-      uses: actions/cache@v3
-      with:
-        path: ${{ env.pythonLocation }}
-        key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
 
     - name: Install requirements
       run: |
         cd scripts
-        pip install --upgrade --upgrade-strategy eager -r requirements.txt -e .
+        poetry install
     
     - name: Run script
       run: ./scripts/farming.py
