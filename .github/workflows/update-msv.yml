@@ -24,7 +24,7 @@ jobs:
     - name: Run script
       run: |
         cd scripts
-        poetry env use system
+        poetry env use 3.10
         poetry install
         poetry run python farming.py
     
