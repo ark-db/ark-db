@@ -23,10 +23,9 @@ jobs:
 
     - name: Run script
       run: |
-        cd scripts
         poetry env use 3.10
         poetry install
-        poetry run python farming.py
+        poetry run python scripts/farming.py
     
     - name: Commit updates
       run: |
