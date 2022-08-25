@@ -21,10 +21,10 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ env.pythonLocation }}
-        key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('dev-requirements.txt') }}
+        key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
 
     - name: Install requirements
-      run: pip install --upgrade --upgrade-strategy eager -r dev-requirements.txt -e .
+      run: pip install --upgrade --upgrade-strategy eager -r requirements.txt -e .
     
     - name: Run script
       run: ./scripts/farming.py
