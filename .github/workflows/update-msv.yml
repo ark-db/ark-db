@@ -25,6 +25,7 @@ jobs:
       run: |
         cd scripts
         poetry install
+        poetry env info
         poetry run python farming.py
     
     - name: Commit updates
