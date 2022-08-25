@@ -25,6 +25,7 @@ jobs:
     - name: Install requirements
       run: |
         cd scripts
+        poetry init
         poetry install
     
     - name: Run script
