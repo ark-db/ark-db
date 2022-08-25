@@ -24,7 +24,9 @@ jobs:
         key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
 
     - name: Install requirements
-      run: pip install --upgrade --upgrade-strategy eager -r requirements.txt -e .
+      run: |
+        cd scripts
+        pip install --upgrade --upgrade-strategy eager -r requirements.txt -e .
     
     - name: Run script
       run: ./scripts/farming.py
