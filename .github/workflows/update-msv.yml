@@ -21,11 +21,9 @@ jobs:
         python-version: "3.x"
         cache: "poetry"
 
-
     - name: Install requirements
       run: |
         cd scripts
-        poetry init
         poetry install
     
     - name: Run script
