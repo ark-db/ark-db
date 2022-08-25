@@ -29,7 +29,7 @@ jobs:
     
     - name: Commit updates
       run: |
-        git config --global user.name "Castle-3"
+        git config --global user.name "astral4"
         git config --global user.email "88992929+astral4@users.noreply.github.com"
         git commit -am "Update material sanity values"
         git push
