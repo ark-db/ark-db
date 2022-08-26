@@ -9,6 +9,7 @@ export const allSelected = writable([]);
 export const allSelectedWithCost = derived(
     allSelected,
     $allSelected => $allSelected.map(upgrade => ({...upgrade,
+                                                  charName: operators[upgrade.charId].name,
                                                   cost: operators[upgrade.charId].costs[upgrade.name]}))
 )
 
