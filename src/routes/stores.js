@@ -12,15 +12,10 @@ export const showCost = writable(false);
 
 
 // planner/cost
-const restrictedItems = ["4001",
-                         "2001", "2002", "2003", "2004",
-                         "3112", "3113", "3114",
-                         "3003",
-                         "7003", "4003"]
 export const inventory = writable(
     Object.keys(items)
           .sort((prev, curr) => items[prev].sortId - items[curr].sortId)
-          .filter(id => !restrictedItems.includes(id))
+          .filter(id => items[id].type !== "misc")
           .map(id => ({id, count: 0}))
 );
 
