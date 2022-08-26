@@ -15,7 +15,8 @@ export const showCost = writable(false);
 const restrictedItems = ["4001",
                          "2001", "2002", "2003", "2004",
                          "3112", "3113", "3114",
-                         "3003"]
+                         "3003",
+                         "7003", "4003"]
 export const inventory = writable(
     Object.keys(items)
           .sort((prev, curr) => items[prev].sortId - items[curr].sortId)
