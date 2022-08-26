@@ -10,8 +10,8 @@ import json
 MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"] | utils.VALID_ITEMS["misc"]
 BYPROD_RATE_BONUS = 1.8
-RECORDED_ITEMS = utils.VALID_ITEMS["material"]
 # EXP_DEVALUE_FACTOR = 0.8
+RECORDED_ITEMS = utils.VALID_ITEMS["material"]
 
 recipes = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
