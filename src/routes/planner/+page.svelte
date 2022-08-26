@@ -32,10 +32,10 @@
                                                   charId: $selectedChar.charId,
                                                   ready: false}))]
 
-        let orderId = 0;
-        for (let upgrade of $allSelected) {
-            upgrade.id = orderId++;
+        for (let [idx, upgrade] of $allSelected.entries()) {
+            upgrade.id = idx;
         }
+        $allSelected = $allSelected;
 
         $selectedChar = {};
     }
