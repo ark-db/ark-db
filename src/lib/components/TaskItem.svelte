@@ -1,11 +1,10 @@
 <script>
-    import operators from "../data/operators.json";
     import OperatorIcon from "./OperatorIcon.svelte";
     import ItemIcon from "./ItemIcon.svelte";
     import deleteIcon from "../images/delete.svg";
-    export let splitByStatus;
-    export let showCost;
-    export let charId, name, cost, ready, id;
+
+    export let splitByStatus, showCost;
+    export let charId, charName, name, cost, ready, id;
     id; // stops SvelteKit from complaining
 </script>
 
@@ -18,7 +17,7 @@
             <div class="top">
                 <OperatorIcon {charId} --size="60px" --border="0px" />
                 <div class="upgrade-desc">
-                    <h3>{operators[charId].name}</h3>
+                    <h3>{charName}</h3>
                     <p>{name}</p>
                 </div>
             </div>
