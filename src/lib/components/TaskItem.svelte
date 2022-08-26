@@ -5,7 +5,7 @@
     import deleteIcon from "../images/delete.svg";
     export let splitByStatus;
     export let showCost;
-    export let name, cost, charId, id, ready;
+    export let name, charId, id, ready;
     id; // stops SvelteKit from complaining
 </script>
 
@@ -23,6 +23,7 @@
                 </div>
             </div>
             {#if $showCost}
+                {@const cost = operators[charId].costs[name]}
                 <div class="cost">
                     {#each cost as item}
                         <ItemIcon {...item} --size="60px" />

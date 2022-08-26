@@ -15,24 +15,28 @@
 
     let innerWidth;
     const flipDurationMs = 150;
-    $: uid = $allSelected.length;
     $: allReady = $allSelected.filter(upgrade => upgrade.ready);
     $: allNotReady = $allSelected.filter(upgrade => !upgrade.ready);
 
     $: selectedUpgradeNames = writable(new Array($selectedChar?.upgrades?.length).fill(new Set()))
 
     function submitUpgrades() {
-        let allSelectedNames = Object.values($selectedUpgradeNames).map(set => Array.from(set)).flat();
-        let upgrades = $selectedChar.upgrades.map(category => category.data.flat()).flat();
-        let newUpgrades = upgrades.filter(upgrade => allSelectedNames.includes(upgrade.name))
-                                  .filter(upgrade => !$allSelected.filter(upgrade => upgrade.charId === $selectedChar.charId)
-                                                                  .map(upgrade => upgrade.name)
-                                  .includes(upgrade.name));
+        let selectedNames = $selectedUpgradeNames.map(set => Array.from(set)).flat();
+        let allNames = $selectedChar.upgrades.map(category => category.names).flat();
+        let newNames = allNames.filter(name => selectedNames.includes(name))
+                               .filter(name => !$allSelected.filter(upgrade => upgrade.charId === $selectedChar.charId)
+                                                            .map(upgrade => upgrade.name)
+                                                            .includes(name));
         $allSelected = [...$allSelected,
-                        ...newUpgrades.map(upgrade => ({...upgrade,
-                                                        charId: $selectedChar.charId,
-                                                        id: uid++,
-                                                        ready: false}))]
+                        ...newNames.map(name => ({name,
+                                                  charId: $selectedChar.charId,
+                                                  ready: false}))]
+
+        let orderId = 0;
+        for (let upgrade of $allSelected) {
+            upgrade.id = orderId++;
+        }
+
         $selectedChar = {};
     }
     function remove(upgrade) {
@@ -86,7 +90,7 @@
 {#if $selectedChar?.upgrades !== undefined}
     <section class="content select">
         {#each $selectedChar.upgrades as category, idx}
-            {#if category.data.length > 0}
+            {#if category.names.length > 0}
                 <div>
                     <UpgradeSeries {category} {idx} {activeCategory} {selectedUpgradeNames} />
                 </div>
