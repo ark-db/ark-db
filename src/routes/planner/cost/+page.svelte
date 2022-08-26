@@ -162,7 +162,7 @@
 </section>
 
 <h1 class="title">Inventory</h1>
-<section class="content items">
+<section class="content items inv">
     {#each $inventory as item}
         <div>
             <ItemIcon {...item} --size="100px" />
@@ -213,6 +213,9 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, 100px);
         justify-content: center;
+        gap: 20px;
+    }
+    .items.inv {
         gap: 30px;
     }
     .items > div {
