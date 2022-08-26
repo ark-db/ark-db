@@ -20,6 +20,13 @@
 
     $: selectedUpgradeNames = writable(new Array($selectedChar?.upgrades?.length).fill(new Set()))
 
+    function reindex() {
+        for (let [idx, upgrade] of $allSelected.entries()) {
+            upgrade.id = idx;
+        }
+        $allSelected = $allSelected;
+    }
+
     function submitUpgrades() {
         let selectedNames = $selectedUpgradeNames.map(set => Array.from(set)).flat();
         let allNames = $selectedChar.upgrades.map(category => category.names).flat();
@@ -32,10 +39,7 @@
                                                   charId: $selectedChar.charId,
                                                   ready: false}))]
 
-        for (let [idx, upgrade] of $allSelected.entries()) {
-            upgrade.id = idx;
-        }
-        $allSelected = $allSelected;
+        reindex();
 
         $selectedChar = {};
     }
