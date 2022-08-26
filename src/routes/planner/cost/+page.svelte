@@ -197,7 +197,7 @@
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
-        gap: 20px;
+        gap: 10px;
     }
     .costs > div {
         flex: 1 1 0;
