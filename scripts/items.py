@@ -35,7 +35,6 @@ for type, items in utils.VALID_ITEMS.items():
     for id in items:
         item_info = cn_items[id]
         item_data = {
-            "itemId": item_info["itemId"], # TODO: check if this is redundant
             "name": en_items.get(id, cn_items[id])["name"],
             "type": type,
             "rarity": item_info["rarity"],
