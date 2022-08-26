@@ -206,7 +206,7 @@
         justify-content: center;
     }
     .items {
-        margin-top: 15px;
+        margin-top: 25px;
         padding: 10px;
         border-radius: 8px;
         background-color: var(--light-strong);
@@ -216,6 +216,7 @@
         gap: 20px;
     }
     .items.inv {
+        margin-top: 15px;
         gap: 30px;
     }
     .items > div {
