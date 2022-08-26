@@ -1,10 +1,17 @@
-import { writable } from "svelte/store";
+import { writable, derived } from "svelte/store";
+import operators from "$lib/data/operators.json";
 import items from "$lib/data/items.json";
 
 // planner
 export const selectedChar = writable();
 export const activeCategory = writable();
 export const allSelected = writable([]);
+export const allSelectedWithCost = derived(
+    allSelected,
+    $allSelected => $allSelected.map(upgrade => ({...upgrade,
+                                                  charName: operators[upgrade.charId].name,
+                                                  cost: operators[upgrade.charId].costs[upgrade.name]}))
+)
 
 export const splitByStatus = writable(false);
 export const showCost = writable(false);
@@ -12,14 +19,10 @@ export const showCost = writable(false);
 
 
 // planner/cost
-const restrictedItems = ["4001",
-                         "2001", "2002", "2003", "2004",
-                         "3112", "3113", "3114",
-                         "3003"]
 export const inventory = writable(
     Object.keys(items)
           .sort((prev, curr) => items[prev].sortId - items[curr].sortId)
-          .filter(id => !restrictedItems.includes(id))
+          .filter(id => items[id].type !== "misc")
           .map(id => ({id, count: 0}))
 );
 

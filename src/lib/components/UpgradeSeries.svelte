@@ -3,7 +3,7 @@
     export let activeCategory, selectedUpgradeNames;
     export let category, idx;
 
-    $: names = category.data.map(upgrade => upgrade.name);
+    let { names } = category;
     let selectedNames = new Set();
 
     function replaceAt(index, value) {
@@ -44,7 +44,7 @@
 </script>
 
 <ol on:mouseenter={setActiveCategory} on:mouseleave={unsetActiveCategory}>
-    {#if category.data.length > 1}
+    {#if names.length > 1}
         <li>
             <label>
                 <input type="checkbox" checked={selectedNames.size === names.length} on:change={onSelectAll}>

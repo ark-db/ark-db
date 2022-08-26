@@ -4,7 +4,7 @@
 </svelte:head>
 
 <script>
-    import { allSelected, inventory, costFilter, itemFilter, makeT3 } from "../../stores.js";
+    import { allSelectedWithCost, inventory, costFilter, itemFilter, makeT3 } from "../../stores.js";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import NumberInput from "$lib/components/NumberInput.svelte";
@@ -12,66 +12,73 @@
     const min = 0;
     const max = 999999;
 
-    $: itemCounter = normalize(
-            makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
-                                    .map(upgrade => upgrade.cost)
-                                    .flat()
-                                    .filter(({ id }) => $itemFilter.includes(items[id].type)))
-            );
+    $: itemCounter = makeCounter($allSelectedWithCost.filter(upgrade => $costFilter.includes(upgrade.ready))
+                                                     .map(upgrade => upgrade.cost)
+                                                     .flat()
+                                                     .filter(({ id }) => $itemFilter.includes(items[id].type)));
 
     function sortItems(list) {
         return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
     };
 
     function normalize(counter) {
-        return Object.entries(counter)
-                     .map(([id, count]) => ({id, count}))
+        return Array.from(counter).map(([id, count]) => ({id, count}));
     }
 
     function makeCounter(list) {
-        return list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
+        return new Map(
+            Object.entries(
+                list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
+            )
+        );
     };
 
-    function convertToT3(list) {
-        let itemCounts = {};
+    function convertToT3(counter) {
+        let itemCounts = new Map();
         
-        function convert({ id, count }) {
+        function convert(id, count) {
             let { rarity, recipe = undefined } = items[id];
             if (rarity === 2) {
-                itemCounts[id] = (itemCounts[id] ?? 0) + count;
+                itemCounts.set(id, (itemCounts.get(id) ?? 0) + count);
             } else if (rarity > 2 && recipe) {
-                recipe.forEach(({ id, count: ingCount }) => convert({id, count: ingCount*count}));
+                recipe.forEach(({ id, count: ingCount }) => convert(id, ingCount*count));
             }
         };
 
-        list.forEach(item => convert(item));
-        return normalize(itemCounts);
+        for (const [id, count] of counter) {
+            convert(id, count);
+        };
+        return itemCounts;
     };
 
     function getDeficits(inv, costs) {
         let stock = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
-        return costs.map(({ id, count }) => ({id, count: stock[id] - count}))
-                    .filter(({ id, count }) => id !== "4001" && count < 0);
+        let deficits = Array.from(costs)
+                            .map(([ id, count ]) => ({id: id, count: stock[id] - count}))
+                            .filter(({ id, count }) => id !== "4001" && count < 0)
+        return deficits;
     }
 
     function getDeficitsT3(inv, costs) {
         let deficits = new Set();
-        let stock = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
+        let stock = new Map(inv.map(({ id, count }) => ([id, count])));
 
         function searchForDeficits(id, qtyNeeded) {
-            stock[id] -= qtyNeeded;
-            if (stock[id] < 0) {
+            stock.set(id, stock.get(id) - qtyNeeded);
+            if (stock.get(id) < 0) {
                 let { rarity, recipe = undefined } = items[id];
                 if (rarity > 2 && recipe) {
-                    recipe.forEach(({ id: matId, count}) => searchForDeficits(matId, count*-stock[id]));
-                    stock[id] = 0;
+                    recipe.forEach(({ id: matId, count }) => searchForDeficits(matId, -stock.get(id)*count));
+                    stock.set(id, 0);
                 } else {
                     deficits.add(id);
                 }
             }
         }
 
-        costs.forEach(({ id, count }) => searchForDeficits(id, count));
+        for (const [id, count] of costs) {
+            searchForDeficits(id, count);
+        };
         return normalize(stock).filter(({ id }) => deficits.has(id));
     }
 </script>
@@ -121,20 +128,23 @@
 <section class="costs">
     <div>
         <h1 class="title">Upgrade Costs</h1>
-        {#if itemCounter.length > 0}
-            {@const costs = sortItems($makeT3 ? convertToT3(itemCounter) : itemCounter)}
+        {#if itemCounter.size > 0}
+            {@const costs = sortItems(normalize($makeT3 ? convertToT3(itemCounter) : itemCounter))}
+            {#key $makeT3}
             <section class="items">
                 {#each costs as item}
                     <ItemIcon {...item} --size="100px" />
                 {/each}
             </section>
+            {/key}
         {:else}
             <p class="placeholder">No upgrades found</p>
         {/if}
     </div>
     
-    {#if itemCounter.length > 0}
+    {#if itemCounter.size > 0}
         {@const deficits = sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter))}
+        {#key [$makeT3, $inventory]}
         <div>
             <h1 class="title">Item Deficits</h1>
             {#if deficits.length > 0}
@@ -147,11 +157,12 @@
                 <p class="placeholder">No deficits!</p>
             {/if}
         </div>
+        {/key}
     {/if}
 </section>
 
 <h1 class="title">Inventory</h1>
-<section class="content items">
+<section class="content items inv">
     {#each $inventory as item}
         <div>
             <ItemIcon {...item} --size="100px" />
@@ -186,7 +197,7 @@
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
-        gap: 20px;
+        gap: 10px;
     }
     .costs > div {
         flex: 1 1 0;
@@ -195,13 +206,17 @@
         justify-content: center;
     }
     .items {
-        margin-top: 15px;
+        margin-top: 25px;
         padding: 10px;
         border-radius: 8px;
         background-color: var(--light-strong);
         display: grid;
         grid-template-columns: repeat(auto-fit, 100px);
         justify-content: center;
+        gap: 20px;
+    }
+    .items.inv {
+        margin-top: 15px;
         gap: 30px;
     }
     .items > div {

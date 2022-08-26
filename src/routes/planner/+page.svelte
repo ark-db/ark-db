@@ -5,7 +5,7 @@
 
 <script>
     import { writable } from "svelte/store";
-    import { selectedChar, activeCategory, allSelected, splitByStatus, showCost } from "../stores.js";
+    import { selectedChar, activeCategory, allSelected, allSelectedWithCost, splitByStatus, showCost } from "../stores.js";
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
@@ -15,24 +15,32 @@
 
     let innerWidth;
     const flipDurationMs = 150;
-    $: uid = $allSelected.length;
-    $: allReady = $allSelected.filter(upgrade => upgrade.ready);
-    $: allNotReady = $allSelected.filter(upgrade => !upgrade.ready);
+    $: allReady = $allSelectedWithCost.filter(upgrade => upgrade.ready);
+    $: allNotReady = $allSelectedWithCost.filter(upgrade => !upgrade.ready);
 
     $: selectedUpgradeNames = writable(new Array($selectedChar?.upgrades?.length).fill(new Set()))
 
+    function reindex() {
+        for (let [idx, upgrade] of $allSelected.entries()) {
+            upgrade.id = idx;
+        }
+        $allSelected = $allSelected;
+    }
+
     function submitUpgrades() {
-        let allSelectedNames = Object.values($selectedUpgradeNames).map(set => Array.from(set)).flat();
-        let upgrades = $selectedChar.upgrades.map(category => category.data.flat()).flat();
-        let newUpgrades = upgrades.filter(upgrade => allSelectedNames.includes(upgrade.name))
-                                  .filter(upgrade => !$allSelected.filter(upgrade => upgrade.charId === $selectedChar.charId)
-                                                                  .map(upgrade => upgrade.name)
-                                  .includes(upgrade.name));
+        let selectedNames = $selectedUpgradeNames.map(set => Array.from(set)).flat();
+        let allNames = $selectedChar.upgrades.map(category => category.names).flat();
+        let newNames = allNames.filter(name => selectedNames.includes(name))
+                               .filter(name => !$allSelected.filter(upgrade => upgrade.charId === $selectedChar.charId)
+                                                            .map(upgrade => upgrade.name)
+                                                            .includes(name));
         $allSelected = [...$allSelected,
-                        ...newUpgrades.map(upgrade => ({...upgrade,
-                                                        charId: $selectedChar.charId,
-                                                        id: uid++,
-                                                        ready: false}))]
+                        ...newNames.map(name => ({name,
+                                                  charId: $selectedChar.charId,
+                                                  ready: false}))]
+
+        reindex();
+
         $selectedChar = {};
     }
     function remove(upgrade) {
@@ -86,7 +94,7 @@
 {#if $selectedChar?.upgrades !== undefined}
     <section class="content select">
         {#each $selectedChar.upgrades as category, idx}
-            {#if category.data.length > 0}
+            {#if category.names.length > 0}
                 <div>
                     <UpgradeSeries {category} {idx} {activeCategory} {selectedUpgradeNames} />
                 </div>
@@ -129,7 +137,7 @@
                  on:consider={handleDnd}
                  on:finalize={handleDnd}
         >
-            {#each $allSelected as upgrade (upgrade.id)}
+            {#each $allSelectedWithCost as upgrade (upgrade.id)}
                 <div animate:flip="{{duration: flipDurationMs}}">
                     <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                 </div>
