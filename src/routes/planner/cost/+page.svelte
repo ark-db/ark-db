@@ -5,6 +5,7 @@
 
 <script>
     import { allSelectedWithCost, inventory, costFilter, itemFilter, makeT3 } from "../../stores.js";
+    import { sortItems } from "../../utils.js";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import NumberInput from "$lib/components/NumberInput.svelte";
@@ -16,10 +17,6 @@
                                                      .map(upgrade => upgrade.cost)
                                                      .flat()
                                                      .filter(({ id }) => $itemFilter.includes(items[id].type)));
-
-    function sortItems(list) {
-        return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
-    };
 
     function normalize(counter) {
         return Array.from(counter).map(([id, count]) => ({id, count}));
