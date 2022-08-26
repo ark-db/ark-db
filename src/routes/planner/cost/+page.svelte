@@ -5,6 +5,7 @@
 
 <script>
     import { allSelected, inventory, costFilter, itemFilter, makeT3 } from "../../stores.js";
+    import operators from "$lib/data/operators.json";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import NumberInput from "$lib/components/NumberInput.svelte";
@@ -14,7 +15,7 @@
 
     $: itemCounter = normalize(
             makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
-                                    .map(upgrade => upgrade.cost)
+                                    .map(({ charId, name }) => operators[charId].costs[name])
                                     .flat()
                                     .filter(({ id }) => $itemFilter.includes(items[id].type)))
             );
