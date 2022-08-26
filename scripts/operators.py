@@ -53,9 +53,8 @@ def get_skill_id(skill):
 
 for char_id, char_info in chars.items():
     if is_operator(char_info) and char_info["rarity"] > 1:
-        #all_char_data.update({
         char_data = {
-            "charId": char_id, # TODO: check if this is redundant
+            "charId": char_id,
             "name": name_changes.get(char_id, char_info["appellation"]),
             "rarity": char_info["rarity"] + 1,
             "upgrades": [
