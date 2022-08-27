@@ -56,7 +56,7 @@
     }
     .sidebar {
         position: fixed;
-        width: 75%;
+        width: 65%;
         height: 100%;
         z-index: 3;
         padding: 0.5em;
@@ -81,18 +81,20 @@
         border-bottom: 1px solid white;
     }
     nav {
-        padding: 0.5em;
+        margin-top: 0.5em;
         display: flex;
         flex-direction: column;
     }
     a {
-        padding: 0.75em 0;
+        padding: 0.75em;
         font-weight: 500;
 		text-decoration: none;
         color: var(--med-strong);
     }
     a.active {
+        border-radius: 0.5em;
         color: var(--light-moderate);
+        background-color: var(--dark-strong);
     }
     .filter {
         position: fixed;
