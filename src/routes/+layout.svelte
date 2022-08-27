@@ -28,7 +28,7 @@
 <style>
 	main {
 		margin: 0 auto;
-        padding: 4.75em 0;
+        padding: 4.75em 10px;
 		max-width: clamp(800px, 100vw, 1500px);
 		display: flex;
         flex-direction: column;
