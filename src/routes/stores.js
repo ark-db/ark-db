@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import items from "$lib/data/items.json";
+import { sortItems } from "./utils.js";
 
 // planner
 export const selectedChar = writable();
@@ -13,10 +13,8 @@ export const showCost = writable(false);
 
 // planner/cost
 export const inventory = writable(
-    Object.keys(items)
-          .sort((prev, curr) => items[prev].sortId - items[curr].sortId)
-          .filter(id => items[id].type !== "misc")
-          .map(id => ({id, count: 0}))
+    sortItems(Object.keys(items)).filter(id => items[id].type !== "misc")
+                                 .map(id => ({id, count: 0}))
 );
 
 export const costFilter = writable([false]);
