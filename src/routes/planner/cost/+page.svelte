@@ -55,8 +55,8 @@
     }
 
     function getDeficitsT3(inv, costs) {
-        let deficits = new Set();
         let stock = new Map(inv.map(({ id, count }) => ([id, count])));
+        let deficits = new Set();
 
         function searchForDeficits(id, qtyNeeded) {
             stock.set(id, stock.get(id) - qtyNeeded);
@@ -71,10 +71,33 @@
             }
         }
 
+        function patchDeficits(itemId) {
+            let { recipe = undefined } = items[itemId];
+            if (recipe) {
+                let minCraftable = Infinity;
+                for (let { id, count } of recipe) {
+                    let craftable = Math.floor(stock.get(id)/count);
+                    if (craftable <= 0) {
+                        return
+                    } else if (craftable < minCraftable) {
+                        minCraftable = craftable;
+                    }
+                }
+                recipe.forEach(({ id, count }) => stock.set(id, stock.get(id) - minCraftable*count));
+                let itemQty = stock.get(itemId);
+                stock.set(itemId, itemQty + minCraftable);
+            }
+        };
+
         for (const [id, count] of costs) {
             searchForDeficits(id, count);
         };
-        return normalize(stock).filter(({ id }) => deficits.has(id));
+
+        Array.from(deficits)
+             .sort((prev, curr) => items[prev].rarity - items[curr].rarity)
+             .forEach(id => patchDeficits(id));
+        
+        return normalize(stock).filter(({ id, count }) => deficits.has(id) && count < 0);
     }
 </script>
 
