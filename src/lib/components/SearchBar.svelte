@@ -9,7 +9,7 @@
         return str.replace( /(<([^>]+)>)/ig, '');
     }
 </script>
-  
+
 <Typeahead
     hideLabel={true}
     placeholder={"Search operators..."}

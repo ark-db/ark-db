@@ -5,14 +5,11 @@
 
 <script>
     import { region, sortMode } from "../stores.js";
+    import { sortItems } from "../utils.js";
     import farming from "$lib/data/farming.json";
-    import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import FarmingStage from "$lib/components/FarmingStage.svelte";
 
-    function sortItems(list) {
-        return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
-    };
     function sortStages(stages, mode) {
         return stages.sort((prev, curr) => (prev[mode] - curr[mode]) * (mode === "effic" ? -1 : 1))
     }
@@ -56,7 +53,7 @@
 
 <style>
     .settings {
-        margin-top: 2em;
+        margin-top: 1em;
         padding: 1em;
         background-color: var(--light-strong);
         display: flex;

@@ -1,17 +1,10 @@
-import { writable, derived } from "svelte/store";
-import operators from "$lib/data/operators.json";
+import { writable } from "svelte/store";
 import items from "$lib/data/items.json";
 
 // planner
 export const selectedChar = writable();
 export const activeCategory = writable();
-export const allSelected = writable([]);
-export const allSelectedWithCost = derived(
-    allSelected,
-    $allSelected => $allSelected.map(upgrade => ({...upgrade,
-                                                  charName: operators[upgrade.charId].name,
-                                                  cost: operators[upgrade.charId].costs[upgrade.name]}))
-)
+export const allSelected = writable([])
 
 export const splitByStatus = writable(false);
 export const showCost = writable(false);

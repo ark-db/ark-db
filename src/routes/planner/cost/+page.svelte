@@ -4,7 +4,9 @@
 </svelte:head>
 
 <script>
-    import { allSelectedWithCost, inventory, costFilter, itemFilter, makeT3 } from "../../stores.js";
+    import { allSelected, inventory, costFilter, itemFilter, makeT3 } from "../../stores.js";
+    import { sortItems } from "../../utils.js";
+    import operators from "$lib/data/operators.json";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import NumberInput from "$lib/components/NumberInput.svelte";
@@ -12,26 +14,19 @@
     const min = 0;
     const max = 999999;
 
-    $: itemCounter = makeCounter($allSelectedWithCost.filter(upgrade => $costFilter.includes(upgrade.ready))
-                                                     .map(upgrade => upgrade.cost)
-                                                     .flat()
-                                                     .filter(({ id }) => $itemFilter.includes(items[id].type)));
-
-    function sortItems(list) {
-        return list.sort((prev, curr) => items[prev.id].sortId - items[curr.id].sortId);
-    };
+    $: itemCounter = new Map(
+        Object.entries(
+            $allSelected.filter(({ ready }) => $costFilter.includes(ready))
+                        .map(({ charId, name })=> operators[charId].costs[name])
+                        .flat()
+                        .filter(({ id }) => $itemFilter.includes(items[id].type))
+                        .reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
+        )
+    )
 
     function normalize(counter) {
         return Array.from(counter).map(([id, count]) => ({id, count}));
     }
-
-    function makeCounter(list) {
-        return new Map(
-            Object.entries(
-                list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
-            )
-        );
-    };
 
     function convertToT3(counter) {
         let itemCounts = new Map();
@@ -125,18 +120,17 @@
     </label>
 </section>
 
+{#key [$makeT3, $costFilter, $itemFilter, $inventory]}
 <section class="costs">
     <div>
         <h1 class="title">Upgrade Costs</h1>
         {#if itemCounter.size > 0}
             {@const costs = sortItems(normalize($makeT3 ? convertToT3(itemCounter) : itemCounter))}
-            {#key $makeT3}
             <section class="items">
                 {#each costs as item}
                     <ItemIcon {...item} --size="100px" />
                 {/each}
             </section>
-            {/key}
         {:else}
             <p class="placeholder">No upgrades found</p>
         {/if}
@@ -144,7 +138,6 @@
     
     {#if itemCounter.size > 0}
         {@const deficits = sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter))}
-        {#key [$makeT3, $inventory]}
         <div>
             <h1 class="title">Item Deficits</h1>
             {#if deficits.length > 0}
@@ -157,9 +150,9 @@
                 <p class="placeholder">No deficits!</p>
             {/if}
         </div>
-        {/key}
     {/if}
 </section>
+{/key}
 
 <h1 class="title">Inventory</h1>
 <section class="content items inv">
