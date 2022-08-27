@@ -114,7 +114,7 @@
         position: fixed;
         width: 100%;
         z-index: 2;
-        background-color: #3a3d41;
+        background-color: #2f3133;
 		box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.75);
         display: flex;
         align-items: center;
