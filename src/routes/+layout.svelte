@@ -28,14 +28,14 @@
 <style>
 	main {
 		margin: 0 auto;
-        padding: 4.75em 5px;
+        padding: 4.75em 0;
 		max-width: clamp(800px, 100vw, 1500px);
 		display: flex;
         flex-direction: column;
         gap: 10px;
 	}
 	main.mobile {
-		padding: 0.5em;
+		padding: 4em 10px 0 10px;
 	}
 	:global(:root) {
 		--dark-strong: #161921;
