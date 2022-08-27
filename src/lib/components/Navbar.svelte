@@ -5,7 +5,7 @@
 
 <header>
     <a href="/">
-		<img src={logo} alt="ArkDB">
+		<img src={logo} alt="ArkDB logo">
 	</a>
 
     <nav>
