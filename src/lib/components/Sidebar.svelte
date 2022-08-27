@@ -62,6 +62,7 @@
     .sidebar {
         position: fixed;
         width: 75%;
+        height: 100%;
         z-index: 3;
         padding: 0.5em;
         background-color: var(--dark-moderate);
@@ -103,7 +104,7 @@
         position: fixed;
         width: 100%;
         z-index: 2;
-        background-color: var(--dark-moderate);
+        background-color: #3a3d41;
 		box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.75);
         display: flex;
         align-items: center;
@@ -121,6 +122,6 @@
         color: var(--light-moderate);
     }
     h1.page-title {
-        font-weight: 500;
+        font-weight: 600;
     }
 </style>
