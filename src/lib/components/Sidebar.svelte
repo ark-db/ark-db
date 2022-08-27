@@ -5,6 +5,16 @@
     export let page;
 
     let active = false;
+
+    function getPageTitle(path) {
+        if (path === "/") {
+            return "Home"
+        }  else if (path.startsWith("/planner")) {
+            return "Planner"
+        } else if (path === "/farming") {
+            return "Farming"
+        }
+    }
 </script>
 
 
@@ -14,10 +24,10 @@
 {:else}
     <header>
         <input type="image" src={bars} alt="Open navigation menu" on:click={() => active = true}>
-        <div class="logo">
+        <!--<div class="logo">
             <slot name="logo" />
-        </div>
-        <h1>ArkDB</h1>
+        </div>-->
+        <h1>{getPageTitle($page.url.pathname)}</h1>
     </header>
 {/if}
 
@@ -25,6 +35,7 @@
 
 <style>
     header {
+        padding: 0.25em;
         position: fixed;
         width: 100%;
         z-index: 2;
@@ -42,13 +53,17 @@
         max-width: 2em;
         min-width: 2em;
     }
+    /**
     .logo {
         width: 100%;
         max-width: 2em;
         min-width: 2em;
     }
+    */
     h1 {
         margin: 0.25em 0;
+        font-weight: 500;
+        font-size: 1.5em;
         color: var(--light-moderate);
     }
 </style>
