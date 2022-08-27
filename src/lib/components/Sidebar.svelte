@@ -36,6 +36,8 @@
         gap: 0.75em;
     }
     input[type=image] {
+        position: fixed;
+        left: 1em;
         width: 100%;
         max-width: 2em;
         min-width: 2em;
