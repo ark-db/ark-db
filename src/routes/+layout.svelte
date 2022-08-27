@@ -35,7 +35,7 @@
         gap: 10px;
 	}
 	main.mobile {
-		padding: 4em 10px 0 10px;
+		padding: 3.5em 10px 0 10px;
 	}
 	:global(:root) {
 		--dark-strong: #161921;
