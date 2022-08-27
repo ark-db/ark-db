@@ -8,7 +8,9 @@
 <svelte:window bind:innerWidth={w} />
 
 {#if w > 450}
-	<Navbar {page} {logo} />
+	<Navbar {page}>
+		<img slot="logo" src={logo} alt="ArkDB logo">
+	</Navbar>
 {/if}
 
 <main>

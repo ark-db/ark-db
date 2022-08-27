@@ -1,11 +1,10 @@
 <script>
     export let page;
-    export let logo;
 </script>
 
 <header>
     <a href="/">
-		<img src={logo} alt="ArkDB logo">
+		<slot name="logo" />
 	</a>
 
     <nav>
@@ -22,7 +21,7 @@
 		display: flex;
 		align-items: center;
 	}
-	img {
+	header > a {
 		margin-left: 1em;
 		width: 100%;
 		max-width: 40px;
