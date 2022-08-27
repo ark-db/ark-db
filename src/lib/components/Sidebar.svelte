@@ -38,6 +38,7 @@
 		    <a href="/farming" class:active={$page.url.pathname === "/farming"}>Farming</a>
         </nav>
     </div>
+    <div class="filter" transition:fly={{x: 100, duration: 150}} />
 {/if}
 
 <header>
@@ -74,6 +75,11 @@
         align-items: center;
         gap: 1em;
     }
+    .logo {
+        width: 100%;
+        max-width: 3em;
+        min-width: 3em;
+    }
     .divider {
         position: absolute;
         left: 2.5%;
@@ -94,10 +100,12 @@
     a.active {
         color: var(--light-moderate);
     }
-    .logo {
+    .filter {
+        position: fixed;
         width: 100%;
-        max-width: 3em;
-        min-width: 3em;
+        height: 100%;
+        z-index: 2;
+        background: rgba(0, 0, 0, 0.5);
     }
     header {
         padding: 0.25em;
