@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
     import logo from "$lib/images/logo.svg";
 	import Navbar from "$lib/components/Navbar.svelte";
+	import Sidebar from "$lib/components/Sidebar.svelte";
 	let w;
 </script>
 
@@ -11,6 +12,10 @@
 	<Navbar {page}>
 		<img slot="logo" src={logo} alt="ArkDB logo">
 	</Navbar>
+{:else}
+	<Sidebar {page}>
+		<img slot="logo" src={logo} alt="ArkDB logo">
+	</Sidebar>
 {/if}
 
 <main>
