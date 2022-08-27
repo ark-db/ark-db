@@ -14,22 +14,19 @@
     const min = 0;
     const max = 999999;
 
-    $: itemCounter = makeCounter($allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
-                                             .map(upgrade => operators[upgrade.charId].costs[upgrade.name])
-                                             .flat()
-                                             .filter(({ id }) => $itemFilter.includes(items[id].type)));
+    $: itemCounter = new Map(
+        Object.entries(
+            $allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
+                        .map(upgrade => operators[upgrade.charId].costs[upgrade.name])
+                        .flat()
+                        .filter(({ id }) => $itemFilter.includes(items[id].type))
+                        .reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
+        )
+    )
 
     function normalize(counter) {
         return Array.from(counter).map(([id, count]) => ({id, count}));
     }
-
-    function makeCounter(list) {
-        return new Map(
-            Object.entries(
-                list.reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
-            )
-        );
-    };
 
     function convertToT3(counter) {
         let itemCounts = new Map();
