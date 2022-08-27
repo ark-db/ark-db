@@ -1,7 +1,6 @@
 <script>
     import { fly } from "svelte/transition";
     import bars from "../images/bars.svg";
-    import leftArrow from "../images/left-arrow.svg";
 
     export let page;
 
@@ -23,7 +22,6 @@
 
 
 {#if active}
-    <input type="image" class="close" src={leftArrow} alt="Close navigation menu" on:click={toggle} transition:fly={{x: 50, duration: 300}}>
     <div class="sidebar" transition:fly={{x: -100, duration: 300}}>
         <div class="top">
             <div class="logo">
@@ -38,11 +36,11 @@
 		    <a href="/farming" class:active={$page.url.pathname === "/farming"}>Farming</a>
         </nav>
     </div>
-    <div class="filter" transition:fly={{x: 100, duration: 150}} />
+    <div class="filter" on:click={toggle} transition:fly={{x: 100, duration: 150}} />
 {/if}
 
 <header>
-    <input type="image" class="open" src={bars} alt="Open navigation menu" on:click={toggle}>
+    <input type="image" src={bars} alt="Open navigation menu" on:click={toggle}>
     <h1 class="page-title">{getPageTitle($page.url.pathname)}</h1>
 </header>
 
@@ -52,13 +50,9 @@
     input[type=image] {
         position: fixed;
         width: 100%;
-    }
-    input[type=image].close {
-        top: 0.5em;
-        right: 1em;
-        max-width: 1.5em;
-        min-width: 1.5em;
-        z-index: 3;
+        left: 1em;
+        max-width: 2em;
+        min-width: 2em;
     }
     .sidebar {
         position: fixed;
@@ -118,11 +112,6 @@
         align-items: center;
         justify-content: center;
         gap: 0.75em;
-    }
-    input[type=image].open {
-        left: 1em;
-        max-width: 2em;
-        min-width: 2em;
     }
     h1{
         margin: 0.25em 0;
