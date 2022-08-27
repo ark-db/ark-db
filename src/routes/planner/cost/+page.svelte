@@ -16,8 +16,8 @@
 
     $: itemCounter = new Map(
         Object.entries(
-            $allSelected.filter(upgrade => $costFilter.includes(upgrade.ready))
-                        .map(upgrade => operators[upgrade.charId].costs[upgrade.name])
+            $allSelected.filter(({ ready }) => $costFilter.includes(ready))
+                        .map(({ charId, name })=> operators[charId].costs[name])
                         .flat()
                         .filter(({ id }) => $itemFilter.includes(items[id].type))
                         .reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
