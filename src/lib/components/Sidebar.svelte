@@ -31,9 +31,9 @@
         </div>
         <div class="divider" />
         <nav>
-            <a href="/" class:active={$page.url.pathname === "/"}>Home</a>
-		    <a href="/planner" class:active={$page.url.pathname.startsWith("/planner")}>Planner</a>
-		    <a href="/farming" class:active={$page.url.pathname === "/farming"}>Farming</a>
+            <a href="/" class:active={$page.url.pathname === "/"} on:click={toggle}>Home</a>
+		    <a href="/planner" class:active={$page.url.pathname.startsWith("/planner")} on:click={toggle}>Planner</a>
+		    <a href="/farming" class:active={$page.url.pathname === "/farming"} on:click={toggle}>Farming</a>
         </nav>
     </div>
     <div class="filter" on:click={toggle} transition:fly={{x: 100, duration: 150}} />
