@@ -24,17 +24,20 @@
 
 <style>
     header {
-        padding: 0.25em;
         background-color: var(--dark-moderate);
 		box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.75);
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.5em;
+        gap: 0.75em;
     }
     .logo {
         width: 100%;
         max-width: 2em;
         min-width: 2em;
+    }
+    h1 {
+        margin: 0.25em;
+        color: var(--light-moderate);
     }
 </style>
