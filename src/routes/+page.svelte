@@ -4,7 +4,7 @@
 </svelte:head>
 
 <script>
-    import ghLogo from "$lib/images/github-logo.png";
+    import ghLogo from "$lib/images/github-logo.webp";
 </script>
 
 <h1 class="title">ArkDB</h1>
