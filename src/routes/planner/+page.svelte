@@ -5,7 +5,7 @@
 
 <script>
     import { writable } from "svelte/store";
-    import { selectedChar, activeCategory, allSelected, allSelectedWithCost, splitByStatus, showCost } from "../stores.js";
+    import { selectedChar, activeCategory, allSelected, splitByStatus, showCost } from "../stores.js";
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
@@ -15,8 +15,8 @@
 
     let innerWidth;
     const flipDurationMs = 150;
-    $: allReady = $allSelectedWithCost.filter(upgrade => upgrade.ready);
-    $: allNotReady = $allSelectedWithCost.filter(upgrade => !upgrade.ready);
+    $: allReady = $allSelected.filter(upgrade => upgrade.ready);
+    $: allNotReady = $allSelected.filter(upgrade => !upgrade.ready);
 
     $: selectedUpgradeNames = writable(new Array($selectedChar?.upgrades?.length).fill(new Set()))
 
@@ -137,7 +137,7 @@
                  on:consider={handleDnd}
                  on:finalize={handleDnd}
         >
-            {#each $allSelectedWithCost as upgrade (upgrade.id)}
+            {#each $allSelected as upgrade (upgrade.id)}
                 <div animate:flip="{{duration: flipDurationMs}}">
                     <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                 </div>
@@ -164,6 +164,7 @@
     }
     .settings {
         margin-right: calc(1em - 7.75px);
+        padding-bottom: 5px;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
