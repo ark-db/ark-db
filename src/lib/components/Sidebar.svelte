@@ -13,6 +13,7 @@
     {{}}
 {:else}
     <header>
+        <input type="image" src={bars} alt="Open navigation menu" on:click={() => active = true}>
         <div class="logo">
             <slot name="logo" />
         </div>
@@ -30,6 +31,11 @@
         align-items: center;
         justify-content: center;
         gap: 0.75em;
+    }
+    input[type=image] {
+        width: 100%;
+        max-width: 2em;
+        min-width: 2em;
     }
     .logo {
         width: 100%;
