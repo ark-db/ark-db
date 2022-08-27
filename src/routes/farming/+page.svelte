@@ -53,7 +53,7 @@
 
 <style>
     .settings {
-        margin-top: 2em;
+        margin-top: 1em;
         padding: 1em;
         background-color: var(--light-strong);
         display: flex;
