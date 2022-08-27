@@ -4,11 +4,12 @@
 	import Navbar from "$lib/components/Navbar.svelte";
 	import Sidebar from "$lib/components/Sidebar.svelte";
 	let w;
+	const mobileWidth = 450;
 </script>
 
 <svelte:window bind:innerWidth={w} />
 
-{#if w > 450}
+{#if w > mobileWidth}
 	<Navbar {page}>
 		<img slot="logo" src={logo} alt="ArkDB logo">
 	</Navbar>
@@ -18,7 +19,7 @@
 	</Sidebar>
 {/if}
 
-<main>
+<main class:mobile={w <= mobileWidth}>
     <slot />
 </main>
 
@@ -26,12 +27,15 @@
 
 <style>
 	main {
-		margin: auto;
-        padding: 5px;
+		margin: 0 auto;
+        padding: 4.75em 5px;
 		max-width: clamp(800px, 100vw, 1500px);
 		display: flex;
         flex-direction: column;
         gap: 10px;
+	}
+	main.mobile {
+		padding: 0.5em;
 	}
 	:global(:root) {
 		--dark-strong: #161921;
