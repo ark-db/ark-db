@@ -16,7 +16,7 @@
 
 <style>
     h2, p, a {
-        margin-bottom: 2em;
+        margin: 0 1em 2em;
         color: white;
         text-align: center;
     }

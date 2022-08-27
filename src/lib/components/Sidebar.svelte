@@ -48,7 +48,7 @@
         min-width: 2em;
     }
     h1 {
-        margin: 0.25em;
+        margin: 0.25em 0;
         color: var(--light-moderate);
     }
 </style>
