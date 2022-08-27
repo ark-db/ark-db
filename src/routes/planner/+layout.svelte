@@ -15,7 +15,7 @@
 
 <style>
     nav {
-        margin: 20px 0;
+        margin: 10px 0;
         display: flex;
         flex-flow: row wrap;
         align-items: center;
