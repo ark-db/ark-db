@@ -120,18 +120,17 @@
     </label>
 </section>
 
+{#key [$makeT3, $costFilter, $itemFilter, $inventory]}
 <section class="costs">
     <div>
         <h1 class="title">Upgrade Costs</h1>
         {#if itemCounter.size > 0}
             {@const costs = sortItems(normalize($makeT3 ? convertToT3(itemCounter) : itemCounter))}
-            {#key $makeT3}
             <section class="items">
                 {#each costs as item}
                     <ItemIcon {...item} --size="100px" />
                 {/each}
             </section>
-            {/key}
         {:else}
             <p class="placeholder">No upgrades found</p>
         {/if}
@@ -139,7 +138,6 @@
     
     {#if itemCounter.size > 0}
         {@const deficits = sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter))}
-        {#key [$makeT3, $inventory]}
         <div>
             <h1 class="title">Item Deficits</h1>
             {#if deficits.length > 0}
@@ -152,9 +150,9 @@
                 <p class="placeholder">No deficits!</p>
             {/if}
         </div>
-        {/key}
     {/if}
 </section>
+{/key}
 
 <h1 class="title">Inventory</h1>
 <section class="content items inv">
