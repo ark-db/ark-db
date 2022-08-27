@@ -3,15 +3,20 @@
     <meta name="description" content="Utility website for Arknights players" />
 </svelte:head>
 
+<script>
+    import ghLogo from "$lib/images/github-logo.png";
+</script>
+
 <h1 class="title">ArkDB</h1>
 <h2>A utility website for Arknights players</h2>
 <p>v0.9.0-beta</p>
-<a href="https://form.typeform.com/to/gSMV12RK" target="_blank" rel="noreferrer">
-    Submit feedback
+<a href="https://github.com/ark-db/ark-db/" target="_blank" rel="noreferrer">
+    <img src={ghLogo} alt="GitHub logo">
 </a>
 
 <style>
     h2, p, a {
+        margin-bottom: 2em;
         color: white;
         text-align: center;
     }
@@ -21,16 +26,9 @@
     h2 {
         font-size: clamp(1em, 5vw, 2em);
     }
-    a {
-        margin: 5em 30vw;
-        padding: 10px;
-        border-radius: 6px;
-        outline: white solid 1px;
-        background-color: var(--dark-moderate);
-        display: block;
-        text-decoration: none;
-    }
-    a:hover {
-        background-color: var(--dark-mild);
+    img {
+        width: 100%;
+        max-width: 32px;
+        min-width: 32px;
     }
 </style>
