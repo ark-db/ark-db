@@ -16,6 +16,9 @@
 
 <style>
     header {
+        position: fixed;
+        width: 100%;
+        z-index: 2;
 		background-color: var(--dark-moderate);
 		box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.75);
 		display: flex;
