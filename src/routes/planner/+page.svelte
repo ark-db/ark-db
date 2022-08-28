@@ -32,17 +32,11 @@
 
     let innerWidth;
     const flipDurationMs = 150;
+
     $: allReady = $allSelected.filter(upgrade => upgrade.ready);
     $: allNotReady = $allSelected.filter(upgrade => !upgrade.ready);
 
     $: selectedUpgradeNames = writable(new Array($selectedChar?.upgrades?.length).fill(new Set()))
-
-    function reindex() {
-        for (let [idx, upgrade] of $allSelected.entries()) {
-            upgrade.id = idx;
-        }
-        $allSelected = $allSelected;
-    }
 
     function submitUpgrades() {
         let selectedNames = $selectedUpgradeNames.map(set => Array.from(set)).flat();
@@ -55,8 +49,11 @@
                         ...newNames.map(name => ({name,
                                                   charId: $selectedChar.charId,
                                                   ready: false}))]
-
-        reindex();
+        
+        for (let [idx, upgrade] of $allSelected.entries()) {
+            upgrade.id = idx;
+        }
+        $allSelected = $allSelected;
 
         $selectedChar = {};
     }
@@ -143,7 +140,7 @@
                  on:finalize={handleDnd}
         >
             {#each $allSelected as upgrade (upgrade.id)}
-                <div animate:flip="{{duration: flipDurationMs}}">
+                <div animate:flip={{duration: flipDurationMs}}>
                     <TaskItem {...upgrade} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                 </div>
             {/each}
