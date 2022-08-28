@@ -13,6 +13,23 @@
     import { flip } from "svelte/animate";
     import { dndzone } from "svelte-dnd-action";
 
+	import { crossfade } from "svelte/transition";
+
+	const [send, receive] = crossfade({
+		fallback(node, params) {
+			const style = getComputedStyle(node);
+			const transform = style.transform === 'none' ? '' : style.transform;
+
+			return {
+				duration: 100,
+				css: t => `
+					transform: ${transform} scale(${t});
+                    opacity: ${t}
+				`
+			};
+		}
+	});
+
     let innerWidth;
     const flipDurationMs = 150;
     $: allReady = $allSelected.filter(upgrade => upgrade.ready);
@@ -105,14 +122,18 @@
         {#if allNotReady.length > 0}
             <section>
                 {#each allNotReady as upgrade (upgrade.id)}
-                    <TaskItem {...upgrade} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
+                    <div in:receive={{key: upgrade.id}} out:send={{key: upgrade.id}} animate:flip>
+                        <TaskItem {...upgrade} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
+                    </div>
                 {/each}
             </section>
         {/if}
         {#if allReady.length > 0}
             <section>
                 {#each allReady as upgrade (upgrade.id)}
-                    <TaskItem {...upgrade} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
+                    <div in:receive={{key: upgrade.id}} out:send={{key: upgrade.id}} animate:flip>
+                        <TaskItem {...upgrade} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
+                    </div>
                 {/each}
             </section>
         {/if}
