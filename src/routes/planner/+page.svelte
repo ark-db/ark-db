@@ -121,7 +121,7 @@
         {#if allNotReady.length > 0}
             <section>
                 {#each allNotReady as upgrade (upgrade.id)}
-                    <div in:receive={{key: upgrade.id}} out:send={{key: upgrade.id}} animate:flip>
+                    <div in:receive|local={{key: upgrade.id}} out:send|local={{key: upgrade.id}} animate:flip>
                         <TaskItem {...upgrade} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                     </div>
                 {/each}
@@ -130,7 +130,7 @@
         {#if allReady.length > 0}
             <section>
                 {#each allReady as upgrade (upgrade.id)}
-                    <div in:receive={{key: upgrade.id}} out:send={{key: upgrade.id}} animate:flip>
+                    <div in:receive|local={{key: upgrade.id}} out:send|local={{key: upgrade.id}} animate:flip>
                         <TaskItem {...upgrade} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                     </div>
                 {/each}
