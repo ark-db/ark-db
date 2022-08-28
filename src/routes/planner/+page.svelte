@@ -50,12 +50,6 @@
     function handleDnd(event) {
         $allSelected = event.detail.items;
     }
-    function handleDndReady(event) {
-        allReady = event.detail.items;
-    }
-    function handleDndNotReady(event) {
-        allNotReady = event.detail.items;
-    }
 </script>
 
 
@@ -109,26 +103,16 @@
     <section class="content taskboard">
     {#if $splitByStatus}
         {#if allNotReady.length > 0}
-            <section use:dndzone={{items: allNotReady, flipDurationMs, dropFromOthersDisabled: true}}
-                     on:consider={handleDndNotReady}
-                     on:finalize={handleDndNotReady}
-            >
+            <section>
                 {#each allNotReady as upgrade (upgrade.id)}
-                    <div animate:flip="{{duration: flipDurationMs}}">
-                        <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
-                    </div>
+                    <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                 {/each}
             </section>
         {/if}
         {#if allReady.length > 0}
-            <section use:dndzone={{items: allReady, flipDurationMs, dropFromOthersDisabled: true}}
-                     on:consider={handleDndReady}
-                     on:finalize={handleDndReady}
-            >
+            <section>
                 {#each allReady as upgrade (upgrade.id)}
-                    <div animate:flip="{{duration: flipDurationMs}}">
-                        <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
-                    </div>
+                    <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                 {/each}
             </section>
         {/if}
