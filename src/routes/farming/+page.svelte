@@ -16,7 +16,7 @@
 </script>
 
 <section class="content settings">
-    <div class="group">
+    <div>
         <label>
             <input type=radio bind:group={$region} value={"glb"}>
             US/JP/KR
@@ -26,7 +26,7 @@
             CN
         </label>
     </div>
-    <div class="group">
+    <div>
         <label>
             <input type=radio bind:group={$sortMode} value={"effic"}>
             Sort by stage efficiency
@@ -54,16 +54,17 @@
 <style>
     .settings {
         margin-top: 1em;
-        padding: 1em;
+        padding: 0.5em;
         background-color: var(--light-strong);
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
-        gap: 1em 2em;
+        gap: 0.5em 1.5em;
     }
-    .group {
+    .settings label {
+        margin: 0.5em;
         display: flex;
-        gap: 2em;
+        align-items: center;
     }
     .grid {
         margin: 2em 0;
@@ -81,10 +82,6 @@
         display: flex;
         flex-wrap: wrap;
         gap: 0.5em 1.5em;
-    }
-    label {
-        display: flex;
-        align-items: center;
     }
     input[type=radio] {
         transform: scale(1.25);

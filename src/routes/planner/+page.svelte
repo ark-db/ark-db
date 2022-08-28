@@ -13,19 +13,31 @@
     import { flip } from "svelte/animate";
     import { dndzone } from "svelte-dnd-action";
 
+	import { crossfade } from "svelte/transition";
+
+	const [send, receive] = crossfade({
+		fallback(node, params) {
+			const style = getComputedStyle(node);
+			const transform = style.transform === 'none' ? '' : style.transform;
+
+			return {
+				duration: 100,
+				css: t => `
+					transform: ${transform} scale(${t});
+                    opacity: ${t}
+				`
+			};
+		}
+	});
+
     let innerWidth;
     const flipDurationMs = 150;
+
+    $: orderId = $allSelected.length;
     $: allReady = $allSelected.filter(upgrade => upgrade.ready);
     $: allNotReady = $allSelected.filter(upgrade => !upgrade.ready);
 
     $: selectedUpgradeNames = writable(new Array($selectedChar?.upgrades?.length).fill(new Set()))
-
-    function reindex() {
-        for (let [idx, upgrade] of $allSelected.entries()) {
-            upgrade.id = idx;
-        }
-        $allSelected = $allSelected;
-    }
 
     function submitUpgrades() {
         let selectedNames = $selectedUpgradeNames.map(set => Array.from(set)).flat();
@@ -34,12 +46,16 @@
                                .filter(name => !$allSelected.filter(upgrade => upgrade.charId === $selectedChar.charId)
                                                             .map(upgrade => upgrade.name)
                                                             .includes(name));
-        $allSelected = [...$allSelected,
-                        ...newNames.map(name => ({name,
-                                                  charId: $selectedChar.charId,
-                                                  ready: false}))]
-
-        reindex();
+        $allSelected = [
+            ...$allSelected,
+            ...newNames.map(name => ({name,
+                                      charId: $selectedChar.charId,
+                                      ready: false,
+                                      id: orderId++})
+            )
+        ];
+        console.log($allSelected);
+        
 
         $selectedChar = {};
     }
@@ -49,12 +65,6 @@
     }
     function handleDnd(event) {
         $allSelected = event.detail.items;
-    }
-    function handleDndReady(event) {
-        allReady = event.detail.items;
-    }
-    function handleDndNotReady(event) {
-        allNotReady = event.detail.items;
     }
 </script>
 
@@ -109,25 +119,19 @@
     <section class="content taskboard">
     {#if $splitByStatus}
         {#if allNotReady.length > 0}
-            <section use:dndzone={{items: allNotReady, flipDurationMs, dropFromOthersDisabled: true}}
-                     on:consider={handleDndNotReady}
-                     on:finalize={handleDndNotReady}
-            >
+            <section>
                 {#each allNotReady as upgrade (upgrade.id)}
-                    <div animate:flip="{{duration: flipDurationMs}}">
-                        <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
+                    <div in:receive|local={{key: upgrade.id}} out:send|local={{key: upgrade.id}} animate:flip>
+                        <TaskItem {...upgrade} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                     </div>
                 {/each}
             </section>
         {/if}
         {#if allReady.length > 0}
-            <section use:dndzone={{items: allReady, flipDurationMs, dropFromOthersDisabled: true}}
-                     on:consider={handleDndReady}
-                     on:finalize={handleDndReady}
-            >
+            <section>
                 {#each allReady as upgrade (upgrade.id)}
-                    <div animate:flip="{{duration: flipDurationMs}}">
-                        <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
+                    <div in:receive|local={{key: upgrade.id}} out:send|local={{key: upgrade.id}} animate:flip>
+                        <TaskItem {...upgrade} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                     </div>
                 {/each}
             </section>
@@ -138,8 +142,8 @@
                  on:finalize={handleDnd}
         >
             {#each $allSelected as upgrade (upgrade.id)}
-                <div animate:flip="{{duration: flipDurationMs}}">
-                    <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
+                <div animate:flip={{duration: flipDurationMs}}>
+                    <TaskItem {...upgrade} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                 </div>
             {/each}
         </section>
