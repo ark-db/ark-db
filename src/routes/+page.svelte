@@ -9,7 +9,7 @@
 
 <h1 class="title">ArkDB</h1>
 <h2>A utility website for Arknights players</h2>
-<p>v0.9.1-beta</p>
+<p>v0.9.2-beta</p>
 <a href="https://github.com/ark-db/ark-db/" target="_blank" rel="noreferrer">
     <img src={ghLogo} alt="GitHub logo">
 </a>
