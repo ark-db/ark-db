@@ -33,6 +33,7 @@
     let innerWidth;
     const flipDurationMs = 150;
 
+    $: orderId = $allSelected.length;
     $: allReady = $allSelected.filter(upgrade => upgrade.ready);
     $: allNotReady = $allSelected.filter(upgrade => !upgrade.ready);
 
@@ -45,15 +46,16 @@
                                .filter(name => !$allSelected.filter(upgrade => upgrade.charId === $selectedChar.charId)
                                                             .map(upgrade => upgrade.name)
                                                             .includes(name));
-        $allSelected = [...$allSelected,
-                        ...newNames.map(name => ({name,
-                                                  charId: $selectedChar.charId,
-                                                  ready: false}))]
+        $allSelected = [
+            ...$allSelected,
+            ...newNames.map(name => ({name,
+                                      charId: $selectedChar.charId,
+                                      ready: false,
+                                      id: orderId++})
+            )
+        ];
+        console.log($allSelected);
         
-        for (let [idx, upgrade] of $allSelected.entries()) {
-            upgrade.id = idx;
-        }
-        $allSelected = $allSelected;
 
         $selectedChar = {};
     }
