@@ -105,14 +105,14 @@
         {#if allNotReady.length > 0}
             <section>
                 {#each allNotReady as upgrade (upgrade.id)}
-                    <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
+                    <TaskItem {...upgrade} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                 {/each}
             </section>
         {/if}
         {#if allReady.length > 0}
             <section>
                 {#each allReady as upgrade (upgrade.id)}
-                    <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
+                    <TaskItem {...upgrade} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                 {/each}
             </section>
         {/if}
@@ -123,7 +123,7 @@
         >
             {#each $allSelected as upgrade (upgrade.id)}
                 <div animate:flip="{{duration: flipDurationMs}}">
-                    <TaskItem {...upgrade} {splitByStatus} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
+                    <TaskItem {...upgrade} {showCost} bind:ready={upgrade.ready} on:click={() => remove(upgrade)} />
                 </div>
             {/each}
         </section>

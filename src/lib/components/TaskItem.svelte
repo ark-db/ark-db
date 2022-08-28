@@ -4,16 +4,14 @@
     import ItemIcon from "./ItemIcon.svelte";
     import deleteIcon from "../images/delete.svg";
 
-    export let splitByStatus, showCost;
+    export let showCost;
     export let charId, name, ready, id;
     id; // stops SvelteKit from complaining
 </script>
 
 <section class:ready={ready}>
     <div class="left">
-        {#if !$splitByStatus}
-            <input type="checkbox" bind:checked={ready}>
-        {/if}
+        <input type="checkbox" bind:checked={ready}>
         <div class="info">
             <div class="top">
                 <OperatorIcon {charId} --size="60px" --border="0px" />
