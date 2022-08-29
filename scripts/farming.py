@@ -61,7 +61,7 @@ def get_stage_ids(region: Region) -> set[str]:
                 ["matrix"]
     )
     current_stage_ids = set(
-        item["stageId"] for item in current_drops if item["stageId"].startswith(("main", "sub", "wk", "act"))
+        item["stageId"] for item in current_drops if item["stageId"].startswith(("main", "sub", "wk", "act", "a001", "a003"))
     )
     return current_stage_ids
 
