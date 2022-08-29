@@ -60,7 +60,7 @@
         $selectedChar = {};
     }
     function remove(upgrade) {
-        $allSelected = $allSelected.filter(up => !(up.charName === upgrade.charName
+        $allSelected = $allSelected.filter(up => !(up.charId === upgrade.charId
                                                    && up.name === upgrade.name));
     }
     function handleDnd(event) {
