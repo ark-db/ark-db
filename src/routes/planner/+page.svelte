@@ -38,7 +38,7 @@
                                       id: orderId++})
             )
         ];
-
+        updateStoredUpgrades($allSelected);
         $selectedChar = {};
     }
     function remove(upgrade) {
