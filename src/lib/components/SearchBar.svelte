@@ -3,30 +3,29 @@
     import operators from "../data/operators.json";
     export let selectedChar;
 
-    const data = Object.values(operators)
-    const extract = (id) => id.name;
-    const stripTags = (str) => {
-        return str.replace( /(<([^>]+)>)/ig, '');
-    }
+    const stripTags = str => str.replace(/(<([^>]+)>)/ig, "");
 </script>
 
-<Typeahead
-    hideLabel={true}
-    placeholder={"Search operators..."}
-    {data}
-    {extract}
-    inputAfterSelect="clear"
-    let:value
-    let:result
-    on:select={({ detail }) => $selectedChar = detail.original}
+
+
+<Typeahead hideLabel={true}
+           placeholder={"Search operators..."}
+           data={Object.values(operators)}
+           extract={(id) => id.name}
+           inputAfterSelect="clear"
+           let:value
+           let:result
+           on:select={({ detail }) => $selectedChar = detail.original}
 >
     <svelte:fragment slot="no-results">
-        <div class="notfound">
+        <span class="notfound">
             No results found for "{value}"
-        </div>
+        </span>
     </svelte:fragment>
     {stripTags(result.string)}
 </Typeahead>
+
+
 
 <style>
     .notfound {
