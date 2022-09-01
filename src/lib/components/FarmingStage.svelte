@@ -19,9 +19,15 @@
 <div class={categorize(effic)}>
     <h2 title="Stage">{stage}</h2>
     <div class="stats">
-        <p title="Stage efficiency">{effic === 1 ? effic.toFixed(1) : effic}</p>
-        <p title="Drop rate">{toPercent.format(rate)}</p>
-        <p title="Expected sanity per drop">{espd}</p>
+        <p title="Stage efficiency">
+            {effic === 1 ? effic.toFixed(1) : effic}
+        </p>
+        <p title="Drop rate">
+            {toPercent.format(rate)}
+        </p>
+        <p title="Expected sanity per drop">
+            {espd}
+        </p>
     </div>
 </div>
 
