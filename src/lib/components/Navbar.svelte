@@ -8,7 +8,6 @@
     <a href="/">
 		<slot name="logo" />
 	</a>
-
     <nav>
         <a href="/" class:active={$page.url.pathname === "/"}>
 			Home
