@@ -110,7 +110,7 @@
         </label>
     </div>
     <label>
-        <input type="checkbox" bind:checked={$makeT3} disabled={!$itemFilter.includes("material")}>
+        <input type="checkbox" bind:checked={$makeT3}>
         Reduce items to T3
     </label>
 </section>
