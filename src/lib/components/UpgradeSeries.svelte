@@ -1,43 +1,32 @@
 <script>
     import { assets } from "$app/paths";
-    export let activeCategory, selectedUpgradeNames;
-    export let category, idx;
 
-    let { names } = category;
+    export let activeCategory, selectedUpgradeNames, category, idx;
+
+    const { names } = category;
     let selectedNames = new Set();
 
     function replaceAt(index, value) {
         let temp = $selectedUpgradeNames.slice(0);
         temp[index] = value;
         return temp;
-    }
+    };
 
     const setActiveCategory = () => {
-        if (category?.cls === "mastery") {
-            $activeCategory = `${assets}/images/skills/${category.skillId}.webp`;
-        } else if (category?.cls === "module") {
-            $activeCategory = `${assets}/images/modules/${category.moduleId}.webp`;
-        }
-    };
-    const unsetActiveCategory = () => {
-        $activeCategory = "";
+        if (category?.cls === "mastery") $activeCategory = `${assets}/images/skills/${category.skillId}.webp`;
+        else if (category?.cls === "module") $activeCategory = `${assets}/images/modules/${category.moduleId}.webp`;
     };
 
+    const unsetActiveCategory = () => $activeCategory = "";
+
     const onCheckName = event => {
-        if (event.target.checked) {
-            selectedNames.add(event.target.value);
-        } else {
-            selectedNames.delete(event.target.value);
-        }
+        event.target.checked ? selectedNames.add(event.target.value) : selectedNames.delete(event.target.value);
         selectedNames = selectedNames;
         $selectedUpgradeNames = replaceAt(idx, selectedNames)
     };
+
     const onSelectAll = event => {
-        if (event.target.checked) {
-            selectedNames = new Set(names);
-        } else {
-            selectedNames.clear();
-        }
+        event.target.checked ? selectedNames = new Set(names) : selectedNames.clear();
         selectedNames = selectedNames;
         $selectedUpgradeNames = replaceAt(idx, selectedNames)
     };
