@@ -1,12 +1,13 @@
 <script>
     import { assets } from "$app/paths";
     import items from "../data/items.json";
+
     export let id;
     export let count = undefined;
 
-    let itemSrc = `${assets}/images/items/${id}.webp`;
-    let { name, rarity } = items[id];
-    let bgSrc = `${assets}/images/rarities/${rarity}.webp`;
+    const itemSrc = `${assets}/images/items/${id}.webp`;
+    const { name, rarity } = items[id];
+    const bgSrc = `${assets}/images/rarities/${rarity}.webp`;
 
     const compactNum = Intl.NumberFormat("en-US", {
         notation: "compact",
@@ -14,13 +15,19 @@
     });
 </script>
 
+
+
 <div>
     <img src={bgSrc} alt="background" />
     <img src={itemSrc} title={name} alt={name} />
     {#if count !== undefined}
-        <p class:neg={count < 0}>{compactNum.format(count)}</p>
+        <p class:neg={count < 0}>
+            {compactNum.format(count)}
+        </p>
     {/if}
 </div>
+
+
 
 <style>
     div {

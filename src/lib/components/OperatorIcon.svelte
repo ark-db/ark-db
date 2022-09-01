@@ -1,13 +1,22 @@
 <script>
     import { assets } from "$app/paths";
     import operators from "../data/operators.json";
+
     export let charId;
     
-    let src = `${assets}/images/operators/${charId}.webp`;
-    let { name, rarity } = operators[charId];
+    const src = `${assets}/images/operators/${charId}.webp`;
+    const { name, rarity } = operators[charId];
 </script>
 
-<img class={rarity} {src} title={name} alt={name} />
+
+
+<img class={rarity}
+     {src}
+     title={name}
+     alt={name}
+/>
+
+
 
 <style>
     img {

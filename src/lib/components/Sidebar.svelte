@@ -9,14 +9,10 @@
     const toggle = () => active = !active;
 
     function getPageTitle(path) {
-        if (path === "/") {
-            return "Home"
-        }  else if (path.startsWith("/planner")) {
-            return "Planner"
-        } else if (path === "/farming") {
-            return "Farming"
-        }
-    }
+        if (path === "/") return "Home";
+        else if (path.startsWith("/planner")) return "Planner";
+        else if (path === "/farming") return "Farming";
+    };
 </script>
 
 
