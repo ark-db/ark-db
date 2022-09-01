@@ -2,17 +2,11 @@
     export let stage, effic, rate, espd;
 
     function categorize(eff) {
-        if (eff < 0.75) {
-            return "poor";
-        } else if (eff < 0.9) {
-            return "bad";
-        } else if (eff < 0.95) {
-            return "fair"
-        } else if (eff < 0.99) {
-            return "good";
-        } else {
-            return "great";
-        };
+        if (eff < 0.75) return "poor";
+        else if (eff < 0.9) return "bad";
+        else if (eff < 0.95) return "fair"
+        else if (eff < 0.99) return "good";
+        else return "great";
     };
     const toPercent = new Intl.NumberFormat("en-US", {
         style: "percent",
