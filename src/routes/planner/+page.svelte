@@ -5,30 +5,14 @@
 
 <script>
     import { writable } from "svelte/store";
-    import { selectedChar, activeCategory, allSelected, splitByStatus, showCost } from "../stores.js";
+    import { selectedChar, activeCategory, allSelected, splitByStatus, showCost } from "@stores";
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
     import TaskItem from "$lib/components/TaskItem.svelte";
     import { flip } from "svelte/animate";
     import { dndzone } from "svelte-dnd-action";
-
 	import { crossfade } from "svelte/transition";
-
-	const [send, receive] = crossfade({
-		fallback(node, params) {
-			const style = getComputedStyle(node);
-			const transform = style.transform === 'none' ? '' : style.transform;
-
-			return {
-				duration: 100,
-				css: t => `
-					transform: ${transform} scale(${t});
-                    opacity: ${t}
-				`
-			};
-		}
-	});
 
     let innerWidth;
     const flipDurationMs = 150;
@@ -54,8 +38,6 @@
                                       id: orderId++})
             )
         ];
-        console.log($allSelected);
-        
 
         $selectedChar = {};
     }
@@ -66,6 +48,20 @@
     function handleDnd(event) {
         $allSelected = event.detail.items;
     }
+    const [send, receive] = crossfade({
+		fallback(node, params) {
+			const style = getComputedStyle(node);
+			const transform = style.transform === 'none' ? '' : style.transform;
+
+			return {
+				duration: 100,
+				css: t => `
+					transform: ${transform} scale(${t});
+                    opacity: ${t}
+				`
+			};
+		}
+	});
 </script>
 
 
