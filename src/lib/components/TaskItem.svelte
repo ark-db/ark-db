@@ -9,6 +9,8 @@
     id; // stops SvelteKit from complaining
 </script>
 
+
+
 <section class:ready={ready}>
     <div class="left">
         <input type="checkbox" bind:checked={ready}>
@@ -31,6 +33,8 @@
     </div>
     <input type="image" src={deleteIcon} alt="delete" on:click />
 </section>
+
+
 
 <style>
     section {

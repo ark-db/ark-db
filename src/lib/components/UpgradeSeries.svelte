@@ -32,6 +32,8 @@
     };
 </script>
 
+
+
 <ol on:mouseenter={setActiveCategory} on:mouseleave={unsetActiveCategory}>
     {#if names.length > 1}
         <li>
@@ -50,6 +52,8 @@
         </li>
     {/each}
 </ol>
+
+
 
 <style>
     ol {
