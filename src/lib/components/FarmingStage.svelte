@@ -8,6 +8,7 @@
         else if (eff < 0.99) return "good";
         else return "great";
     };
+
     const toPercent = new Intl.NumberFormat("en-US", {
         style: "percent",
         minimumFractionDigits: 1
