@@ -3,9 +3,12 @@
     import logo from "$lib/images/logo.svg";
 	import Navbar from "$lib/components/Navbar.svelte";
 	import Sidebar from "$lib/components/Sidebar.svelte";
+
 	let w;
 	const mobileWidth = 450;
 </script>
+
+
 
 <svelte:window bind:innerWidth={w} />
 
