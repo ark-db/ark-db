@@ -4,8 +4,8 @@
 </svelte:head>
 
 <script>
-    import { allSelected, inventory, costFilter, itemFilter, makeT3 } from "../../stores.js";
-    import { sortItems } from "../../utils.js";
+    import { allSelected, inventory, costFilter, itemFilter, makeT3 } from "@stores";
+    import { sortItems } from "@utils";
     import operators from "$lib/data/operators.json";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
