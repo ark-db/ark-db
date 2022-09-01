@@ -1,8 +1,3 @@
-<svelte:head>
-    <title>Farming Stages</title>
-    <meta name="description" content="A list of the best Arknights farming stages for materials, with stage efficiencies, drop rates, and expected sanity costs." />
-</svelte:head>
-
 <script>
     import { region, sortMode } from "@stores";
     import { sortItems } from "@utils";
@@ -10,10 +5,15 @@
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import FarmingStage from "$lib/components/FarmingStage.svelte";
 
-    function sortStages(stages, mode) {
-        return stages.sort((prev, curr) => (prev[mode] - curr[mode]) * (mode === "effic" ? -1 : 1))
-    }
+    const sortStages = (stages, mode) => stages.sort((prev, curr) => (prev[mode] - curr[mode]) * (mode === "effic" ? -1 : 1));
 </script>
+
+
+
+<svelte:head>
+    <title>Farming Stages</title>
+    <meta name="description" content="A list of the best Arknights farming stages for materials, with stage efficiencies, drop rates, and expected sanity costs." />
+</svelte:head>
 
 <section class="content settings">
     <div>
@@ -50,6 +50,8 @@
         </div>
     {/each}
 </section>
+
+
 
 <style>
     .settings {
