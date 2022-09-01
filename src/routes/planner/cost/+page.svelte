@@ -44,7 +44,7 @@
         const stock = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
         const deficits = Array.from(costs)
                               .map(([ id, count ]) => ({id, count: stock[id] - count}))
-                              .filter(({ id, count }) => id !== "4001" && count < 0)
+                              .filter(({ id, count }) => id !== "4001" && count < 0);
         return deficits;
     };
 
@@ -81,7 +81,7 @@
 
         for (const [id, count] of costs) {
             searchForDeficits(id, count);
-        };
+        }
 
         Array.from(deficits)
              .sort((prev, curr) => items[prev].rarity - items[curr].rarity)
