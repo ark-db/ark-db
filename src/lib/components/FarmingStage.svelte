@@ -14,6 +14,8 @@
     });
 </script>
 
+
+
 <div class={categorize(effic)}>
     <h2 title="Stage">{stage}</h2>
     <div class="stats">
@@ -22,6 +24,8 @@
         <p title="Expected sanity per drop">{espd}</p>
     </div>
 </div>
+
+
 
 <style>
     .poor, .bad, .fair, .good, .great {

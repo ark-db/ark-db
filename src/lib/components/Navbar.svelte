@@ -2,6 +2,8 @@
     export let page;
 </script>
 
+
+
 <header>
     <a href="/">
 		<slot name="logo" />
@@ -13,6 +15,8 @@
 		<a href="/farming" class:active={$page.url.pathname === "/farming"}>Farming</a>
     </nav>
 </header>
+
+
 
 <style>
     header {
