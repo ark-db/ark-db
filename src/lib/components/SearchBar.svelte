@@ -1,6 +1,7 @@
 <script>
     import Typeahead from "svelte-typeahead";
     import operators from "../data/operators.json";
+
     export let selectedChar;
 
     const stripTags = str => str.replace(/(<([^>]+)>)/ig, "");

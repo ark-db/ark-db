@@ -6,6 +6,7 @@
 
     export let showCost;
     export let charId, name, ready, id;
+
     id; // stops SvelteKit from complaining
 </script>
 
