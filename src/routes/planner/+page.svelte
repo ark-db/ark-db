@@ -5,7 +5,7 @@
 
 <script>
     import { writable } from "svelte/store";
-    import { selectedChar, activeCategory, allSelected, splitByStatus, showCost } from "@stores";
+    import { selectedChar, activeCategory, allSelected, updateStoredUpgrades, splitByStatus, showCost } from "@stores";
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
@@ -47,6 +47,10 @@
     }
     function handleDnd(event) {
         $allSelected = event.detail.items;
+    }
+    function handleDndFinal(event) {
+        $allSelected = event.detail.items;
+        updateStoredUpgrades($allSelected);
     }
     const [send, receive] = crossfade({
 		fallback(node, params) {
@@ -135,7 +139,7 @@
     {:else}
         <section use:dndzone={{items: $allSelected, flipDurationMs}}
                  on:consider={handleDnd}
-                 on:finalize={handleDnd}
+                 on:finalize={handleDndFinal}
         >
             {#each $allSelected as upgrade (upgrade.id)}
                 <div animate:flip={{duration: flipDurationMs}}>
