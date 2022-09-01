@@ -4,8 +4,7 @@
     import ItemIcon from "./ItemIcon.svelte";
     import deleteIcon from "../images/delete.svg";
 
-    export let showCost;
-    export let charId, name, ready, id;
+    export let showCost, charId, name, ready, id;
 
     id; // stops SvelteKit from complaining
 </script>
