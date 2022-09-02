@@ -2,6 +2,7 @@ import { writable } from "svelte/store";
 import { browser } from "$app/environment";
 import items from "$lib/data/items.json";
 
+// preloaded data
 let storedUpgrades;
 let storedInventory;
 
@@ -24,7 +25,7 @@ export function updateStoredUpgrades(upgrades) {
         }
         localStorage.upgrades = JSON.stringify(reindexed);
     }
-}
+};
 
 export const splitByStatus = writable(false);
 export const showCost = writable(false);
