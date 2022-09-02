@@ -1,5 +1,5 @@
 <script>
-    import { page } from '$app/stores';
+    import { page } from "$app/stores";
     import src from "$lib/images/skalter.webp";
 </script>
 
