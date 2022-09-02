@@ -50,6 +50,7 @@ def update_mat_relations(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
+    # adds recipes' outcome quantities to the recipe matrix
     for item_id, count in zip(df.index.get_level_values("itemId"), df.index.get_level_values("count")):
         df.at[item_id, item_id] = count
     return df
@@ -61,6 +62,7 @@ def get_stage_ids(region: Region) -> set[str]:
                 ["matrix"]
     )
     current_stage_ids = set(
+        # GT (a001) and OF (a003) event stage IDs don't start with "act"
         item["stageId"] for item in current_drops if item["stageId"].startswith(("main", "sub", "wk", "act", "a001", "a003"))
     )
     return current_stage_ids
@@ -107,6 +109,7 @@ drop_data = (
              columns="itemId",
              values="drop_rate")
       .fillna(0)
+      # below: combine "tough" and "normal" stage drop data (for ch.10+)
       .assign(norm_id = lambda df: df.index.str.replace("tough", "main"))
       .groupby("norm_id")
       .mean()
@@ -119,6 +122,7 @@ stage_data = (
       .set_index("stageId")
 )
 
+# handle entries for non-stages and things without drop info
 for stage in stages:
     if (not stage.get("dropInfos")) or stage["stageId"] == "recruit":
         stage.update({"dropInfos": []})
@@ -127,7 +131,7 @@ main_drops = (
     pd.json_normalize(data=stages,
                       record_path="dropInfos",
                       meta="stageId")
-      .pipe(lambda df: df[df["dropType"] == "NORMAL_DROP"])
+      .pipe(lambda df: df[df["dropType"] == "NORMAL_DROP"]) # NORMAL_DROP = main drop of a stage
       .filter(["stageId", "itemId"])
       .pipe(lambda df: df[~df["itemId"].isna()])
 )
@@ -188,7 +192,7 @@ for region in Region:
 
     curr_drop_data = (
         drop_data.pipe(lambda df: df[df.index.isin(valid_stage_ids)])
-                 .assign(lmd = stage_data["apCost"] * 12)
+                 .assign(lmd = stage_data["apCost"] * 12) # implicit reindexing of stage_data
                  .pipe(update_lmd_stages, valid_stage_ids)
                  .rename(columns={"lmd": "4001"})
                  .reindex(columns=ALLOWED_ITEMS)
