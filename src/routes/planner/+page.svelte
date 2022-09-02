@@ -162,7 +162,6 @@
 
 <style>
     .top {
-        margin-bottom: 5px;
         padding: 10px;
         background-color: var(--light-strong);
         display: flex;
