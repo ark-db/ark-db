@@ -1,5 +1,5 @@
 <script>
-	import { page } from '$app/stores';
+	import { page } from "$app/stores";
     import logo from "$lib/images/logo.svg";
 	import Navbar from "$lib/components/Navbar.svelte";
 	import Sidebar from "$lib/components/Sidebar.svelte";
