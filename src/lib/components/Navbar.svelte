@@ -2,17 +2,26 @@
     export let page;
 </script>
 
+
+
 <header>
     <a href="/">
 		<slot name="logo" />
 	</a>
-
     <nav>
-        <a href="/" class:active={$page.url.pathname === "/"}>Home</a>
-		<a href="/planner" class:active={$page.url.pathname.startsWith("/planner")}>Planner</a>
-		<a href="/farming" class:active={$page.url.pathname === "/farming"}>Farming</a>
+        <a href="/" class:active={$page.url.pathname === "/"}>
+			Home
+		</a>
+		<a href="/planner" class:active={$page.url.pathname.startsWith("/planner")}>
+			Planner
+		</a>
+		<a href="/farming" class:active={$page.url.pathname === "/farming"}>
+			Farming
+		</a>
     </nav>
 </header>
+
+
 
 <style>
     header {

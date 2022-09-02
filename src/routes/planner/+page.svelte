@@ -1,35 +1,14 @@
-<svelte:head>
-    <title>Upgrade Planner</title>
-    <meta name="description" content="An Arknights operator upgrade planner." />
-</svelte:head>
-
 <script>
     import { writable } from "svelte/store";
-    import { selectedChar, activeCategory, allSelected, splitByStatus, showCost } from "../stores.js";
+    import { flip } from "svelte/animate";
+    import { dndzone } from "svelte-dnd-action";
+	import { crossfade } from "svelte/transition";
+    import { selectedChar, activeCategory, allSelected, updateStoredUpgrades, splitByStatus, showCost } from "@stores";
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
     import TaskItem from "$lib/components/TaskItem.svelte";
-    import { flip } from "svelte/animate";
-    import { dndzone } from "svelte-dnd-action";
-
-	import { crossfade } from "svelte/transition";
-
-	const [send, receive] = crossfade({
-		fallback(node, params) {
-			const style = getComputedStyle(node);
-			const transform = style.transform === 'none' ? '' : style.transform;
-
-			return {
-				duration: 100,
-				css: t => `
-					transform: ${transform} scale(${t});
-                    opacity: ${t}
-				`
-			};
-		}
-	});
-
+    
     let innerWidth;
     const flipDurationMs = 150;
 
@@ -37,15 +16,18 @@
     $: allReady = $allSelected.filter(upgrade => upgrade.ready);
     $: allNotReady = $allSelected.filter(upgrade => !upgrade.ready);
 
-    $: selectedUpgradeNames = writable(new Array($selectedChar?.upgrades?.length).fill(new Set()))
+    $: selectedUpgradeNames = writable(new Array($selectedChar?.upgrades?.length).fill(new Set()));
 
     function submitUpgrades() {
-        let selectedNames = $selectedUpgradeNames.map(set => Array.from(set)).flat();
-        let allNames = $selectedChar.upgrades.map(category => category.names).flat();
+        const selectedNames = $selectedUpgradeNames.map(set => Array.from(set))
+                                                   .flat();
+        const allNames = $selectedChar.upgrades.map(category => category.names)
+                                               .flat();
         let newNames = allNames.filter(name => selectedNames.includes(name))
                                .filter(name => !$allSelected.filter(upgrade => upgrade.charId === $selectedChar.charId)
                                                             .map(upgrade => upgrade.name)
                                                             .includes(name));
+
         $allSelected = [
             ...$allSelected,
             ...newNames.map(name => ({name,
@@ -54,21 +36,44 @@
                                       id: orderId++})
             )
         ];
-        console.log($allSelected);
-        
-
+        updateStoredUpgrades($allSelected);
         $selectedChar = {};
-    }
+    };
+
     function remove(upgrade) {
         $allSelected = $allSelected.filter(up => !(up.charId === upgrade.charId
                                                    && up.name === upgrade.name));
-    }
+    };
+
+    const [send, receive] = crossfade({
+		fallback(node, params) {
+			const style = getComputedStyle(node);
+			const transform = style.transform === 'none' ? '' : style.transform;
+            const effects = {
+                duration: 100,
+                css: t => `transform: ${transform} scale(${t});
+                           opacity: ${t};`
+            };
+			return effects;
+		}
+	});
+
     function handleDnd(event) {
         $allSelected = event.detail.items;
-    }
+    };
+
+    function handleDndFinal(event) {
+        $allSelected = event.detail.items;
+        updateStoredUpgrades($allSelected);
+    };
 </script>
 
 
+
+<svelte:head>
+    <title>Upgrade Planner</title>
+    <meta name="description" content="An Arknights operator upgrade planner." />
+</svelte:head>
 
 <svelte:window bind:innerWidth={innerWidth} />
 
@@ -139,7 +144,7 @@
     {:else}
         <section use:dndzone={{items: $allSelected, flipDurationMs}}
                  on:consider={handleDnd}
-                 on:finalize={handleDnd}
+                 on:finalize={handleDndFinal}
         >
             {#each $allSelected as upgrade (upgrade.id)}
                 <div animate:flip={{duration: flipDurationMs}}>

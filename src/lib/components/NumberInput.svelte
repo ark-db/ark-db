@@ -10,10 +10,11 @@
 
     function updateValue(direction) {
         value = Math.max(min, Math.min(value + direction, max));
-    }
+    };
+
     function parse(raw) {
         return raw != "" ? Number(raw) : null;
-    }
+    };
 </script>
 
 

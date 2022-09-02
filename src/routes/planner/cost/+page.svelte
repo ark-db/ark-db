@@ -1,11 +1,6 @@
-<svelte:head>
-    <title>Cost Calculator</title>
-    <meta name="description" content="A calculator for upgrade costs of operators in Arknights." />
-</svelte:head>
-
 <script>
-    import { allSelected, inventory, costFilter, itemFilter, makeT3 } from "../../stores.js";
-    import { sortItems } from "../../utils.js";
+    import { allSelected, inventory, costFilter, itemFilter, makeT3 } from "@stores";
+    import { sortItems } from "@utils";
     import operators from "$lib/data/operators.json";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
@@ -22,17 +17,15 @@
                         .filter(({ id }) => $itemFilter.includes(items[id].type))
                         .reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
         )
-    )
+    );
 
-    function normalize(counter) {
-        return Array.from(counter).map(([id, count]) => ({id, count}));
-    }
+    const normalize = counter => Array.from(counter).map(([id, count]) => ({id, count}));
 
     function convertToT3(counter) {
-        let itemCounts = new Map();
+        const itemCounts = new Map();
         
         function convert(id, count) {
-            let { rarity, recipe = undefined } = items[id];
+            const { rarity, recipe = undefined } = items[id];
             if (rarity === 2) {
                 itemCounts.set(id, (itemCounts.get(id) ?? 0) + count);
             } else if (rarity > 2 && recipe) {
@@ -43,25 +36,26 @@
         for (const [id, count] of counter) {
             convert(id, count);
         };
+    
         return itemCounts;
     };
 
     function getDeficits(inv, costs) {
-        let stock = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
-        let deficits = Array.from(costs)
-                            .map(([ id, count ]) => ({id: id, count: stock[id] - count}))
-                            .filter(({ id, count }) => id !== "4001" && count < 0)
+        const stock = Object.fromEntries(inv.map(({ id, count }) => [id, count]));
+        const deficits = Array.from(costs)
+                              .map(([ id, count ]) => ({id, count: stock[id] - count}))
+                              .filter(({ id, count }) => id !== "4001" && count < 0);
         return deficits;
-    }
+    };
 
     function getDeficitsT3(inv, costs) {
-        let stock = new Map(inv.map(({ id, count }) => ([id, count])));
-        let deficits = new Set();
+        const stock = new Map(inv.map(({ id, count }) => ([id, count])));
+        const deficits = new Set();
 
         function searchForDeficits(id, qtyNeeded) {
             stock.set(id, stock.get(id) - qtyNeeded);
             if (stock.get(id) < 0) {
-                let { rarity, recipe = undefined } = items[id];
+                const { rarity, recipe = undefined } = items[id];
                 if (rarity > 2 && recipe) {
                     recipe.forEach(({ id: matId, count }) => searchForDeficits(matId, -stock.get(id)*count));
                     stock.set(id, 0);
@@ -69,39 +63,40 @@
                     deficits.add(id);
                 }
             }
-        }
+        };
 
         function patchDeficits(itemId) {
-            let { recipe = undefined } = items[itemId];
+            const { recipe = undefined } = items[itemId];
             if (recipe) {
                 let minCraftable = Infinity;
-                for (let { id, count } of recipe) {
-                    let craftable = Math.floor(stock.get(id)/count);
-                    if (craftable <= 0) {
-                        return
-                    } else if (craftable < minCraftable) {
-                        minCraftable = craftable;
-                    }
+                for (const { id, count } of recipe) {
+                    const craftable = Math.floor(stock.get(id)/count);
+                    if (craftable <= 0) return;
+                    else if (craftable < minCraftable) minCraftable = craftable;
                 }
                 recipe.forEach(({ id, count }) => stock.set(id, stock.get(id) - minCraftable*count));
-                let itemQty = stock.get(itemId);
-                stock.set(itemId, itemQty + minCraftable);
+                stock.set(itemId, stock.get(itemId) + minCraftable);
             }
         };
 
         for (const [id, count] of costs) {
             searchForDeficits(id, count);
-        };
+        }
 
         Array.from(deficits)
              .sort((prev, curr) => items[prev].rarity - items[curr].rarity)
              .forEach(id => patchDeficits(id));
         
         return normalize(stock).filter(({ id, count }) => deficits.has(id) && count < 0);
-    }
+    };
 </script>
 
 
+
+<svelte:head>
+    <title>Cost Calculator</title>
+    <meta name="description" content="A calculator for upgrade costs of operators in Arknights." />
+</svelte:head>
 
 <section class="content settings">
     <div id="filter-status">
@@ -115,7 +110,7 @@
         </label>
     </div>
     <label>
-        <input type="checkbox" bind:checked={$makeT3} disabled={!$itemFilter.includes("material")}>
+        <input type="checkbox" bind:checked={$makeT3}>
         Reduce items to T3
     </label>
 </section>

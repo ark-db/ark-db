@@ -1,5 +1,5 @@
 <script>
-    import { page } from '$app/stores';
+    import { page } from "$app/stores";
     import src from "$lib/images/skalter.webp";
 </script>
 
@@ -15,7 +15,8 @@
         Illustration by KuroTofu - 
         <a href="https://twitter.com/Kuro_Tofu/status/1454254316710096899"
            target="_blank"
-           rel="noreferrer">
+           rel="noreferrer"
+        >
             source
         </a>
     </figcaption>

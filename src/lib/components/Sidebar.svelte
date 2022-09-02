@@ -5,18 +5,15 @@
     export let page;
 
     let active = false;
+    let pageTitle = getPageTitle($page.url.pathname);
 
     const toggle = () => active = !active;
 
     function getPageTitle(path) {
-        if (path === "/") {
-            return "Home"
-        }  else if (path.startsWith("/planner")) {
-            return "Planner"
-        } else if (path === "/farming") {
-            return "Farming"
-        }
-    }
+        if (path === "/") return "Home";
+        else if (path.startsWith("/planner")) return "Planner";
+        else if (path === "/farming") return "Farming";
+    };
 </script>
 
 
@@ -27,7 +24,7 @@
             <div class="logo">
                 <slot name="logo" />
             </div>
-            <h1>ArkDB</h1>
+            <h1 class="name">ArkDB</h1>
         </div>
         <div class="divider" />
         <nav>
@@ -47,7 +44,11 @@
 
 <header>
     <input type="image" src={bars} alt="Open navigation menu" on:click={toggle}>
-    <h1 class="page-title">{getPageTitle($page.url.pathname)}</h1>
+    {#if pageTitle}
+        <h1 class="page-title">{pageTitle}</h1>
+    {:else}
+        <div class="gap" />
+    {/if}
 </header>
 
 
@@ -80,6 +81,13 @@
         max-width: 3em;
         min-width: 3em;
     }
+    h1 {
+        color: var(--light-moderate);
+    }
+    .name {
+        margin: 0;
+        font-size: 2em;
+    }
     .divider {
         position: absolute;
         left: 2.5%;
@@ -97,7 +105,7 @@
 		text-decoration: none;
         color: var(--med-strong);
     }
-    a.active {
+    .active {
         border-radius: 0.5em;
         color: var(--light-moderate);
         background-color: var(--dark-strong);
@@ -121,12 +129,12 @@
         justify-content: center;
         gap: 0.75em;
     }
-    h1{
-        margin: 0.25em 0;
+    .page-title {
+        margin: 0.5em 0;
         font-size: 1.5em;
-        color: var(--light-moderate);
-    }
-    h1.page-title {
         font-weight: 600;
+    }
+    .gap {
+        height: 3.35em;
     }
 </style>

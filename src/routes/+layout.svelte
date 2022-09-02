@@ -1,11 +1,14 @@
 <script>
-	import { page } from '$app/stores';
+	import { page } from "$app/stores";
     import logo from "$lib/images/logo.svg";
 	import Navbar from "$lib/components/Navbar.svelte";
 	import Sidebar from "$lib/components/Sidebar.svelte";
+
 	let w;
 	const mobileWidth = 450;
 </script>
+
+
 
 <svelte:window bind:innerWidth={w} />
 
@@ -35,7 +38,7 @@
         gap: 10px;
 	}
 	main.mobile {
-		padding: 3.5em 10px 0 10px;
+		padding: 4.35em 10px 0 10px;
 	}
 	:global(:root) {
 		--dark-strong: #161921;
