@@ -63,10 +63,20 @@
         justify-content: space-between;
         gap: 0.5em 1.5em;
     }
+    .settings div {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 1em;
+    }
     .settings label {
         margin: 0.5em;
         display: flex;
         align-items: center;
+    }
+    input[type=radio] {
+        transform: scale(1.5);
+        margin-right: 1em;
+        margin-bottom: 0.25em;
     }
     .grid {
         margin: 2em 0;
@@ -84,9 +94,5 @@
         display: flex;
         flex-wrap: wrap;
         gap: 0.5em 1.5em;
-    }
-    input[type=radio] {
-        transform: scale(1.25);
-        margin-right: 1em;
     }
 </style>
