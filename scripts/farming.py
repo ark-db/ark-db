@@ -185,6 +185,7 @@ num_rows, _ = item_rel_matrix.shape
 
 
 
+all_sanity_values = dict()
 all_farming_stages = dict()
 
 for region in Region:
@@ -216,6 +217,12 @@ for region in Region:
         .x
     )
 
+    all_sanity_values.update({
+        region.name.lower(): {
+            item_id: sanity_value for item_id, sanity_value in zip(ALLOWED_ITEMS, sanity_values)
+        }
+    })
+
     stage_effics = (drop_matrix.dot(sanity_values) - sanity_cost_vec) / sanity_cost_vec + 1
 
     farming_stages = (
@@ -244,6 +251,9 @@ for region in Region:
             for item, stages in farming_stages_by_item.items()
         ]
     })
+
+with open("./scripts/msv.json", "w") as f:
+    json.dump(all_sanity_values, f)
 
 with open("./src/lib/data/farming.json", "w") as f:
     json.dump(all_farming_stages, f)
