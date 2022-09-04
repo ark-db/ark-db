@@ -42,12 +42,12 @@ name_changes = {
 all_char_data = dict()
 skill_ids = set()
 
-def is_operator(char_info):
+def is_operator(char_info: dict[str, str | list]):
     return char_info["profession"] != "TOKEN" \
            and char_info["profession"] != "TRAP" \
            and not char_info["isNotObtainable"]
 
-def get_skill_id(skill):
+def get_skill_id(skill: str) -> str:
     skill_info = skills[skill["skillId"]]
     return skill_info["iconId"] or skill_info["skillId"]
 

@@ -3,6 +3,8 @@ import requests
 from PIL import Image
 from io import BytesIO
 
+Cost = list[dict[str, str | int] | None]
+
 VALID_ITEMS = {
     "material": {"30011", "30021", "30031", "30041", "30051", "30061",
                  "30012", "30022", "30032", "30042", "30052", "30062",
@@ -22,13 +24,13 @@ VALID_ITEMS = {
              "7003", "4003"},
 }
 
-def format_cost(cost):
+def format_cost(cost: Cost) -> Cost:
     if cost:
         return [{k: v for k, v in mat.items() if k != "type"} for mat in cost]
     return []
 
-def save_image(url, type, id):
-    target_path = Path(f"./static/images/{type}/{id}.webp")
+def save_image(url: str, category: str, image_id: str):
+    target_path = Path(f"./static/images/{category}/{image_id}.webp")
     if target_path.is_file():
         pass
     elif (res := requests.get(url)):
@@ -36,5 +38,5 @@ def save_image(url, type, id):
              .convert("RGBA") \
              .save(target_path, "webp")
     else:
-        raise RuntimeError(f"Image \"{id}\" of type \"{type}\" could not be retrieved")
-        #print(f"{type}: {id}")
+        raise RuntimeError(f"Image \"{image_id}\" of type \"{category}\" could not be retrieved")
+        #print(f"{category}: {image_id}")
