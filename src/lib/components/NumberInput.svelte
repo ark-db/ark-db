@@ -26,7 +26,7 @@
             disabled={value < min}
             on:click={() => updateValue(-1)}
     >
-        <img src={minusIcon} alt="decrement">
+        <img src={minusIcon} alt="decrement" loading="lazy">
     </button>
     <input type="number"
            pattern="[0-9]+"
@@ -44,7 +44,7 @@
             disabled={value > max}
             on:click={() => updateValue(1)}
     >
-        <img src={addIcon} alt="increment">
+        <img src={addIcon} alt="increment" loading="lazy">
     </button>
 </div>
 {#if error}

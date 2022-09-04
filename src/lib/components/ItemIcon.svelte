@@ -18,8 +18,8 @@
 
 
 <div>
-    <img src={bgSrc} alt="background" />
-    <img src={itemSrc} title={name} alt={name} />
+    <img src={bgSrc} alt="background" loading="lazy">
+    <img src={itemSrc} title={name} alt={name} loading="lazy">
     {#if count !== undefined}
         <p class:neg={count < 0}>
             {compactNum.format(count)}

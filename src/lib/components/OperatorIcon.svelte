@@ -14,7 +14,8 @@
      {src}
      title={name}
      alt={name}
-/>
+     loading="lazy"
+>
 
 
 
