@@ -37,7 +37,7 @@ class Region(Enum):
     GLB = "US"
     CN = "CN"
 
-def update_mat_relations(df: pd.DataFrame) -> pd.DataFrame:
+def update_mat_relations(df: pd.DataFrame):
     # relationships between exp cards + pure gold; base unit is Drill Battle Record (200 exp)
     MAT_RELATIONS = {
         "2002": 2,
@@ -49,7 +49,7 @@ def update_mat_relations(df: pd.DataFrame) -> pd.DataFrame:
         df.at[(item_id, 1), "2001"] = count
     return df
 
-def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
+def fill_diagonal(df: pd.DataFrame):
     # adds recipes' outcome quantities to the recipe matrix
     for item_id, count in zip(df.index.get_level_values("itemId"), df.index.get_level_values("count")):
         df.at[item_id, item_id] = count
@@ -67,7 +67,7 @@ def get_stage_ids(region: Region) -> set[str]:
     )
     return current_stage_ids
 
-def update_lmd_stages(df: pd.DataFrame, valid_stages: set) -> pd.DataFrame:
+def update_lmd_stages(df: pd.DataFrame, valid_stages: set[str]):
     LMD_STAGES = {
         "wk_melee_1": 1700,
         "wk_melee_2": 2800,
