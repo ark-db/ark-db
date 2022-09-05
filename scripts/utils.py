@@ -3,7 +3,7 @@ import requests
 from PIL import Image
 from io import BytesIO
 
-Cost = list[dict[str, str | int] | None]
+Cost = list[dict[str, str|int] | None]
 
 VALID_ITEMS = {
     "material": {"30011", "30021", "30031", "30041", "30051", "30061",
