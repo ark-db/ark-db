@@ -29,14 +29,9 @@ def convert_to_utc(df: pd.DataFrame):
     df["活动开始时间"] = df["活动开始时间"].dt.tz_localize("UTC")
     return df
 
-def clean_event_name(name: str):
-    event_name, _, _ = name.partition("(")
-    return event_name
-
 def get_name_of_latest(df: pd.DataFrame) -> str:
     latest_event = df.iloc[0]
-    name = clean_event_name(latest_event["活动页面"])
-    name = name.replace("·复刻", str(latest_event["活动开始时间"].year))
+    name = latest_event["name"].replace("·复刻", str(latest_event["活动开始时间"].year))
     return name
 
 def get_cc_page_url(name: str):
@@ -76,6 +71,8 @@ cn_events = (
         ignore_index=True)
       .pipe(convert_to_utc)
       .pipe(lambda df: df[df["活动开始时间"] < pd.Timestamp.utcnow()])
+      .assign(name = lambda df: df["活动页面"].str.partition("(")[0])
+      .drop(columns=["活动页面", "官网公告"])
 )
 
 cc_events = cn_events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
@@ -85,8 +82,7 @@ cn_cc_shop = get_shop_table(get_cc_page_url(get_name_of_latest(cc_events)))
 
 
 for cc in cc_events.itertuples(index=False):
-    cn_name = clean_event_name(cc.活动页面)
-    soup = BeautifulSoup(requests.get(get_cc_page_url(cn_name))
+    soup = BeautifulSoup(requests.get(get_cc_page_url(cc.name))
                                  .text,
                          "lxml")
 
@@ -95,7 +91,7 @@ for cc in cc_events.itertuples(index=False):
     cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_name)])
 
     if not cc_event.empty:
-        en_cc_shop = get_shop_table(get_cc_page_url(cn_name))
+        en_cc_shop = get_shop_table(get_cc_page_url(cc.name))
         break
 
 cn_latest_ss = get_name_of_latest(
