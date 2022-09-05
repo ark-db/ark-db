@@ -1,5 +1,6 @@
 import utils
 import requests
+from enum import Enum
 import pandas as pd
 from collections import defaultdict
 from scipy.optimize import linprog
@@ -32,6 +33,10 @@ stages = (
 
 
 
+class Region(Enum):
+    GLB = "US"
+    CN = "CN"
+
 def update_mat_relations(df: pd.DataFrame):
     # relationships between exp cards + pure gold; base unit is Drill Battle Record (200 exp)
     MAT_RELATIONS = {
@@ -50,7 +55,7 @@ def fill_diagonal(df: pd.DataFrame):
         df.at[item_id, item_id] = count
     return df
 
-def get_stage_ids(region: utils.Region) -> set[str]:
+def get_stage_ids(region: Region) -> set[str]:
     current_drops = (
         requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region.value}")
                 .json()
@@ -183,7 +188,7 @@ num_rows, _ = item_rel_matrix.shape
 all_sanity_values = dict()
 all_farming_stages = dict()
 
-for region in utils.Region:
+for region in Region:
     valid_stage_ids = get_stage_ids(region)
 
     curr_drop_data = (
