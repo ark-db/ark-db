@@ -11,6 +11,10 @@ MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"] | utils.VALID_ITEMS["misc"]
 BYPROD_RATE_BONUS = 1.8
 # EXP_DEVALUE_FACTOR = 0.8
+MISC_SANITY_VALUES = {
+    "3401": 0,
+}
+
 RECORDED_ITEMS = utils.VALID_ITEMS["material"]
 
 recipes = (
@@ -220,7 +224,7 @@ for region in Region:
     all_sanity_values.update({
         region.name.lower(): {
             item_id: sanity_value for item_id, sanity_value in zip(ALLOWED_ITEMS, sanity_values)
-        }
+        } | MISC_SANITY_VALUES
     })
 
     stage_effics = (drop_matrix.dot(sanity_values) - sanity_cost_vec) / sanity_cost_vec + 1
