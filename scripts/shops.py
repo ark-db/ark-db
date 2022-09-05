@@ -1,3 +1,4 @@
+import utils
 import requests
 import pandas as pd
 import json
@@ -23,6 +24,20 @@ def get_name_of_latest(df: pd.DataFrame) -> str:
     name = name.replace("·复刻", str(latest_event["活动开始时间"].year))
     return name
 
+def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, dict[str, float]], region: utils.Region) -> list[dict[str, str|int|float]]:
+    shop_effics = []
+    for item in shop.itertuples(index=False):
+        name, _, qty = item.可兑换道具.partition("×")
+        qty = int(qty) if qty else 1
+        cost = int(item.单价)
+        item_id = item_name_to_id[name]
+        if (value := msvs[region.name.lower()].get(item_id)):
+            shop_effics.append({
+                "id": item_id,
+                "count": qty,
+                "effic": value * qty / cost
+            })
+    return shop_effics
 
 
 item_name_to_id = {data["name"]: data["itemId"] for data in cn_items.values()}
@@ -69,18 +84,6 @@ all_shop_effics = {
 with open("./scripts/msv.json", "r") as f:
     sanity_values = json.load(f)
 
-    cc_shop_effics = []
-    for item in cc_shop.itertuples(index=False):
-        name, _, qty = item.可兑换道具.partition("×")
-        qty = int(qty) if qty else 1
-        cost = int(item.单价)
-        item_id = item_name_to_id[name]
-        if (value := sanity_values["cn"].get(item_id)):
-            cc_shop_effics.append({
-                "id": item_id,
-                "count": qty,
-                "effic": value * qty / cost
-            })
     all_shop_effics["cn"].update({
-        "cc": cc_shop_effics
+        "cc": get_shop_effics(cc_shop, sanity_values, utils.Region.CN)
     })
