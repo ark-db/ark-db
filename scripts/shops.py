@@ -42,6 +42,16 @@ def get_name_of_latest(df: pd.DataFrame) -> str:
 def get_cc_page_url(name: str):
     return f"https://prts.wiki/w/{quote('危机合约')}/{quote(name)}"
 
+def get_shop_table(url: str):
+    shop = (
+        pd.read_html(url,
+                     match="可兑换道具")
+          [0]
+          .iloc[:-1, 1:]
+          .pipe(lambda df: df[df["单价"].str.isdecimal()])
+    )
+    return shop
+
 def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> list[dict[str, str|int|float]]:
     shop_effics = []
     for item in shop.itertuples(index=False):
@@ -70,12 +80,7 @@ cn_events = (
 
 cc_events = cn_events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
 
-cn_cc_shop = (
-    pd.read_html(get_cc_page_url(get_name_of_latest(cc_events)),
-                 match="可兑换道具")
-      [0]
-      .iloc[:-1, 1:]
-)
+cn_cc_shop = get_shop_table(get_cc_page_url(get_name_of_latest(cc_events)))
 
 
 
@@ -90,12 +95,7 @@ for cc in cc_events.itertuples(index=False):
     cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_name)])
 
     if not cc_event.empty:
-        en_cc_shop = (
-            pd.read_html(get_cc_page_url(cn_name),
-                         match="可兑换道具")
-              [0]
-              .iloc[:-1, 1:]
-        )
+        en_cc_shop = get_shop_table(get_cc_page_url(cn_name))
         break
 
 cn_latest_ss = get_name_of_latest(
@@ -104,13 +104,7 @@ cn_latest_ss = get_name_of_latest(
 
 formatted_ss_name = "".join(ch for ch in cn_latest_ss if unicodedata.category(ch)[0] != "P")
 
-cn_ss_shop = (
-    pd.read_html(f"https://prts.wiki/w/{quote(formatted_ss_name)}",
-                 match="可兑换道具")
-      [0]
-      .iloc[:-1, 1:]
-      .pipe(lambda df: df[df["单价"].str.isdecimal()])
-)
+cn_ss_shop = get_shop_table(f"https://prts.wiki/w/{quote(formatted_ss_name)}")
 
 
 
