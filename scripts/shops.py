@@ -72,6 +72,7 @@ ss_shop = (
                  match="可兑换道具")
       [0]
       .iloc[:-1, 1:]
+      .pipe(lambda df: df[df["单价"].str.isdecimal()])
 )
 
 
