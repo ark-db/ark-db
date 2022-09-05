@@ -52,11 +52,13 @@ latest_ss = get_name_of_latest(
 
 formatted_ss_name = "".join(ch for ch in latest_ss if unicodedata.category(ch)[0] != "P")
 
-'''
 ss_shop = (
-    pd.read_html(f"https://prts.wiki/w/{quote(latest_ss)}")
+    pd.read_html(f"https://prts.wiki/w/{quote(formatted_ss_name)}",
+                 match="可兑换道具")
+      [0]
+      .iloc[:-1, 1:]
 )
-'''
+
 
 
 all_shop_effics = {
