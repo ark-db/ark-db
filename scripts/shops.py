@@ -10,6 +10,11 @@ cn_items = (
             ["items"]
 )
 
+events = (
+    requests.get("https://penguin-stats.io/PenguinStats/api/v2/period")
+            .json()
+)
+
 
 
 def convert_to_utc(df: pd.DataFrame):
