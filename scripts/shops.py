@@ -53,12 +53,26 @@ latest_ss = get_name_of_latest(
 )
 '''
 
+all_shop_effics = {
+    "glb": dict(),
+    "cn": dict()
+}
+
 with open("./scripts/msv.json", "r") as f:
     sanity_values = json.load(f)
 
+    cc_shop_effics = []
     for item in cc_shop.itertuples(index=False):
         name, _, qty = item.可兑换道具.partition("×")
         qty = int(qty) if qty else 1
-        cost = item.单价
-        if (value := sanity_values["cn"].get(item_name_to_id[name])):
-            pass
+        cost = int(item.单价)
+        item_id = item_name_to_id[name]
+        if (value := sanity_values["cn"].get(item_id)):
+            cc_shop_effics.append({
+                "id": item_id,
+                "count": qty,
+                "effic": value * qty / cost
+            })
+    all_shop_effics["cn"].update({
+        "cc": cc_shop_effics
+    })
