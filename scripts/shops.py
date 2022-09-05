@@ -16,9 +16,10 @@ all_events = (
             .json()
 )
 
-en_events = pd.read_html(
-    requests.get("https://gamepress.gg/arknights/other/event-and-campaign-list")
-            .text
+en_events = (
+    pd.read_html(requests.get("https://gamepress.gg/arknights/other/event-and-campaign-list")
+                         .text)
+      [0]
 )
 
 def convert_to_utc(df: pd.DataFrame):
