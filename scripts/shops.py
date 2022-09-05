@@ -44,7 +44,7 @@ cc_shop = (
     pd.read_html(f"https://prts.wiki/w/{quote('危机合约')}/{quote(latest_cc)}",
                  match="可兑换道具")
     [0]
-    #.iloc[:,1:]
+    .iloc[:-1, 1:]
 )
 
 '''
@@ -55,3 +55,10 @@ latest_ss = get_name_of_latest(
 
 with open("./scripts/msv.json", "r") as f:
     sanity_values = json.load(f)
+
+    for item in cc_shop.itertuples(index=False):
+        name, _, qty = item.可兑换道具.partition("×")
+        qty = int(qty) if qty else 1
+        cost = item.单价
+        if (value := sanity_values["cn"].get(item_name_to_id[name])):
+            pass
