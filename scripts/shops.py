@@ -66,30 +66,23 @@ cn_events = (
 
 cc_events = cn_events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
 
-print(cc_events)
-'''
-latest_cc = get_name_of_latest(cc_events)
-
 cc_shop = (
-    pd.read_html(get_cc_page_url(latest_cc),
+    pd.read_html(get_cc_page_url(get_name_of_latest(cc_events)),
                  match="可兑换道具")
     [0]
     .iloc[:-1, 1:]
 )
 
+for cc in cc_events.iloc[1:].itertuples(index=False):
+    soup = BeautifulSoup(requests.get(get_cc_page_url(cc.活动页面))
+                                 .text,
+                         "lxml")
 
-cc_page = (
-    requests.get(cc_page_url)
-            .text
-)
+    en_cc_name = soup.select_one("td > .nodesktop").text
 
-soup = BeautifulSoup(cc_page, "lxml")
-
-t = soup.select_one("td > .nodesktop").text
-print(t)
-
-
-
+    cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_cc_name)])
+    if not cc_event.empty:
+        break
 
 latest_ss = get_name_of_latest(
      cn_events.pipe(lambda df: df[df["活动分类"].isin({"支线故事", "故事集"})])
@@ -124,4 +117,3 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
     })
     
     json.dump(all_shop_effics, f2)
-'''
