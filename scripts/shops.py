@@ -29,8 +29,7 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> list[dict[str
         name, _, qty = item.可兑换道具.partition("×")
         qty = int(qty) if qty else 1
         cost = int(item.单价)
-        item_id = item_name_to_id[name]
-        if (value := msvs.get(item_id)):
+        if (item_id := item_name_to_id.get(name)) and (value := msvs.get(item_id)):
             shop_effics.append({
                 "id": item_id,
                 "count": qty,
@@ -81,8 +80,8 @@ all_shop_effics = {
     "cn": dict()
 }
 
-with open("./scripts/msv.json", "r") as f:
-    sanity_values = json.load(f)
+with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as f2:
+    sanity_values = json.load(f1)
 
     all_shop_effics["cn"].update({
         "cc": get_shop_effics(cc_shop, sanity_values["cn"])
@@ -91,3 +90,5 @@ with open("./scripts/msv.json", "r") as f:
     all_shop_effics["cn"].update({
         "ss": get_shop_effics(ss_shop, sanity_values["cn"]) 
     })
+    
+    json.dump(all_shop_effics, f2)
