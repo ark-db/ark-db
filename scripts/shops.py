@@ -87,3 +87,7 @@ with open("./scripts/msv.json", "r") as f:
     all_shop_effics["cn"].update({
         "cc": get_shop_effics(cc_shop, sanity_values, utils.Region.CN)
     })
+
+    all_shop_effics["cn"].update({
+        "ss": get_shop_effics(ss_shop, sanity_values, utils.Region.CN) 
+    })
