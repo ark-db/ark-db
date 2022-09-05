@@ -73,8 +73,8 @@ cc_events = cn_events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
 cn_cc_shop = (
     pd.read_html(get_cc_page_url(get_name_of_latest(cc_events)),
                  match="可兑换道具")
-    [0]
-    .iloc[:-1, 1:]
+      [0]
+      .iloc[:-1, 1:]
 )
 
 
@@ -90,6 +90,12 @@ for cc in cc_events.itertuples(index=False):
     cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_name)])
 
     if not cc_event.empty:
+        en_cc_shop = (
+            pd.read_html(get_cc_page_url(cn_name),
+                         match="可兑换道具")
+              [0]
+              .iloc[:-1, 1:]
+        )
         break
 
 cn_latest_ss = get_name_of_latest(
@@ -122,6 +128,10 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
 
     all_shop_effics["cn"].update({
         "ss": get_shop_effics(cn_ss_shop, sanity_values["cn"]) 
+    })
+
+    all_shop_effics["glb"].update({
+        "cc": get_shop_effics(en_cc_shop, sanity_values["glb"])
     })
     
     json.dump(all_shop_effics, f2)
