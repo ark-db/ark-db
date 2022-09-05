@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import json
 from urllib.parse import quote
+import unicodedata
 
 cn_items = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/item_table.json")
@@ -17,11 +18,9 @@ def convert_to_utc(df: pd.DataFrame):
     return df
 
 def get_name_of_latest(df: pd.DataFrame) -> str:
-    name, _, _ = (
-        df.iloc[0]
-          ["活动页面"]
-          .partition("(")
-    )
+    latest_event = df.iloc[0]
+    name, _, _ = latest_event["活动页面"].partition("(")
+    name = name.replace("·复刻", str(latest_event["活动开始时间"].year))
     return name
 
 
@@ -47,11 +46,18 @@ cc_shop = (
     .iloc[:-1, 1:]
 )
 
-'''
 latest_ss = get_name_of_latest(
      events.pipe(lambda df: df[df["活动分类"].isin({"支线故事", "故事集"})])
 )
+
+formatted_ss_name = "".join(ch for ch in latest_ss if unicodedata.category(ch)[0] != "P")
+
 '''
+ss_shop = (
+    pd.read_html(f"https://prts.wiki/w/{quote(latest_ss)}")
+)
+'''
+
 
 all_shop_effics = {
     "glb": dict(),
