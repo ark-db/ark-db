@@ -11,6 +11,8 @@ cn_items = (
             ["items"]
 )
 
+item_name_to_id = {data["name"]: data["itemId"] for data in cn_items.values()}
+
 all_events = (
     requests.get("https://penguin-stats.io/PenguinStats/api/v2/period")
             .json()
@@ -33,6 +35,9 @@ def get_name_of_latest(df: pd.DataFrame) -> str:
     name = name.replace("·复刻", str(latest_event["活动开始时间"].year))
     return name
 
+def get_cc_page_url(name: str):
+    return f"https://prts.wiki/w/{quote('危机合约')}/{quote(name)}"
+
 def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> list[dict[str, str|int|float]]:
     shop_effics = []
     for item in shop.itertuples(index=False):
@@ -48,29 +53,28 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> list[dict[str
     return shop_effics
 
 
-item_name_to_id = {data["name"]: data["itemId"] for data in cn_items.values()}
 
 cn_events = (
-    pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
-                 parse_dates=["活动开始时间"])
-      [0]
+    pd.concat(
+        pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
+                     parse_dates=["活动开始时间"])
+          [:1])
       .pipe(convert_to_utc)
       .pipe(lambda df: df[df["活动开始时间"] < pd.Timestamp.utcnow()])
 )
-    
-latest_cc = get_name_of_latest(
-    cn_events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
-)
 
-cc_page_url = f"https://prts.wiki/w/{quote('危机合约')}/{quote(latest_cc)}"
+cc_events = cn_events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
+
+latest_cc = get_name_of_latest(cc_events)
 
 cc_shop = (
-    pd.read_html(cc_page_url,
+    pd.read_html(get_cc_page_url(latest_cc),
                  match="可兑换道具")
     [0]
     .iloc[:-1, 1:]
 )
 
+'''
 cc_page = (
     requests.get(cc_page_url)
             .text
@@ -80,6 +84,7 @@ soup = BeautifulSoup(cc_page, "lxml")
 
 t = soup.select_one("td > .nodesktop").text
 print(t)
+'''
 
 
 
