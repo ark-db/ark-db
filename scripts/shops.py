@@ -58,7 +58,8 @@ cn_events = (
     pd.concat(
         pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
                      parse_dates=["活动开始时间"])
-          [:2])
+          [:2],
+        ignore_index=True)
       .pipe(convert_to_utc)
       .pipe(lambda df: df[df["活动开始时间"] < pd.Timestamp.utcnow()])
 )
