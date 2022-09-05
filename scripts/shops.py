@@ -1,4 +1,5 @@
 import pandas as pd
+from urllib.parse import quote
 
 def convert_to_utc(df: pd.DataFrame):
     df["活动开始时间"] -= pd.Timedelta(hours=8)
@@ -25,8 +26,17 @@ latest_cc = get_name_of_latest(
     events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
 )
 
+shop = (
+    pd.read_html(f"https://prts.wiki/w/{quote('危机合约')}/{quote(latest_cc)}",
+                 match="可兑换道具")
+      [0]
+      #.iloc[:,1:]
+)
+print(shop)
+
+
+'''
 latest_ss = get_name_of_latest(
     events.pipe(lambda df: df[df["活动分类"].isin({"支线故事", "故事集"})])
 )
-
-print(latest_cc, latest_ss)
+'''
