@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import json
 from urllib.parse import quote
+from bs4 import BeautifulSoup
 import unicodedata
 
 cn_items = (
@@ -56,13 +57,27 @@ events = (
 latest_cc = get_name_of_latest(
     events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
 )
-    
+
+cc_page_url = f"https://prts.wiki/w/{quote('危机合约')}/{quote(latest_cc)}"
+
 cc_shop = (
-    pd.read_html(f"https://prts.wiki/w/{quote('危机合约')}/{quote(latest_cc)}",
+    pd.read_html(cc_page_url,
                  match="可兑换道具")
     [0]
     .iloc[:-1, 1:]
 )
+
+cc_page = (
+    requests.get(cc_page_url)
+            .text
+)
+
+soup = BeautifulSoup(cc_page, "lxml")
+
+t = soup.select_one("td > .nodesktop").text
+print(t)
+
+
 
 latest_ss = get_name_of_latest(
      events.pipe(lambda df: df[df["活动分类"].isin({"支线故事", "故事集"})])
