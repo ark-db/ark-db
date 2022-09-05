@@ -11,12 +11,15 @@ cn_items = (
             ["items"]
 )
 
-events = (
+all_events = (
     requests.get("https://penguin-stats.io/PenguinStats/api/v2/period")
             .json()
 )
 
-
+en_events = pd.read_html(
+    requests.get("https://gamepress.gg/arknights/other/event-and-campaign-list")
+            .text
+)
 
 def convert_to_utc(df: pd.DataFrame):
     df["活动开始时间"] -= pd.Timedelta(hours=8)
@@ -46,7 +49,7 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> list[dict[str
 
 item_name_to_id = {data["name"]: data["itemId"] for data in cn_items.values()}
 
-events = (
+cn_events = (
     pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
                  parse_dates=["活动开始时间"])
       [0]
@@ -55,7 +58,7 @@ events = (
 )
     
 latest_cc = get_name_of_latest(
-    events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
+    cn_events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
 )
 
 cc_page_url = f"https://prts.wiki/w/{quote('危机合约')}/{quote(latest_cc)}"
@@ -80,7 +83,7 @@ print(t)
 
 
 latest_ss = get_name_of_latest(
-     events.pipe(lambda df: df[df["活动分类"].isin({"支线故事", "故事集"})])
+     cn_events.pipe(lambda df: df[df["活动分类"].isin({"支线故事", "故事集"})])
 )
 
 formatted_ss_name = "".join(ch for ch in latest_ss if unicodedata.category(ch)[0] != "P")
