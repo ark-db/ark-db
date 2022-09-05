@@ -58,13 +58,15 @@ cn_events = (
     pd.concat(
         pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
                      parse_dates=["活动开始时间"])
-          [:1])
+          [:2])
       .pipe(convert_to_utc)
       .pipe(lambda df: df[df["活动开始时间"] < pd.Timestamp.utcnow()])
 )
 
 cc_events = cn_events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
 
+print(cc_events)
+'''
 latest_cc = get_name_of_latest(cc_events)
 
 cc_shop = (
@@ -74,7 +76,7 @@ cc_shop = (
     .iloc[:-1, 1:]
 )
 
-'''
+
 cc_page = (
     requests.get(cc_page_url)
             .text
@@ -84,7 +86,7 @@ soup = BeautifulSoup(cc_page, "lxml")
 
 t = soup.select_one("td > .nodesktop").text
 print(t)
-'''
+
 
 
 
@@ -121,3 +123,4 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
     })
     
     json.dump(all_shop_effics, f2)
+'''
