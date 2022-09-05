@@ -1,3 +1,4 @@
+from enum import Enum
 from pathlib import Path
 import requests
 from PIL import Image
@@ -23,6 +24,10 @@ VALID_ITEMS = {
              "3003",
              "7003", "4003"},
 }
+
+class Region(Enum):
+    GLB = "US"
+    CN = "CN"
 
 def format_cost(cost: Cost) -> Cost:
     if cost:
