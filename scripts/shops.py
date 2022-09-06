@@ -130,8 +130,8 @@ with open("./scripts/msv.json", "r") as f1, open("./src/lib/data/shops.json", "w
 
         if ss.Index == 0:
             prts_soup = BeautifulSoup(requests.get(page_url)
-                                         .text,
-                                 "lxml")
+                                              .text,
+                                      "lxml")
             news_link = prts_soup.select_one("a[href*='https://ak.hypergryph.com/news/']")["href"]
 
             soup = BeautifulSoup(requests.get(news_link)
