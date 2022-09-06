@@ -4,6 +4,7 @@ import json
 from urllib.parse import quote
 from bs4 import BeautifulSoup
 import unicodedata
+import re
 
 cn_items = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/item_table.json")
@@ -162,10 +163,19 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
         cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_cc_name)])
 
         if cc.Index == 0:
-            cn_cc_shop = get_shop_table(page_url)
-            all_shop_effics["events"]["cn"].update({
-                "cc": en_cc_name
-            })
+            event_period = soup("b", text=re.compile("赛季开启时间：", flags=re.U))[0].parent.contents[1].rstrip()
+            end_time = pd.to_datetime(str(pd.Timestamp.now().year) + "年" + event_period.partition(" - ")[2],
+                                      format="%Y年%m月%d日 %H:%M")            
+            end_time_utc = (end_time - pd.Timedelta(hours=8)).tz_localize("UTC")
+
+            if end_time_utc < pd.Timestamp.utcnow():
+                cn_cc_shop = get_shop_table(page_url)
+                all_shop_effics["cn"].update({
+                    "cc": get_shop_effics(cn_cc_shop, sanity_values["cn"])
+                })
+                all_shop_effics["events"]["cn"].update({
+                    "cc": en_cc_name
+                })
 
         if not cc_event.empty:
             if ss_event.iloc[0]["end_time"] < pd.Timestamp.utcnow():
@@ -177,9 +187,5 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
                     "cc": en_cc_name
                 })
             break
-
-    all_shop_effics["cn"].update({
-        "cc": get_shop_effics(cn_cc_shop, sanity_values["cn"])
-    })
 
     json.dump(all_shop_effics, f2, ensure_ascii=False)
