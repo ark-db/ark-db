@@ -134,7 +134,7 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
                                       format="%Y年%m月%d日 %H:%M")
             end_time_utc = (end_time - pd.Timedelta(hours=8)).tz_localize("UTC")
 
-            if end_time_utc < pd.Timestamp.utcnow():
+            if end_time_utc > pd.Timestamp.utcnow():
                 cn_ss_shop = get_shop_table(page_url)
                 all_shop_effics["cn"].update({
                     "ss": get_shop_effics(cn_ss_shop, sanity_values["cn"]) 
@@ -144,7 +144,7 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
                 })
 
         if not ss_event.empty:
-            if ss_event.iloc[0]["end_time"] < pd.Timestamp.utcnow():
+            if ss_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
                 en_ss_shop = get_shop_table(page_url)
                 all_shop_effics["glb"].update({
                     "ss": get_shop_effics(en_ss_shop, sanity_values["glb"])
@@ -168,7 +168,7 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
                                       format="%Y年%m月%d日 %H:%M")            
             end_time_utc = (end_time - pd.Timedelta(hours=8)).tz_localize("UTC")
 
-            if end_time_utc < pd.Timestamp.utcnow():
+            if end_time_utc > pd.Timestamp.utcnow():
                 cn_cc_shop = get_shop_table(page_url)
                 all_shop_effics["cn"].update({
                     "cc": get_shop_effics(cn_cc_shop, sanity_values["cn"])
@@ -178,7 +178,7 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
                 })
 
         if not cc_event.empty:
-            if ss_event.iloc[0]["end_time"] < pd.Timestamp.utcnow():
+            if cc_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
                 en_cc_shop = get_shop_table(page_url)
                 all_shop_effics["glb"].update({
                     "cc": get_shop_effics(en_cc_shop, sanity_values["glb"])
