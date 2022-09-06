@@ -37,6 +37,9 @@ def get_name_of_latest(df: pd.DataFrame) -> str:
 def get_cc_page_url(name: str):
     return f"https://prts.wiki/w/{quote('危机合约')}/{quote(name)}"
 
+def remove_punctuation(text: str):
+    return "".join(ch for ch in text if unicodedata.category(ch)[0] != "P")
+
 def get_shop_table(url: str):
     shop = (
         pd.read_html(url,
@@ -79,8 +82,6 @@ cc_events = cn_events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
 
 cn_cc_shop = get_shop_table(get_cc_page_url(get_name_of_latest(cc_events)))
 
-
-
 for cc in cc_events.itertuples(index=False):
     soup = BeautifulSoup(requests.get(get_cc_page_url(cc.name))
                                  .text,
@@ -94,13 +95,11 @@ for cc in cc_events.itertuples(index=False):
         en_cc_shop = get_shop_table(get_cc_page_url(cc.name))
         break
 
-cn_latest_ss = get_name_of_latest(
-     cn_events.pipe(lambda df: df[df["活动分类"].isin({"支线故事", "故事集"})])
-)
 
-formatted_ss_name = "".join(ch for ch in cn_latest_ss if unicodedata.category(ch)[0] != "P")
 
-cn_ss_shop = get_shop_table(f"https://prts.wiki/w/{quote(formatted_ss_name)}")
+ss_events = cn_events.pipe(lambda df: df[df["活动分类"].isin({"支线故事", "故事集"})])
+
+cn_ss_shop = get_shop_table(f"https://prts.wiki/w/{quote(remove_punctuation(get_name_of_latest(ss_events)))}")
 
 
 
