@@ -1,18 +1,13 @@
 <script>
     import { page } from "$app/stores";
     import { fly } from "svelte/transition";
+    import { links } from "@utils";
     import bars from "../images/bars.svg";
 
     let active = false;
-    let pageTitle = getPageTitle($page.url.pathname);
+    let pageTitle = links.get($page.url.pathname);
 
     const toggle = () => active = !active;
-
-    function getPageTitle(path) {
-        if (path === "/") return "Home";
-        else if (path.startsWith("/planner")) return "Planner";
-        else if (path === "/farming") return "Farming";
-    };
 </script>
 
 
@@ -27,15 +22,11 @@
         </div>
         <div class="divider" />
         <nav>
-            <a href="/" class:active={$page.url.pathname === "/"} on:click={toggle}>
-                Home
-            </a>
-		    <a href="/planner" class:active={$page.url.pathname.startsWith("/planner")} on:click={toggle}>
-                Planner
-            </a>
-		    <a href="/farming" class:active={$page.url.pathname === "/farming"} on:click={toggle}>
-                Farming
-            </a>
+            {#each [...links.entries()] as [ href, title ]}
+			    <a {href} class:active={$page.url.pathname.startsWith(href)} on:click={toggle}>
+				    {title}
+			    </a>
+		    {/each}
         </nav>
     </div>
     <div class="filter" on:click={toggle} transition:fly={{x: 100, duration: 150}} />
