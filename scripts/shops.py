@@ -151,7 +151,7 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
                 all_shop_effics["events"]["glb"].update({
                     "ss": en_ss_name
                 })
-                break
+            break
 
     for cc in cc_events.itertuples():
         page_url = get_cc_page_url(cc.name)
