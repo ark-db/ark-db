@@ -133,7 +133,7 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
                                          .content
                                          .decode("utf-8", "ignore"),
                                  "lxml")
-            event_period = soup.find_all("p")[3].contents[1]
+            event_period = soup("strong", text=re.compile("活动时间|关卡开放时间", flags=re.U))[0].parent.contents[1].rstrip()
             end_time = pd.to_datetime(str(pd.Timestamp.now().year) + "年" + event_period.partition(" - ")[2],
                                       format="%Y年%m月%d日 %H:%M")
             end_time_utc = (end_time - pd.Timedelta(hours=8)).tz_localize("UTC")
@@ -167,7 +167,7 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
         en_cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_cc_name)])
 
         if cc.Index == 0:
-            event_period = soup("b", text=re.compile("赛季开启时间：", flags=re.U))[0].parent.contents[1].rstrip()
+            event_period = soup("b", text=re.compile("赛季开启时间", flags=re.U))[0].parent.contents[1].rstrip()
             end_time = pd.to_datetime(str(pd.Timestamp.now().year) + "年" + event_period.partition(" - ")[2],
                                       format="%Y年%m月%d日 %H:%M")            
             end_time_utc = (end_time - pd.Timedelta(hours=8)).tz_localize("UTC")
