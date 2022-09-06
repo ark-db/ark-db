@@ -122,57 +122,56 @@ for cc in cc_events.itertuples():
         })
         break
 
-cn_ss_shop = None
+
 
 ss_events = (
     cn_events.pipe(lambda df: df[df["活动分类"].isin({"支线故事", "故事集"})])
              .reset_index(drop=True)
 )
 
-for ss in ss_events.itertuples():
-    page_url = get_ss_page_url(ss.name, ss.活动开始时间.year)
-    en_ss_name = cn_to_en_event_name[ss.name]
-    ss_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.lower()
-                                                                  .str.contains(remove_punctuation(en_ss_name).lower())])
-    if ss.Index == 0:
-        soup = BeautifulSoup(requests.get(page_url)
-                                     .text,
-                             "lxml")
-        news_link = soup.select_one("a[href*='https://ak.hypergryph.com/news/']")["href"]
-        soup = BeautifulSoup(requests.get(news_link)
-                                     .content
-                                     .decode("utf-8", "ignore"),
-                             "lxml")
-        event_period = soup.find_all("p")[3].contents[1]
-        end_time = pd.to_datetime(str(pd.Timestamp.now().year) + "年" + event_period.partition(" - ")[2],
-                                  format="%Y年%m月%d日 %H:%M")
-        end_time_utc = (end_time - pd.Timedelta(hours=8)).tz_localize("UTC")
 
-        if end_time_utc < pd.Timestamp.utcnow():
-            cn_ss_shop = get_shop_table(page_url)
-            all_shop_effics["events"]["cn"].update({
-                "ss": en_ss_name
-            })
-
-    if not ss_event.empty:
-        en_ss_shop = get_shop_table(page_url)
-        all_shop_effics["events"]["glb"].update({
-            "ss": en_ss_name
-        })
-        break
-
-
-
+ 
 with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as f2:
     sanity_values = json.load(f1)
+
+    for ss in ss_events.itertuples():
+        page_url = get_ss_page_url(ss.name, ss.活动开始时间.year)
+        en_ss_name = cn_to_en_event_name[ss.name]
+        ss_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.lower()
+                                                                      .str.contains(remove_punctuation(en_ss_name).lower())])
+        if ss.Index == 0:
+            soup = BeautifulSoup(requests.get(page_url)
+                                         .text,
+                                 "lxml")
+            news_link = soup.select_one("a[href*='https://ak.hypergryph.com/news/']")["href"]
+            soup = BeautifulSoup(requests.get(news_link)
+                                         .content
+                                         .decode("utf-8", "ignore"),
+                                 "lxml")
+            event_period = soup.find_all("p")[3].contents[1]
+            end_time = pd.to_datetime(str(pd.Timestamp.now().year) + "年" + event_period.partition(" - ")[2],
+                                      format="%Y年%m月%d日 %H:%M")
+            end_time_utc = (end_time - pd.Timedelta(hours=8)).tz_localize("UTC")
+
+            if end_time_utc < pd.Timestamp.utcnow():
+                cn_ss_shop = get_shop_table(page_url)
+                all_shop_effics["cn"].update({
+                    "ss": get_shop_effics(cn_ss_shop, sanity_values["cn"]) 
+                })
+                all_shop_effics["events"]["cn"].update({
+                    "ss": en_ss_name
+                })
+
+        if not ss_event.empty:
+            en_ss_shop = get_shop_table(page_url)
+            all_shop_effics["events"]["glb"].update({
+                "ss": en_ss_name
+            })
+            break
 
     all_shop_effics["cn"].update({
         "cc": get_shop_effics(cn_cc_shop, sanity_values["cn"])
     })
-    if cn_ss_shop:
-        all_shop_effics["cn"].update({
-            "ss": get_shop_effics(cn_ss_shop, sanity_values["cn"]) 
-        })
 
     all_shop_effics["glb"].update({
         "cc": get_shop_effics(en_cc_shop, sanity_values["glb"])
