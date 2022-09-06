@@ -1,5 +1,5 @@
 <script>
-    export let page;
+    import { page } from "$app/stores";
 </script>
 
 

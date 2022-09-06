@@ -1,8 +1,7 @@
 <script>
+    import { page } from "$app/stores";
     import { fly } from "svelte/transition";
     import bars from "../images/bars.svg";
-
-    export let page;
 
     let active = false;
     let pageTitle = getPageTitle($page.url.pathname);
