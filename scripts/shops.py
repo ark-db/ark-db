@@ -26,6 +26,9 @@ en_events = (
     pd.read_html(requests.get("https://gamepress.gg/arknights/other/event-and-campaign-list")
                          .text)
       [0]
+      .assign(end_time = lambda df: (pd.to_datetime(df["Period"].str.partition(" ~ ")[2])
+                                     + pd.Timedelta(hours=10, minutes=59))
+                                    .dt.tz_localize("UTC"))
 )
 
 def convert_to_utc(df: pd.DataFrame):
