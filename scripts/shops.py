@@ -108,6 +108,7 @@ for ss in ss_events.itertuples(index=False):
                                                                   .str.contains(en_name)])
 
     if not ss_event.empty:
+        en_ss_shop = get_shop_table(f"https://prts.wiki/w/{quote(ss.name)}")
         break
 
 
@@ -130,6 +131,10 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
 
     all_shop_effics["glb"].update({
         "cc": get_shop_effics(en_cc_shop, sanity_values["glb"])
+    })
+
+    all_shop_effics["glb"].update({
+        "ss": get_shop_effics(en_ss_shop, sanity_values["glb"])
     })
     
     json.dump(all_shop_effics, f2)
