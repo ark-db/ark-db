@@ -70,6 +70,15 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> list[dict[str
 
 
 
+all_shop_effics = {
+    "glb": dict(),
+    "cn": dict(),
+    "events": {
+        "glb": dict(),
+        "cn": dict()
+    }
+}
+
 cn_events = (
     pd.concat(
         pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
@@ -83,40 +92,57 @@ cn_events = (
       .drop(columns=["活动页面", "官网公告"])
 )
 
-cc_events = cn_events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
+cc_events = (
+    cn_events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
+             .reset_index(drop=True)
+)
+
 cn_cc_shop = get_shop_table(get_cc_page_url(get_name_of_latest(cc_events)))
 
-for cc in cc_events.itertuples(index=False):
+for cc in cc_events.itertuples():
     soup = BeautifulSoup(requests.get(get_cc_page_url(cc.name))
                                  .text,
                          "lxml")
     en_cc_name = soup.select_one("td > .nodesktop").text
     cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_cc_name)])
+    if cc.Index == 0:
+        all_shop_effics["events"]["cn"].update({
+            "cc": en_cc_name
+        })
 
     if not cc_event.empty:
         en_cc_shop = get_shop_table(get_cc_page_url(cc.name))
+        all_shop_effics["events"]["glb"].update({
+            "cc": en_cc_name
+        })
         break
 
 
 
-ss_events = cn_events.pipe(lambda df: df[df["活动分类"].isin({"支线故事", "故事集"})])
+ss_events = (
+    cn_events.pipe(lambda df: df[df["活动分类"].isin({"支线故事", "故事集"})])
+             .reset_index(drop=True)
+)
+
 cn_ss_shop = get_shop_table(f"https://prts.wiki/w/{quote(remove_punctuation(get_name_of_latest(ss_events)))}")
 
-for ss in ss_events.itertuples(index=False):
+for ss in ss_events.itertuples():
     en_ss_name = cn_to_en_event_name[ss.name]
     ss_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.lower()
                                                                   .str.contains(remove_punctuation(en_ss_name).lower())])
+    if ss.Index == 0:
+        all_shop_effics["events"]["cn"].update({
+            "ss": en_ss_name
+        })
 
     if not ss_event.empty:
         en_ss_shop = get_shop_table(f"https://prts.wiki/w/{quote(ss.name)}")
+        all_shop_effics["events"]["glb"].update({
+            "ss": en_ss_name
+        })
         break
 
 
-
-all_shop_effics = {
-    "glb": dict(),
-    "cn": dict()
-}
 
 with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as f2:
     sanity_values = json.load(f1)
@@ -137,4 +163,4 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
         "ss": get_shop_effics(en_ss_shop, sanity_values["glb"])
     })
     
-    json.dump(all_shop_effics, f2)
+    json.dump(all_shop_effics, f2, ensure_ascii=False)
