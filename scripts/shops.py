@@ -78,15 +78,6 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> list[dict[str
 
 
 
-all_shop_effics = {
-    "glb": dict(),
-    "cn": dict(),
-    "events": {
-        "glb": dict(),
-        "cn": dict()
-    }
-}
-
 cn_events = (
     pd.concat(
         pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
@@ -111,6 +102,17 @@ ss_events = (
 )
 
 
+
+all_shop_effics = {
+    "shops": {
+        "glb": dict(),
+        "cn": dict()
+    },
+    "events": {
+        "glb": dict(),
+        "cn": dict()
+    }
+}
  
 with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as f2:
     sanity_values = json.load(f1)
@@ -136,7 +138,7 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
 
             if end_time_utc > pd.Timestamp.utcnow():
                 cn_ss_shop = get_shop_table(page_url)
-                all_shop_effics["cn"].update({
+                all_shop_effics["shops"]["cn"].update({
                     "ss": get_shop_effics(cn_ss_shop, sanity_values["cn"]) 
                 })
                 all_shop_effics["events"]["cn"].update({
@@ -146,7 +148,7 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
         if not ss_event.empty:
             if ss_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
                 en_ss_shop = get_shop_table(page_url)
-                all_shop_effics["glb"].update({
+                all_shop_effics["shops"]["glb"].update({
                     "ss": get_shop_effics(en_ss_shop, sanity_values["glb"])
                 })
                 all_shop_effics["events"]["glb"].update({
@@ -170,7 +172,7 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
 
             if end_time_utc > pd.Timestamp.utcnow():
                 cn_cc_shop = get_shop_table(page_url)
-                all_shop_effics["cn"].update({
+                all_shop_effics["shops"]["cn"].update({
                     "cc": get_shop_effics(cn_cc_shop, sanity_values["cn"])
                 })
                 all_shop_effics["events"]["cn"].update({
@@ -180,7 +182,7 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
         if not cc_event.empty:
             if cc_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
                 en_cc_shop = get_shop_table(page_url)
-                all_shop_effics["glb"].update({
+                all_shop_effics["shops"]["glb"].update({
                     "cc": get_shop_effics(en_cc_shop, sanity_values["glb"])
                 })
                 all_shop_effics["events"]["glb"].update({
