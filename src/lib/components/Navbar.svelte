@@ -1,5 +1,6 @@
 <script>
     import { page } from "$app/stores";
+	import { links } from "@utils";
 </script>
 
 
@@ -9,15 +10,11 @@
 		<slot name="logo" />
 	</a>
     <nav>
-        <a href="/" class:active={$page.url.pathname === "/"}>
-			Home
-		</a>
-		<a href="/planner" class:active={$page.url.pathname.startsWith("/planner")}>
-			Planner
-		</a>
-		<a href="/farming" class:active={$page.url.pathname === "/farming"}>
-			Farming
-		</a>
+		{#each [...links.entries()] as [ href, title ]}
+			<a {href} class:active={$page.url.pathname.startsWith(href)}>
+				{title}
+			</a>
+		{/each}
     </nav>
 </header>
 
