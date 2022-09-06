@@ -129,10 +129,10 @@ with open("./scripts/msv.json", "r") as f1, open("./src/lib/data/shops.json", "w
                                                                          .str.contains(remove_punctuation(en_ss_name).lower())])
 
         if ss.Index == 0:
-            soup = BeautifulSoup(requests.get(page_url)
+            prts_soup = BeautifulSoup(requests.get(page_url)
                                          .text,
                                  "lxml")
-            news_link = soup.select_one("a[href*='https://ak.hypergryph.com/news/']")["href"]
+            news_link = prts_soup.select_one("a[href*='https://ak.hypergryph.com/news/']")["href"]
 
             soup = BeautifulSoup(requests.get(news_link)
                                          .content
@@ -149,6 +149,8 @@ with open("./scripts/msv.json", "r") as f1, open("./src/lib/data/shops.json", "w
             end_time_utc = (end_time - pd.Timedelta(hours=8)).tz_localize("UTC")
 
             if end_time_utc > pd.Timestamp.utcnow():
+                save_event_banner_img(prts_soup, "cn_ss_banner")
+
                 cn_ss_shop = get_shop_table(page_url)
                 all_shop_effics["shops"]["cn"].update({
                     "ss": get_shop_effics(cn_ss_shop, sanity_values["cn"]) 
@@ -159,6 +161,11 @@ with open("./scripts/msv.json", "r") as f1, open("./src/lib/data/shops.json", "w
 
         if not en_ss_event.empty:
             if en_ss_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
+                soup = BeautifulSoup(requests.get(page_url)
+                                             .text,
+                                     "lxml")
+                save_event_banner_img(soup, "en_ss_banner")
+
                 en_ss_shop = get_shop_table(page_url)
                 all_shop_effics["shops"]["glb"].update({
                     "ss": get_shop_effics(en_ss_shop, sanity_values["glb"])
