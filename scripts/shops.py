@@ -102,20 +102,21 @@ cc_events = (
 )
 
 for cc in cc_events.itertuples():
-    soup = BeautifulSoup(requests.get(get_cc_page_url(cc.name))
+    page_url = get_cc_page_url(cc.name)
+    soup = BeautifulSoup(requests.get(page_url)
                                  .text,
                          "lxml")
     en_cc_name = soup.select_one("td > .nodesktop").text
     cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_cc_name)])
 
     if cc.Index == 0:
-        cn_cc_shop = get_shop_table(get_cc_page_url(cc.name))
+        cn_cc_shop = get_shop_table(page_url)
         all_shop_effics["events"]["cn"].update({
             "cc": en_cc_name
         })
 
     if not cc_event.empty:
-        en_cc_shop = get_shop_table(get_cc_page_url(cc.name))
+        en_cc_shop = get_shop_table(page_url)
         all_shop_effics["events"]["glb"].update({
             "cc": en_cc_name
         })
@@ -129,17 +130,18 @@ ss_events = (
 )
 
 for ss in ss_events.itertuples():
+    page_url = get_ss_page_url(ss.name, ss.活动开始时间.year)
     en_ss_name = cn_to_en_event_name[ss.name]
     ss_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.lower()
                                                                   .str.contains(remove_punctuation(en_ss_name).lower())])
     if ss.Index == 0:
-        cn_ss_shop = get_shop_table(get_ss_page_url(ss.name, ss.活动开始时间.year))
+        cn_ss_shop = get_shop_table(page_url)
         all_shop_effics["events"]["cn"].update({
             "ss": en_ss_name
         })
 
     if not ss_event.empty:
-        en_ss_shop = get_shop_table(f"https://prts.wiki/w/{quote(ss.name)}")
+        en_ss_shop = get_shop_table(page_url)
         all_shop_effics["events"]["glb"].update({
             "ss": en_ss_name
         })
