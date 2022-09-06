@@ -164,7 +164,7 @@ with open("./scripts/msv.json", "r") as f1, open("./src/lib/data/shops.json", "w
                 soup = BeautifulSoup(requests.get(page_url)
                                              .text,
                                      "lxml")
-                save_event_banner_img(soup, "en_ss_banner")
+                save_event_banner_img(soup, "glb_ss_banner")
 
                 en_ss_shop = get_shop_table(page_url)
                 all_shop_effics["shops"]["glb"].update({
@@ -210,7 +210,7 @@ with open("./scripts/msv.json", "r") as f1, open("./src/lib/data/shops.json", "w
 
         if not en_cc_event.empty:
             if en_cc_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
-                save_event_banner_img(soup, "en_cc_banner")
+                save_event_banner_img(soup, "glb_cc_banner")
 
                 en_cc_shop = get_shop_table(page_url)
                 all_shop_effics["shops"]["glb"].update({
