@@ -18,6 +18,10 @@ all_events = (
             .json()
 )
 
+cn_to_en_event_name = {
+    event["label_i18n"]["zh"]: event["label_i18n"]["en"] for event in all_events
+}
+
 en_events = (
     pd.read_html(requests.get("https://gamepress.gg/arknights/other/event-and-campaign-list")
                          .text)
@@ -74,21 +78,19 @@ cn_events = (
         ignore_index=True)
       .pipe(convert_to_utc)
       .pipe(lambda df: df[df["活动开始时间"] < pd.Timestamp.utcnow()])
-      .assign(name = lambda df: df["活动页面"].str.partition("(")[0])
+      .assign(name = lambda df: df["活动页面"].str.partition("(")[0]
+                                             .str.rstrip())
       .drop(columns=["活动页面", "官网公告"])
 )
 
 cc_events = cn_events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
-
 cn_cc_shop = get_shop_table(get_cc_page_url(get_name_of_latest(cc_events)))
 
 for cc in cc_events.itertuples(index=False):
     soup = BeautifulSoup(requests.get(get_cc_page_url(cc.name))
                                  .text,
                          "lxml")
-
     en_name = soup.select_one("td > .nodesktop").text
-
     cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_name)])
 
     if not cc_event.empty:
@@ -98,8 +100,15 @@ for cc in cc_events.itertuples(index=False):
 
 
 ss_events = cn_events.pipe(lambda df: df[df["活动分类"].isin({"支线故事", "故事集"})])
-
 cn_ss_shop = get_shop_table(f"https://prts.wiki/w/{quote(remove_punctuation(get_name_of_latest(ss_events)))}")
+
+for ss in ss_events.itertuples(index=False):
+    en_name = remove_punctuation(cn_to_en_event_name[ss.name]).lower()
+    ss_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.lower()
+                                                                  .str.contains(en_name)])
+
+    if not ss_event.empty:
+        break
 
 
 
