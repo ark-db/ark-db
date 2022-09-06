@@ -6,32 +6,6 @@ from bs4 import BeautifulSoup
 import unicodedata
 import re
 
-cn_items = (
-    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/item_table.json")
-            .json()
-            ["items"]
-)
-
-item_name_to_id = {data["name"]: data["itemId"] for data in cn_items.values()}
-
-all_events = (
-    requests.get("https://penguin-stats.io/PenguinStats/api/v2/period")
-            .json()
-)
-
-cn_to_en_event_name = {
-    event["label_i18n"]["zh"]: event["label_i18n"]["en"] for event in all_events
-}
-
-en_events = (
-    pd.read_html(requests.get("https://gamepress.gg/arknights/other/event-and-campaign-list")
-                         .text)
-      [0]
-      .assign(end_time = lambda df: (pd.to_datetime(df["Period"].str.partition(" ~ ")[2])
-                                     + pd.Timedelta(hours=10, minutes=59))
-                                    .dt.tz_localize("UTC"))
-)
-
 def convert_to_utc(df: pd.DataFrame):
     df["活动开始时间"] -= pd.Timedelta(hours=8)
     df["活动开始时间"] = df["活动开始时间"].dt.tz_localize("UTC")
@@ -78,6 +52,23 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> list[dict[str
 
 
 
+cn_items = (
+    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/item_table.json")
+            .json()
+            ["items"]
+)
+
+item_name_to_id = {data["name"]: data["itemId"] for data in cn_items.values()}
+
+all_events = (
+    requests.get("https://penguin-stats.io/PenguinStats/api/v2/period")
+            .json()
+)
+
+cn_to_en_event_name = {
+    event["label_i18n"]["zh"]: event["label_i18n"]["en"] for event in all_events
+}
+
 cn_events = (
     pd.concat(
         pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
@@ -101,7 +92,14 @@ ss_events = (
              .reset_index(drop=True)
 )
 
-
+en_events = (
+    pd.read_html(requests.get("https://gamepress.gg/arknights/other/event-and-campaign-list")
+                         .text)
+      [0]
+      .assign(end_time = lambda df: (pd.to_datetime(df["Period"].str.partition(" ~ ")[2])
+                                     + pd.Timedelta(hours=10, minutes=59))
+                                    .dt.tz_localize("UTC"))
+)
 
 all_shop_effics = {
     "shops": {
@@ -113,6 +111,8 @@ all_shop_effics = {
         "cn": dict()
     }
 }
+
+
  
 with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as f2:
     sanity_values = json.load(f1)
@@ -120,13 +120,15 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
     for ss in ss_events.itertuples():
         page_url = get_ss_page_url(ss.name, ss.活动开始时间.year)
         en_ss_name = cn_to_en_event_name[ss.name]
-        ss_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.lower()
-                                                                      .str.contains(remove_punctuation(en_ss_name).lower())])
+        en_ss_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.lower()
+                                                                         .str.contains(remove_punctuation(en_ss_name).lower())])
+
         if ss.Index == 0:
             soup = BeautifulSoup(requests.get(page_url)
                                          .text,
                                  "lxml")
             news_link = soup.select_one("a[href*='https://ak.hypergryph.com/news/']")["href"]
+
             soup = BeautifulSoup(requests.get(news_link)
                                          .content
                                          .decode("utf-8", "ignore"),
@@ -145,8 +147,8 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
                     "ss": en_ss_name
                 })
 
-        if not ss_event.empty:
-            if ss_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
+        if not en_ss_event.empty:
+            if en_ss_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
                 en_ss_shop = get_shop_table(page_url)
                 all_shop_effics["shops"]["glb"].update({
                     "ss": get_shop_effics(en_ss_shop, sanity_values["glb"])
@@ -162,7 +164,7 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
                                      .text,
                              "lxml")
         en_cc_name = soup.select_one("td > .nodesktop").text
-        cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_cc_name)])
+        en_cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_cc_name)])
 
         if cc.Index == 0:
             event_period = soup("b", text=re.compile("赛季开启时间：", flags=re.U))[0].parent.contents[1].rstrip()
@@ -179,8 +181,8 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
                     "cc": en_cc_name
                 })
 
-        if not cc_event.empty:
-            if cc_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
+        if not en_cc_event.empty:
+            if en_cc_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
                 en_cc_shop = get_shop_table(page_url)
                 all_shop_effics["shops"]["glb"].update({
                     "cc": get_shop_effics(en_cc_shop, sanity_values["glb"])
