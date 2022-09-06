@@ -160,26 +160,26 @@ with open("./scripts/msv.json", "r") as f1, open("./scripts/shops.json", "w") as
                              "lxml")
         en_cc_name = soup.select_one("td > .nodesktop").text
         cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_cc_name)])
-    
+
         if cc.Index == 0:
             cn_cc_shop = get_shop_table(page_url)
             all_shop_effics["events"]["cn"].update({
                 "cc": en_cc_name
             })
-    
+
         if not cc_event.empty:
-            en_cc_shop = get_shop_table(page_url)
-            all_shop_effics["events"]["glb"].update({
-                "cc": en_cc_name
-            })
+            if ss_event.iloc[0]["end_time"] < pd.Timestamp.utcnow():
+                en_cc_shop = get_shop_table(page_url)
+                all_shop_effics["glb"].update({
+                    "cc": get_shop_effics(en_cc_shop, sanity_values["glb"])
+                })
+                all_shop_effics["events"]["glb"].update({
+                    "cc": en_cc_name
+                })
             break
 
     all_shop_effics["cn"].update({
         "cc": get_shop_effics(cn_cc_shop, sanity_values["cn"])
     })
 
-    all_shop_effics["glb"].update({
-        "cc": get_shop_effics(en_cc_shop, sanity_values["glb"])
-    })
-    
     json.dump(all_shop_effics, f2, ensure_ascii=False)
