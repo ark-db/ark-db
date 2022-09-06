@@ -90,8 +90,8 @@ for cc in cc_events.itertuples(index=False):
     soup = BeautifulSoup(requests.get(get_cc_page_url(cc.name))
                                  .text,
                          "lxml")
-    en_name = soup.select_one("td > .nodesktop").text
-    cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_name)])
+    en_cc_name = soup.select_one("td > .nodesktop").text
+    cc_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.contains(en_cc_name)])
 
     if not cc_event.empty:
         en_cc_shop = get_shop_table(get_cc_page_url(cc.name))
@@ -103,9 +103,9 @@ ss_events = cn_events.pipe(lambda df: df[df["活动分类"].isin({"支线故事"
 cn_ss_shop = get_shop_table(f"https://prts.wiki/w/{quote(remove_punctuation(get_name_of_latest(ss_events)))}")
 
 for ss in ss_events.itertuples(index=False):
-    en_name = remove_punctuation(cn_to_en_event_name[ss.name]).lower()
+    en_ss_name = cn_to_en_event_name[ss.name]
     ss_event = en_events.pipe(lambda df: df[df["Event / Campaign"].str.lower()
-                                                                  .str.contains(en_name)])
+                                                                  .str.contains(remove_punctuation(en_ss_name).lower())])
 
     if not ss_event.empty:
         en_ss_shop = get_shop_table(f"https://prts.wiki/w/{quote(ss.name)}")
