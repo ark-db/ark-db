@@ -11,9 +11,9 @@
 	</a>
     <nav>
 		{#each [...links.entries()] as [ href, title ]}
-			<a {href} class:active={$page.url.pathname.startsWith(href)}>
-				{title}
-			</a>
+		<a {href} class:active={href === "/" ? $page.url.pathname === href : $page.url.pathname.startsWith(href)}>
+			{title}
+		</a>
 		{/each}
     </nav>
 </header>
