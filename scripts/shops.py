@@ -1,3 +1,4 @@
+import utils
 import requests
 import pandas as pd
 import json
@@ -25,6 +26,10 @@ def remove_punctuation(text: str):
 def get_ss_page_url(name: str, year: int):
     formatted_name = remove_punctuation(name.replace("·复刻", str(year)))
     return f"https://prts.wiki/w/{quote(formatted_name)}"
+
+def save_event_banner_img(soup: BeautifulSoup, name: str):
+    event_banner_url = soup.select_one("img[alt*='活动预告']")["data-src"]
+    utils.save_image(f"https://prts.wiki{event_banner_url}", "events", name, overwrite=True)
 
 def get_shop_table(url: str):
     shop = (
@@ -186,6 +191,8 @@ with open("./scripts/msv.json", "r") as f1, open("./src/lib/data/shops.json", "w
             end_time_utc = (end_time - pd.Timedelta(hours=8)).tz_localize("UTC")
 
             if end_time_utc > pd.Timestamp.utcnow():
+                save_event_banner_img(soup, "cn_cc_banner")
+
                 cn_cc_shop = get_shop_table(page_url)
                 all_shop_effics["shops"]["cn"].update({
                     "cc": get_shop_effics(cn_cc_shop, sanity_values["cn"])
@@ -196,6 +203,8 @@ with open("./scripts/msv.json", "r") as f1, open("./src/lib/data/shops.json", "w
 
         if not en_cc_event.empty:
             if en_cc_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
+                save_event_banner_img(soup, "en_cc_banner")
+
                 en_cc_shop = get_shop_table(page_url)
                 all_shop_effics["shops"]["glb"].update({
                     "cc": get_shop_effics(en_cc_shop, sanity_values["glb"])
