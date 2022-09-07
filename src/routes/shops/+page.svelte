@@ -23,7 +23,7 @@
 
 <svelte:head>
     <title>Shop Efficiencies</title>
-    <meta name="description" content="A list of item efficiencies of certificate and current event shops." />
+    <meta name="description" content="A list of item efficiencies of certificate and current event shops.">
 </svelte:head>
 
 {#if ssName}

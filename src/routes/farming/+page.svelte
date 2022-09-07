@@ -12,7 +12,7 @@
 
 <svelte:head>
     <title>Farming Stages</title>
-    <meta name="description" content="A list of the best Arknights farming stages for materials, with stage efficiencies, drop rates, and expected sanity costs." />
+    <meta name="description" content="A list of the best Arknights farming stages for materials, with stage efficiencies, drop rates, and expected sanity costs.">
 </svelte:head>
 
 <section class="content settings">
