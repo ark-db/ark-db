@@ -123,19 +123,4 @@
         background-color: var(--light-moderate);
         font-weight: 500;
     }
-    .poor {
-        color: #f13737;
-    }
-    .bad {
-        color: #ff9505;
-    }
-    .fair {
-        color: #f3dc48;
-    }
-    .good {
-        color: #9be564;
-    }
-    .great {
-        color: #00be43;
-    }
 </style>
