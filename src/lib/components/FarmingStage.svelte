@@ -40,21 +40,6 @@
         align-items: center;
         gap: 0.5em;
     }
-    .poor * {
-        color: #f13737;
-    }
-    .bad * {
-        color: #ff9505;
-    }
-    .fair * {
-        color: #f3dc48;
-    }
-    .good * {
-        color: #9be564;
-    }
-    .great * {
-        color: #00be43;
-    }
     h2 {
         font-size: 1.5em;
     }

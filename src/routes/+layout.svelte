@@ -83,4 +83,19 @@
         text-align: center;
 		color: var(--light-moderate);
 	}
+	:global(.poor) {
+        color: #f13737;
+    }
+    :global(.bad) {
+        color: #ff9505;
+    }
+    :global(.fair) {
+        color: #f3dc48;
+    }
+    :global(.good) {
+        color: #9be564;
+    }
+    :global(.great) {
+        color: #00be43;
+    }
 </style>
