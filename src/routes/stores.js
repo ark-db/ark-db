@@ -40,7 +40,7 @@ export const showCost = writable(false);
 // planner/cost
 const defaultInventory = Object.keys(items)
                                .sort((prev, curr) => items[prev].sortId - items[curr].sortId)
-                               .filter(id => items[id].type !== "misc")
+                               .filter(id => items[id].type !== "misc" && items[id].type !== "other")
                                .map(id => ({id, count: 0}));
 
 export const inventory = writable(storedInventory ?? defaultInventory);
