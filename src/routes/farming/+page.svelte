@@ -16,26 +16,14 @@
 </svelte:head>
 
 <section class="content settings">
-    <div>
-        <label>
-            <input type=radio bind:group={$region} value={"glb"}>
-            US/JP/KR
-        </label>
-        <label>
-            <input type=radio bind:group={$region} value={"cn"}>
-            CN
-        </label>
-    </div>
-    <div>
-        <label>
-            <input type=radio bind:group={$sortMode} value={"effic"}>
-            Sort by stage efficiency
-        </label>
-        <label>
-            <input type=radio bind:group={$sortMode} value={"espd"}>
-            Sort by expected sanity per drop
-        </label>
-    </div>
+    <label>
+        <input type=radio bind:group={$sortMode} value={"effic"}>
+        Sort by stage efficiency
+    </label>
+    <label>
+        <input type=radio bind:group={$sortMode} value={"espd"}>
+        Sort by expected sanity per drop
+    </label>
 </section>
 
 <section class="grid">
@@ -60,18 +48,10 @@
         background-color: var(--light-strong);
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
         gap: 0.5em 1.5em;
-    }
-    .settings div {
-        display: flex;
-        flex-wrap: wrap;
-        column-gap: 1em;
     }
     .settings label {
         margin: 0.5em;
-        display: flex;
-        align-items: center;
     }
     input[type=radio] {
         transform: scale(1.5);
