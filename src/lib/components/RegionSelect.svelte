@@ -17,6 +17,7 @@
 
 <style>
     div {
+        margin-right: 0.25em;
         display: flex;
         gap: 15px;
     }
