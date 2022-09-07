@@ -45,12 +45,14 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> list[dict[str
     shop_effics = []
     for item in shop.itertuples(index=False):
         name, _, qty = item.可兑换道具.partition("×")
-        qty = int(qty) if qty else 1
-        cost = int(item.单价)
         if (item_id := item_name_to_id.get(name)) and (value := msvs.get(item_id)):
+            qty = int(qty) if qty else 1
+            stock = int(item.库存) if item.库存 != "∞" else -1
+            cost = int(item.单价)
             shop_effics.append({
                 "id": item_id,
                 "count": qty,
+                "stock": stock,
                 "effic": round(value * qty / cost, 3)
             })
     return shop_effics
