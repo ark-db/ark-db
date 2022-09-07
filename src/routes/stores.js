@@ -13,6 +13,11 @@ if (browser) {
 
 
 
+// general
+export const region = writable("glb");
+
+
+
 // planner
 export const selectedChar = writable();
 export const activeCategory = writable();
@@ -52,5 +57,4 @@ export const makeT3 = writable(false);
 
 
 // farming
-export const region = writable("glb");
 export const sortMode = writable("effic");
