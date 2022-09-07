@@ -48,7 +48,9 @@
                     <p class="stock" title="Item stock">
                         {stock !== -1 ? stock : "∞"}
                     </p>
-                    <p class="effic {categorize(normEffic)}" title="Sanity value per token">
+                    <p class="effic {categorize(normEffic)}"
+                       title={$normalizeEffics ? "Relative efficiency" : "Sanity value per token"}
+                    >
                         {$normalizeEffics ? normEffic.toFixed(3) : effic}
                     </p>
                 </div>
@@ -72,7 +74,9 @@
                     <p class="stock" title="Item stock">
                         {stock !== -1 ? stock : "∞"}
                     </p>
-                    <p class="effic {categorize(normEffic)}" title="Sanity value per token">
+                    <p class="effic {categorize(normEffic)}"
+                       title={$normalizeEffics ? "Relative efficiency" : "Sanity value per token"}
+                    >
                         {$normalizeEffics ? normEffic.toFixed(3) : effic}
                     </p>
                 </div>
