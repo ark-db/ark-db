@@ -20,10 +20,15 @@
         display: flex;
         gap: 15px;
     }
+    img {
+        width: 100%;
+        max-width: 20px;
+        min-width: 20px;
+    }
     select {
         border: 1px solid white;
         border-radius: 0.75em;
-        padding: 0.75em 2em 0.75em 0.75em;
+        padding: 0.75em 2em 0.75em 1em;
         background-color: transparent;
         width: 100%;
         max-width: 10em;
@@ -36,9 +41,7 @@
         background-position-y: 50%;
         background-size: 10px;
     }
-    img {
-        width: 100%;
-        max-width: 20px;
-        min-width: 20px;
+    option {
+        color: black;
     }
 </style>
