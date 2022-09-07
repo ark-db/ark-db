@@ -74,7 +74,7 @@
 	}
 	.region-select {
 		position: fixed;
-		top: 1em;
+		top: 0.9375em;
 		right: 1em;
 	}
 </style>
