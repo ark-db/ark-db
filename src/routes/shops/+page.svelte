@@ -21,6 +21,11 @@
 
 
 
+<svelte:head>
+    <title>Shop Efficiencies</title>
+    <meta name="description" content="A list of item efficiencies of certificate and current event shops." />
+</svelte:head>
+
 {#if ssName}
     {@const ssMaxEffic = Math.max(...ssShopItems.map(item => item.effic))}
     <div class="event">
