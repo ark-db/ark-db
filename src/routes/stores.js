@@ -58,3 +58,8 @@ export const makeT3 = writable(false);
 
 // farming
 export const sortMode = writable("effic");
+
+
+
+// shops
+export const normalizeEffics = writable(false);

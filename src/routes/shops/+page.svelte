@@ -1,6 +1,6 @@
 <script>
     import { assets } from "$app/paths";
-    import { region } from "@stores";
+    import { region, normalizeEffics } from "@stores";
     import shops from "$lib/data/shops.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
 
@@ -26,6 +26,13 @@
     <meta name="description" content="A list of item efficiencies of certificate and current event shops.">
 </svelte:head>
 
+<section class="content settings">
+    <label>
+        <input type="checkbox" bind:checked={$normalizeEffics}>
+        Normalize item efficiencies
+    </label>
+</section>
+
 {#if ssName}
     {@const ssMaxEffic = Math.max(...ssShopItems.map(item => item.effic))}
     <section class="event">
@@ -35,13 +42,14 @@
         </div>
         <div class="items">
             {#each ssShopItems as { id, count, stock, effic }}
+                {@const normEffic = effic / ssMaxEffic}
                 <div class="item">
                     <ItemIcon {id} {count} --size="75px"/>
                     <p class="stock" title="Item stock">
                         {stock !== -1 ? stock : "∞"}
                     </p>
-                    <p class="effic {categorize(effic / ssMaxEffic)}" title="Sanity value per token">
-                        {effic}
+                    <p class="effic {categorize(normEffic)}" title="Sanity value per token">
+                        {$normalizeEffics ? normEffic.toFixed(3) : effic}
                     </p>
                 </div>
             {/each}
@@ -58,13 +66,14 @@
         </div>
         <div class="items">
             {#each ccShopItems as { id, count, stock, effic }}
+                {@const normEffic = effic / ccMaxEffic}
                 <div class="item">
                     <ItemIcon {id} {count} --size="75px"/>
                     <p class="stock" title="Item stock">
                         {stock !== -1 ? stock : "∞"}
                     </p>
-                    <p class="effic {categorize(effic / ccMaxEffic)}" title="Sanity value per token">
-                        {effic}
+                    <p class="effic {categorize(normEffic)}" title="Sanity value per token">
+                        {$normalizeEffics ? normEffic.toFixed(3) : effic}
                     </p>
                 </div>
             {/each}
@@ -75,8 +84,13 @@
 
 
 <style>
+    .settings {
+        margin-top: 0.5em;
+        padding: 1em;
+        background-color: var(--light-moderate);
+    }
     .event {
-        margin-top: 1em;
+        margin: 1em 10vw;
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -100,7 +114,7 @@
     }
     .items {
         display: grid;
-        grid-template-columns: repeat(auto-fill, calc(75px + 5em));
+        grid-template-columns: repeat(auto-fill, calc(75px + 6em));
         justify-content: center;
         gap: 20px;
     }
