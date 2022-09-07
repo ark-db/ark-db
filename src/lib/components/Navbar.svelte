@@ -29,6 +29,7 @@
 
 <style>
     header {
+		padding: 0 1em;
 		background-color: var(--dark-moderate);
 		box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.75);
 		position: fixed;
@@ -75,6 +76,6 @@
 	.region-select {
 		position: fixed;
 		top: 0.9375em;
-		right: 1em;
+		right: 2em;
 	}
 </style>
