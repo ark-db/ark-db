@@ -34,9 +34,12 @@
             <img class="banner" src={ssSrc} alt={ssName}>
         </div>
         <div class="items">
-            {#each ssShopItems as { id, count, effic }}
+            {#each ssShopItems as { id, count, stock, effic }}
                 <div class="item">
                     <ItemIcon {id} {count} --size="75px"/>
+                    <p class="stock" title="Item stock">
+                        {stock !== -1 ? stock : "∞"}
+                    </p>
                     <p class={categorize(effic / ssMaxEffic)} title="Sanity value per token">
                         {effic}
                     </p>
@@ -54,10 +57,13 @@
             <img class="banner" src={ccSrc} alt={ccName}>
         </div>
         <div class="items">
-            {#each ccShopItems as { id, count, effic }}
+            {#each ccShopItems as { id, count, stock, effic }}
                 <div class="item">
                     <ItemIcon {id} {count} --size="75px"/>
-                    <p class={categorize(effic / ccMaxEffic)} title="Sanity value per token">
+                    <p class="stock" title="Item stock">
+                        {stock !== -1 ? stock : "∞"}
+                    </p>
+                    <p class="effic {categorize(effic / ccMaxEffic)}" title="Sanity value per token">
                         {effic}
                     </p>
                 </div>
@@ -99,12 +105,23 @@
         gap: 20px;
     }
     .item {
+        position: relative;
         display: flex;
         align-items: center;
-        gap: 1em;
+        gap: 2.5em;
     }
-    .item p {
+    .effic {
         font-weight: 600;
+    }
+    .stock {
+        position: absolute;
+        top: -5px;
+        left: 30px;
+        z-index: -1;
+        padding: 0.15em 0.5em 0.15em 3em;
+        border-radius: 1em;
+        background-color: var(--light-moderate);
+        font-weight: 500;
     }
     .poor {
         color: #f13737;
