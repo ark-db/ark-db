@@ -40,7 +40,7 @@
                     <p class="stock" title="Item stock">
                         {stock !== -1 ? stock : "∞"}
                     </p>
-                    <p class={categorize(effic / ssMaxEffic)} title="Sanity value per token">
+                    <p class="effic {categorize(effic / ssMaxEffic)}" title="Sanity value per token">
                         {effic}
                     </p>
                 </div>
@@ -108,7 +108,7 @@
         position: relative;
         display: flex;
         align-items: center;
-        gap: 2.5em;
+        gap: 2.75em;
     }
     .effic {
         font-weight: 600;
