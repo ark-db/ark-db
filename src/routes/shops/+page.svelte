@@ -94,7 +94,8 @@
         background-color: var(--light-moderate);
     }
     .event {
-        margin: 1em 10vw;
+        margin: 1em 0;
+        padding: 1em;
         display: flex;
         flex-direction: column;
         gap: 20px;
