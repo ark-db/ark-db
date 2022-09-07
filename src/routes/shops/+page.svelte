@@ -28,7 +28,7 @@
 
 {#if ssName}
     {@const ssMaxEffic = Math.max(...ssShopItems.map(item => item.effic))}
-    <div class="event">
+    <section class="event">
         <div class="top">
             <h1 class="title">{ssName}</h1>
             <img class="banner" src={ssSrc} alt={ssName}>
@@ -43,12 +43,12 @@
                 </div>
             {/each}
         </div>
-    </div>
+    </section>
 {/if}
 
 {#if ccName}
     {@const ccMaxEffic = Math.max(...ccShopItems.map(item => item.effic))}
-    <div class="event">
+    <section class="event">
         <div class="top">
             <h1 class="title">{ccName}</h1>
             <img class="banner" src={ccSrc} alt={ccName}>
@@ -63,7 +63,7 @@
                 </div>
             {/each}
         </div>
-    </div>
+    </section>
 {/if}
 
 
