@@ -4,7 +4,7 @@
 	import Sidebar from "$lib/components/Sidebar.svelte";
 
 	let w;
-	const mobileWidth = 450;
+	const mobileWidth = 720;
 </script>
 
 
