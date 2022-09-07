@@ -6,4 +6,5 @@ export const links = new Map([
     ["/", "Home"],
     ["/planner", "Planner"],
     ["/farming", "Farming"],
+    ["/shops", "Shops"],
 ]);
