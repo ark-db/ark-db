@@ -31,7 +31,7 @@
             {/if}
         </div>
     </div>
-    <input type="image" src={deleteIcon} alt="delete" loading="lazy" on:click />
+    <input type="image" src={deleteIcon} alt="delete" loading="lazy" on:click>
 </section>
 
 
