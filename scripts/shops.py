@@ -51,7 +51,7 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> list[dict[str
             shop_effics.append({
                 "id": item_id,
                 "count": qty,
-                "effic": value * qty / cost
+                "effic": round(value * qty / cost, 3)
             })
     return shop_effics
 
