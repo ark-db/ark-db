@@ -3,6 +3,7 @@
     import { fly } from "svelte/transition";
     import { links } from "@utils";
     import bars from "../images/bars.svg";
+    import RegionSelect from "./RegionSelect.svelte";
 
     let active = false;
     let pageTitle = links.get($page.url.pathname);
@@ -28,6 +29,9 @@
 			    </a>
 		    {/each}
         </nav>
+        <div class="region-select">
+            <RegionSelect />
+        </div>
     </div>
     <div class="filter" on:click={toggle} transition:fly={{x: 100, duration: 150}} />
 {/if}
@@ -99,6 +103,11 @@
         border-radius: 0.5em;
         color: var(--light-moderate);
         background-color: var(--dark-strong);
+    }
+    .region-select {
+        position: fixed;
+        bottom: 1.5em;
+        left: 1.5em;
     }
     .filter {
         position: fixed;
