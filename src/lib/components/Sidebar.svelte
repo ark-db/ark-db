@@ -14,6 +14,7 @@
 
 
 {#if active}
+    <div class="filter" on:click={toggle} transition:fly={{x: 100, duration: 150}} />
     <div class="sidebar" transition:fly={{x: -100, duration: 300}}>
         <div class="top">
             <div class="logo">
@@ -29,11 +30,12 @@
 			    </a>
 		    {/each}
         </nav>
-        <div class="region-select">
-            <RegionSelect />
+        <div class="container">
+            <div class="region-select">
+                <RegionSelect />
+            </div>
         </div>
     </div>
-    <div class="filter" on:click={toggle} transition:fly={{x: 100, duration: 150}} />
 {/if}
 
 <header>
@@ -57,7 +59,7 @@
     }
     .sidebar {
         position: fixed;
-        width: 65%;
+        width: min(65%, 250px);
         height: 100%;
         z-index: 3;
         padding: 0.5em;
@@ -104,16 +106,20 @@
         color: var(--light-moderate);
         background-color: var(--dark-strong);
     }
+    .container {
+        position: absolute;
+        bottom: 0;
+    }
     .region-select {
-        position: fixed;
-        bottom: 1.5em;
-        left: 1.5em;
+        position: relative;
+        left: 1em;
+        bottom: 2.5em;
     }
     .filter {
         position: fixed;
         width: 100%;
         height: 100%;
-        z-index: 2;
+        z-index: 3;
         background: rgba(0, 0, 0, 0.5);
     }
     header {
