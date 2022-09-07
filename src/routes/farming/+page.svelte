@@ -48,14 +48,14 @@
         background-color: var(--light-strong);
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5em 1.5em;
+        gap: 0.25em 1.5em;
     }
     .settings label {
         margin: 0.5em;
     }
     input[type=radio] {
         transform: scale(1.5);
-        margin-right: 1em;
+        margin-right: 0.5em;
         margin-bottom: 0.25em;
     }
     .grid {
