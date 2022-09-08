@@ -2,7 +2,10 @@
     import { assets } from "$app/paths";
     import { region, normalizeValues } from "@stores";
     import eventShops from "$lib/data/event_shops.json";
+    import permaShops from "$lib/data/perma_shops.json";
+    import items from "$lib/data/items.json";
     import ShopItems from "$lib/components/ShopItems.svelte";
+    import ItemIcon from "../../lib/components/ItemIcon.svelte";
 </script>
 
 
@@ -34,6 +37,20 @@
     {/if}
 {/each}
 
+{#each permaShops[$region] as shop}
+    <section class="event">
+        <div class="top">
+            <ItemIcon id={shop.currency} --size="100px"/>
+            <h1 class="title">{items[shop.currency].name} Store</h1>
+        </div>
+        {#each shop.items as tier}
+            <div class="tier">
+                <ShopItems items={tier} {normalizeValues}/>
+            </div>
+        {/each}
+    </section>
+{/each}
+
 
 
 <style>
@@ -53,11 +70,12 @@
         margin-top: 3em;
     }
     .top {
+        padding-bottom: 1em;
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
-        gap: 1em 5em;
+        gap: 1em 2em;
     }
     .title {
         margin: 0 0.5em;
@@ -65,5 +83,11 @@
     }
     .banner {
         width: clamp(1px, 80vw, 600px);
+    }
+    .tier {
+        padding-top: 1em;
+    }
+    .tier + .tier {
+        border-top: 0.5px solid var(--med-strong);
     }
 </style>
