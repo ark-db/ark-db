@@ -2,7 +2,7 @@
     import ItemIcon from "./ItemIcon.svelte";
     export let items, normalizeValues;
 
-    const maxValue = Math.max(...items.map(item => item.value));
+    let maxValue = Math.max(...items.map(item => item.value));
 
     function categorize(score) {
         if (score < 0.5) return "poor";
