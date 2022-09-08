@@ -55,7 +55,7 @@
         position: relative;
         display: flex;
         align-items: center;
-        gap: 2.75em;
+        gap: 2.5em;
     }
     .effic {
         font-weight: 600;
