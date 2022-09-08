@@ -48,11 +48,19 @@
                     <p class="stock" title="Item stock">
                         {stock !== -1 ? stock : "∞"}
                     </p>
-                    <p class="effic {categorize(normEffic)}"
-                       title={$normalizeEffics ? "Relative efficiency" : "Sanity value per token"}
-                    >
-                        {$normalizeEffics ? normEffic.toFixed(3) : effic}
-                    </p>
+                    {#if effic !== -1}
+                        <p class="effic {categorize(normEffic)}"
+                           title={$normalizeEffics ? "Relative efficiency" : "Sanity value per token"}
+                        >
+                            {$normalizeEffics ? normEffic.toFixed(3) : effic}
+                        </p>
+                    {:else}
+                        <p class="effic none"
+                           title={$normalizeEffics ? "Relative efficiency" : "Sanity value per token"}
+                        >
+                            ——
+                        </p>
+                    {/if}
                 </div>
             {/each}
         </div>
@@ -74,11 +82,19 @@
                     <p class="stock" title="Item stock">
                         {stock !== -1 ? stock : "∞"}
                     </p>
-                    <p class="effic {categorize(normEffic)}"
-                       title={$normalizeEffics ? "Relative efficiency" : "Sanity value per token"}
-                    >
-                        {$normalizeEffics ? normEffic.toFixed(3) : effic}
-                    </p>
+                    {#if effic !== -1}
+                        <p class="effic {categorize(normEffic)}"
+                           title={$normalizeEffics ? "Relative efficiency" : "Sanity value per token"}
+                        >
+                            {$normalizeEffics ? normEffic.toFixed(3) : effic}
+                        </p>
+                    {:else}
+                        <p class="effic none"
+                           title={$normalizeEffics ? "Relative efficiency" : "Sanity value per token"}
+                        >
+                            ——
+                        </p>
+                    {/if}
                 </div>
             {/each}
         </div>
@@ -131,6 +147,9 @@
     }
     .effic {
         font-weight: 600;
+    }
+    .effic.none {
+        color: var(--light-moderate);
     }
     .stock {
         position: absolute;

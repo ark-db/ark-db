@@ -28,12 +28,15 @@ VALID_ITEMS = {
     "misc": {
         "4001", # LMD
         "2001", "2002", "2003", "2004", # EXP card
-        "3112", "3113", "3114", "3401", # carbon, furniture part
+        "3112", "3113", "3114", # carbon
         "3003" # pure gold
     },
     "other": {
-        "4003", "7003", "7004", # orundum, headhunting permits
-        "7001", "7002" # rec. permit, expedited plan
+        "4005", "4004", "REP_COIN", # green, yellow, intell. cert.
+        "4003", "7003", "7004", # orundum; 1x, 10x headhunting permit
+        "7001", "7002", # rec. permit; expedited plan
+        "voucher_recruitR3_1", "voucher_recruitR4_1", # 3*, 4* rec. vouchers
+        "3401", # furniture part
     }
 }
 
