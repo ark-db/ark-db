@@ -121,7 +121,7 @@ all_shop_effics = {
 
 
  
-with open("./scripts/msv.json", "r") as f1, open("./src/lib/data/shops.json", "w") as f2:
+with open("./scripts/msv.json", "r") as f1, open("./src/lib/data/event_shops.json", "w") as f2:
     sanity_values = json.load(f1)
 
     for ss in ss_events.itertuples():
