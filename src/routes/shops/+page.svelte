@@ -1,14 +1,8 @@
 <script>
     import { assets } from "$app/paths";
     import { region, normalizeValues } from "@stores";
-    import shops from "$lib/data/shops.json";
+    import shops from "$lib/data/event_shops.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
-
-    $: ({ ss: ssName = undefined, cc: ccName = undefined } = shops.events[$region]);
-    $: ({ ss: ssShopItems = undefined, cc: ccShopItems = undefined } = shops.shops[$region]);
-
-    $: ssSrc = `${assets}/images/events/${$region}_ss_banner.webp`;
-    $: ccSrc = `${assets}/images/events/${$region}_cc_banner.webp`;
 
     function categorize(score) {
         if (score < 0.5) return "poor";
@@ -33,73 +27,44 @@
     </label>
 </section>
 
-{#if ssName}
-    {@const maxValue = Math.max(...ssShopItems.map(item => item.value))}
-    <section class="event">
-        <div class="top">
-            <h1 class="title">{ssName}</h1>
-            <img class="banner" src={ssSrc} alt={ssName}>
-        </div>
-        <div class="items">
-            {#each ssShopItems as { id, count, stock, value }}
-                {@const effic = value / maxValue}
-                <div class="item">
-                    <ItemIcon {id} {count} --size="75px"/>
-                    <p class="stock" title="Item stock">
-                        {stock !== -1 ? stock : "∞"}
-                    </p>
-                    {#if value !== -1}
-                        <p class="effic {categorize(effic)}"
-                           title={$normalizeValues ? "Relative efficiency" : "Sanity value per token"}
-                        >
-                            {$normalizeValues ? effic.toFixed(3) : value}
+{#each ["ss", "cc"] as type}
+    {@const eventName = shops.events[$region]?.[type]}
+    {@const shopItems = shops.shops[$region]?.[type]}
+    {#if eventName}
+        {@const src = `${assets}/images/events/${$region}_${type}_banner.webp`}
+        {@const maxValue = Math.max(...shopItems.map(item => item.value))}
+        <section class="event">
+            <div class="top">
+                <h1 class="title">{eventName}</h1>
+                <img class="banner" {src} alt={eventName}>
+            </div>
+            <div class="items">
+                {#each shopItems as { id, count, stock, value }}
+                    {@const effic = value / maxValue}
+                    <div class="item">
+                        <ItemIcon {id} {count} --size="75px"/>
+                        <p class="stock" title="Item stock">
+                            {stock !== -1 ? stock : "∞"}
                         </p>
-                    {:else}
-                        <p class="effic none"
-                           title={$normalizeValues ? "Relative efficiency" : "Sanity value per token"}
-                        >
-                            ——
-                        </p>
-                    {/if}
-                </div>
-            {/each}
-        </div>
-    </section>
-{/if}
-
-{#if ccName}
-    {@const maxValue = Math.max(...ccShopItems.map(item => item.value))}
-    <section class="event">
-        <div class="top">
-            <h1 class="title">{ccName}</h1>
-            <img class="banner" src={ccSrc} alt={ccName}>
-        </div>
-        <div class="items">
-            {#each ccShopItems as { id, count, stock, value }}
-                {@const effic = value / maxValue}
-                <div class="item">
-                    <ItemIcon {id} {count} --size="75px"/>
-                    <p class="stock" title="Item stock">
-                        {stock !== -1 ? stock : "∞"}
-                    </p>
-                    {#if value !== -1}
-                        <p class="effic {categorize(effic)}"
-                           title={$normalizeValues ? "Relative efficiency" : "Sanity value per token"}
-                        >
-                            {$normalizeValues ? effic.toFixed(3) : value}
-                        </p>
-                    {:else}
-                        <p class="effic none"
-                           title={$normalizeValues ? "Relative efficiency" : "Sanity value per token"}
-                        >
-                            ——
-                        </p>
-                    {/if}
-                </div>
-            {/each}
-        </div>
-    </section>
-{/if}
+                        {#if value !== -1}
+                            <p class="effic {categorize(effic)}"
+                               title={$normalizeValues ? "Relative efficiency" : "Sanity value per token"}
+                            >
+                                {$normalizeValues ? effic.toFixed(3) : value}
+                            </p>
+                        {:else}
+                            <p class="effic none"
+                               title={$normalizeValues ? "Relative efficiency" : "Sanity value per token"}
+                            >
+                                ——
+                            </p>
+                        {/if}
+                    </div>
+                {/each}
+            </div>
+        </section>
+    {/if}
+{/each}
 
 
 
