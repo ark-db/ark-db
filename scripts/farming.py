@@ -8,7 +8,7 @@ import numpy as np
 import json
 
 MIN_RUN_THRESHOLD = 100
-ALLOWED_ITEMS = utils.VALID_ITEMS["material"] | utils.VALID_ITEMS["misc"]
+ALLOWED_ITEMS = utils.VALID_ITEMS["material"] | utils.VALID_ITEMS["skill"] | utils.VALID_ITEMS["misc"]
 BYPROD_RATE_BONUS = 1.8
 # EXP_DEVALUE_FACTOR = 0.8
 MISC_SANITY_VALUES = {
