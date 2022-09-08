@@ -42,12 +42,12 @@ name_changes = {
 all_char_data = dict()
 skill_ids = set()
 
-def is_operator(char_info):
+def is_operator(char_info: dict[str, str|list]):
     return char_info["profession"] != "TOKEN" \
            and char_info["profession"] != "TRAP" \
            and not char_info["isNotObtainable"]
 
-def get_skill_id(skill):
+def get_skill_id(skill: str) -> str:
     skill_info = skills[skill["skillId"]]
     return skill_info["iconId"] or skill_info["skillId"]
 
@@ -62,12 +62,12 @@ for char_id, char_info in chars.items():
         }
 
         upgrade_names = []
-        for i, phase in enumerate(char_info["phases"][1:]):
-            name = f"Elite {i+1}"
+        for i, phase in enumerate(char_info["phases"][1:], start=1):
+            name = f"Elite {i}"
             upgrade_names.append(name)
             char_data["costs"].update({
                 name: utils.format_cost(phase["evolveCost"])
-                      + [{"id": "4001", "count": elite_lmd_costs[char_info["rarity"]][i]}]
+                      + [{"id": "4001", "count": elite_lmd_costs[char_info["rarity"]][i-1]}]
             })
         char_data["upgrades"].append({
             "names": upgrade_names
@@ -76,8 +76,8 @@ for char_id, char_info in chars.items():
 
 
         upgrade_names = []
-        for i, level in enumerate(char_info["allSkillLvlup"]):
-            name = f"Skill Level {i+2}"
+        for i, level in enumerate(char_info["allSkillLvlup"], start=2):
+            name = f"Skill Level {i}"
             upgrade_names.append(name)
             char_data["costs"].update({
                 name: utils.format_cost(level["lvlUpCost"])
@@ -88,7 +88,7 @@ for char_id, char_info in chars.items():
 
 
 
-        for i, skill in enumerate(char_info["skills"]):
+        for i, skill in enumerate(char_info["skills"], start=1):
             upgrade_names = []
 
             skill_id = get_skill_id(skill)
@@ -97,8 +97,8 @@ for char_id, char_info in chars.items():
                 icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/skills/skill_icon_{skill_id}.png"
                 utils.save_image(icon_url, "skills", skill_id)
 
-            for j, mastery in enumerate(skill["levelUpCostCond"]):
-                name = f"Skill {i+1} Mastery {j+1}"
+            for j, mastery in enumerate(skill["levelUpCostCond"], start=1):
+                name = f"Skill {i} Mastery {j}"
                 upgrade_names.append(name)
                 char_data["costs"].update({
                     name: utils.format_cost(mastery["levelUpCost"])
@@ -119,8 +119,8 @@ for char_id, char_info in chars.items():
             utils.save_image(icon_url, "modules", module_id)
 
             module_info = modules["equipDict"][module_id]
-            for i, cost in enumerate(module_info["itemCost"].values()):
-                name = f"{module_info['typeIcon'].upper()} Stage {i+1}"
+            for i, cost in enumerate(module_info["itemCost"].values(), start=1):
+                name = f"{module_info['typeIcon'].upper()} Stage {i}"
                 upgrade_names.append(name)
                 char_data["costs"].update({
                     name: utils.format_cost(cost)

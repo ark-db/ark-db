@@ -13,6 +13,11 @@ if (browser) {
 
 
 
+// general
+export const region = writable("glb");
+
+
+
 // planner
 export const selectedChar = writable();
 export const activeCategory = writable();
@@ -35,7 +40,7 @@ export const showCost = writable(false);
 // planner/cost
 const defaultInventory = Object.keys(items)
                                .sort((prev, curr) => items[prev].sortId - items[curr].sortId)
-                               .filter(id => items[id].type !== "misc")
+                               .filter(id => items[id].type !== "misc" && items[id].type !== "other")
                                .map(id => ({id, count: 0}));
 
 export const inventory = writable(storedInventory ?? defaultInventory);
@@ -52,5 +57,9 @@ export const makeT3 = writable(false);
 
 
 // farming
-export const region = writable("glb");
 export const sortMode = writable("effic");
+
+
+
+// shops
+export const normalizeValues = writable(false);

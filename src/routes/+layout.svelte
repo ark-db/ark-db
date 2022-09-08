@@ -1,11 +1,10 @@
 <script>
-	import { page } from "$app/stores";
     import logo from "$lib/images/logo.svg";
 	import Navbar from "$lib/components/Navbar.svelte";
 	import Sidebar from "$lib/components/Sidebar.svelte";
 
 	let w;
-	const mobileWidth = 450;
+	const mobileWidth = 800;
 </script>
 
 
@@ -13,11 +12,11 @@
 <svelte:window bind:innerWidth={w} />
 
 {#if w > mobileWidth}
-	<Navbar {page}>
+	<Navbar>
 		<img slot="logo" src={logo} alt="ArkDB logo">
 	</Navbar>
 {:else}
-	<Sidebar {page}>
+	<Sidebar>
 		<img slot="logo" src={logo} alt="ArkDB logo">
 	</Sidebar>
 {/if}
@@ -84,4 +83,19 @@
         text-align: center;
 		color: var(--light-moderate);
 	}
+	:global(.poor) {
+        color: #f13737;
+    }
+    :global(.bad) {
+        color: #ff9505;
+    }
+    :global(.fair) {
+        color: #f3dc48;
+    }
+    :global(.good) {
+        color: #9be564;
+    }
+    :global(.great) {
+        color: #00be43;
+    }
 </style>

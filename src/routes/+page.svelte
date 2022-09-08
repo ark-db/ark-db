@@ -6,12 +6,12 @@
 
 <svelte:head>
     <title>ArkDB - Arknights Tools</title>
-    <meta name="description" content="Utility website for Arknights players" />
+    <meta name="description" content="Utility website for Arknights players">
 </svelte:head>
 
 <h1 class="title">ArkDB</h1>
 <h2>A utility website for Arknights players</h2>
-<p>v0.10.0-beta</p>
+<p>v0.11.0</p>
 <a href="https://github.com/ark-db/ark-db/" target="_blank" rel="noreferrer">
     <img src={ghLogo} alt="GitHub logo">
 </a>

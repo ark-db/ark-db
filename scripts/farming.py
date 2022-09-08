@@ -11,6 +11,19 @@ MIN_RUN_THRESHOLD = 100
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"] | utils.VALID_ITEMS["misc"]
 BYPROD_RATE_BONUS = 1.8
 # EXP_DEVALUE_FACTOR = 0.8
+MISC_SANITY_VALUES = {
+    "4003": -1,
+    "7003": -1,
+    "7004": -1,
+    "7001": -1,
+    "7002": 0,
+    "3401": 0,
+    "32001": -1,
+    "mod_unlock_token": -1,
+    "mod_update_token_1": -1,
+    "mod_update_token_2": -1,
+}
+
 RECORDED_ITEMS = utils.VALID_ITEMS["material"]
 
 recipes = (
@@ -37,7 +50,7 @@ class Region(Enum):
     GLB = "US"
     CN = "CN"
 
-def update_mat_relations(df: pd.DataFrame) -> pd.DataFrame:
+def update_mat_relations(df: pd.DataFrame):
     # relationships between exp cards + pure gold; base unit is Drill Battle Record (200 exp)
     MAT_RELATIONS = {
         "2002": 2,
@@ -49,7 +62,7 @@ def update_mat_relations(df: pd.DataFrame) -> pd.DataFrame:
         df.at[(item_id, 1), "2001"] = count
     return df
 
-def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
+def fill_diagonal(df: pd.DataFrame):
     # adds recipes' outcome quantities to the recipe matrix
     for item_id, count in zip(df.index.get_level_values("itemId"), df.index.get_level_values("count")):
         df.at[item_id, item_id] = count
@@ -67,7 +80,7 @@ def get_stage_ids(region: Region) -> set[str]:
     )
     return current_stage_ids
 
-def update_lmd_stages(df: pd.DataFrame, valid_stages: set) -> pd.DataFrame:
+def update_lmd_stages(df: pd.DataFrame, valid_stages: set[str]):
     LMD_STAGES = {
         "wk_melee_1": 1700,
         "wk_melee_2": 2800,
@@ -185,6 +198,7 @@ num_rows, _ = item_rel_matrix.shape
 
 
 
+all_sanity_values = dict()
 all_farming_stages = dict()
 
 for region in Region:
@@ -216,6 +230,12 @@ for region in Region:
         .x
     )
 
+    all_sanity_values.update({
+        region.name.lower(): {
+            item_id: sanity_value for item_id, sanity_value in zip(ALLOWED_ITEMS, sanity_values)
+        } | MISC_SANITY_VALUES
+    })
+
     stage_effics = (drop_matrix.dot(sanity_values) - sanity_cost_vec) / sanity_cost_vec + 1
 
     farming_stages = (
@@ -244,6 +264,9 @@ for region in Region:
             for item, stages in farming_stages_by_item.items()
         ]
     })
+
+with open("./scripts/msv.json", "w") as f:
+    json.dump(all_sanity_values, f)
 
 with open("./src/lib/data/farming.json", "w") as f:
     json.dump(all_farming_stages, f)

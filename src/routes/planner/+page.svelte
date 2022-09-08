@@ -72,7 +72,7 @@
 
 <svelte:head>
     <title>Upgrade Planner</title>
-    <meta name="description" content="An Arknights operator upgrade planner." />
+    <meta name="description" content="An Arknights operator upgrade planner.">
 </svelte:head>
 
 <svelte:window bind:innerWidth={innerWidth} />
@@ -162,7 +162,6 @@
 
 <style>
     .top {
-        margin-bottom: 5px;
         padding: 10px;
         background-color: var(--light-strong);
         display: flex;

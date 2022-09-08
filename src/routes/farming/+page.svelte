@@ -12,30 +12,18 @@
 
 <svelte:head>
     <title>Farming Stages</title>
-    <meta name="description" content="A list of the best Arknights farming stages for materials, with stage efficiencies, drop rates, and expected sanity costs." />
+    <meta name="description" content="A list of the best Arknights farming stages for materials, with stage efficiencies, drop rates, and expected sanity costs.">
 </svelte:head>
 
 <section class="content settings">
-    <div>
-        <label>
-            <input type=radio bind:group={$region} value={"glb"}>
-            US/JP/KR
-        </label>
-        <label>
-            <input type=radio bind:group={$region} value={"cn"}>
-            CN
-        </label>
-    </div>
-    <div>
-        <label>
-            <input type=radio bind:group={$sortMode} value={"effic"}>
-            Sort by stage efficiency
-        </label>
-        <label>
-            <input type=radio bind:group={$sortMode} value={"espd"}>
-            Sort by expected sanity per drop
-        </label>
-    </div>
+    <label>
+        <input type=radio bind:group={$sortMode} value={"effic"}>
+        Sort by stage efficiency
+    </label>
+    <label>
+        <input type=radio bind:group={$sortMode} value={"espd"}>
+        Sort by expected sanity per drop
+    </label>
 </section>
 
 <section class="grid">
@@ -55,18 +43,20 @@
 
 <style>
     .settings {
-        margin-top: 1em;
+        margin-top: 0.5em;
         padding: 0.5em;
         background-color: var(--light-strong);
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 0.5em 1.5em;
+        gap: 0.25em 1.5em;
     }
     .settings label {
         margin: 0.5em;
-        display: flex;
-        align-items: center;
+    }
+    input[type=radio] {
+        transform: scale(1.5);
+        margin-right: 0.5em;
+        margin-bottom: 0.25em;
     }
     .grid {
         margin: 2em 0;
@@ -84,9 +74,5 @@
         display: flex;
         flex-wrap: wrap;
         gap: 0.5em 1.5em;
-    }
-    input[type=radio] {
-        transform: scale(1.25);
-        margin-right: 1em;
     }
 </style>

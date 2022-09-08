@@ -1,24 +1,20 @@
 <script>
+    import { page } from "$app/stores";
     import { fly } from "svelte/transition";
+    import { links } from "@utils";
     import bars from "../images/bars.svg";
-
-    export let page;
+    import RegionSelect from "./RegionSelect.svelte";
 
     let active = false;
-    let pageTitle = getPageTitle($page.url.pathname);
+    let pageTitle = links.get($page.url.pathname);
 
     const toggle = () => active = !active;
-
-    function getPageTitle(path) {
-        if (path === "/") return "Home";
-        else if (path.startsWith("/planner")) return "Planner";
-        else if (path === "/farming") return "Farming";
-    };
 </script>
 
 
 
 {#if active}
+    <div class="filter" on:click={toggle} transition:fly={{x: 100, duration: 150}} />
     <div class="sidebar" transition:fly={{x: -100, duration: 300}}>
         <div class="top">
             <div class="logo">
@@ -28,18 +24,18 @@
         </div>
         <div class="divider" />
         <nav>
-            <a href="/" class:active={$page.url.pathname === "/"} on:click={toggle}>
-                Home
-            </a>
-		    <a href="/planner" class:active={$page.url.pathname.startsWith("/planner")} on:click={toggle}>
-                Planner
-            </a>
-		    <a href="/farming" class:active={$page.url.pathname === "/farming"} on:click={toggle}>
-                Farming
-            </a>
+            {#each [...links.entries()] as [ href, title ]}
+			    <a {href} class:active={href === "/" ? $page.url.pathname === href : $page.url.pathname.startsWith(href)} on:click={toggle}>
+				    {title}
+			    </a>
+		    {/each}
         </nav>
+        <div class="container">
+            <div class="region-select">
+                <RegionSelect />
+            </div>
+        </div>
     </div>
-    <div class="filter" on:click={toggle} transition:fly={{x: 100, duration: 150}} />
 {/if}
 
 <header>
@@ -63,7 +59,7 @@
     }
     .sidebar {
         position: fixed;
-        width: 65%;
+        width: min(65%, 250px);
         height: 100%;
         z-index: 3;
         padding: 0.5em;
@@ -110,11 +106,20 @@
         color: var(--light-moderate);
         background-color: var(--dark-strong);
     }
+    .container {
+        position: absolute;
+        bottom: 0;
+    }
+    .region-select {
+        position: relative;
+        left: 1em;
+        bottom: 2.5em;
+    }
     .filter {
         position: fixed;
         width: 100%;
         height: 100%;
-        z-index: 2;
+        z-index: 3;
         background: rgba(0, 0, 0, 0.5);
     }
     header {
