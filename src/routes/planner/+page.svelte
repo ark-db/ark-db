@@ -43,6 +43,7 @@
     function remove(upgrade) {
         $allSelected = $allSelected.filter(up => !(up.charId === upgrade.charId
                                                    && up.name === upgrade.name));
+        updateStoredUpgrades($allSelected);
     };
 
     const [send, receive] = crossfade({
