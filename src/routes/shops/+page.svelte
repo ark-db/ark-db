@@ -1,6 +1,6 @@
 <script>
     import { assets } from "$app/paths";
-    import { region, normalizeEffics } from "@stores";
+    import { region, normalizeValues } from "@stores";
     import shops from "$lib/data/shops.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
 
@@ -28,35 +28,35 @@
 
 <section class="content settings">
     <label>
-        <input type="checkbox" bind:checked={$normalizeEffics}>
+        <input type="checkbox" bind:checked={$normalizeValues}>
         Normalize item efficiencies
     </label>
 </section>
 
 {#if ssName}
-    {@const ssMaxEffic = Math.max(...ssShopItems.map(item => item.effic))}
+    {@const maxValue = Math.max(...ssShopItems.map(item => item.value))}
     <section class="event">
         <div class="top">
             <h1 class="title">{ssName}</h1>
             <img class="banner" src={ssSrc} alt={ssName}>
         </div>
         <div class="items">
-            {#each ssShopItems as { id, count, stock, effic }}
-                {@const normEffic = effic / ssMaxEffic}
+            {#each ssShopItems as { id, count, stock, value }}
+                {@const effic = value / maxValue}
                 <div class="item">
                     <ItemIcon {id} {count} --size="75px"/>
                     <p class="stock" title="Item stock">
                         {stock !== -1 ? stock : "∞"}
                     </p>
-                    {#if effic !== -1}
-                        <p class="effic {categorize(normEffic)}"
-                           title={$normalizeEffics ? "Relative efficiency" : "Sanity value per token"}
+                    {#if value !== -1}
+                        <p class="effic {categorize(effic)}"
+                           title={$normalizeValues ? "Relative efficiency" : "Sanity value per token"}
                         >
-                            {$normalizeEffics ? normEffic.toFixed(3) : effic}
+                            {$normalizeValues ? effic.toFixed(3) : value}
                         </p>
                     {:else}
                         <p class="effic none"
-                           title={$normalizeEffics ? "Relative efficiency" : "Sanity value per token"}
+                           title={$normalizeValues ? "Relative efficiency" : "Sanity value per token"}
                         >
                             ——
                         </p>
@@ -68,29 +68,29 @@
 {/if}
 
 {#if ccName}
-    {@const ccMaxEffic = Math.max(...ccShopItems.map(item => item.effic))}
+    {@const maxValue = Math.max(...ccShopItems.map(item => item.value))}
     <section class="event">
         <div class="top">
             <h1 class="title">{ccName}</h1>
             <img class="banner" src={ccSrc} alt={ccName}>
         </div>
         <div class="items">
-            {#each ccShopItems as { id, count, stock, effic }}
-                {@const normEffic = effic / ccMaxEffic}
+            {#each ccShopItems as { id, count, stock, value }}
+                {@const effic = value / maxValue}
                 <div class="item">
                     <ItemIcon {id} {count} --size="75px"/>
                     <p class="stock" title="Item stock">
                         {stock !== -1 ? stock : "∞"}
                     </p>
-                    {#if effic !== -1}
-                        <p class="effic {categorize(normEffic)}"
-                           title={$normalizeEffics ? "Relative efficiency" : "Sanity value per token"}
+                    {#if value !== -1}
+                        <p class="effic {categorize(effic)}"
+                           title={$normalizeValues ? "Relative efficiency" : "Sanity value per token"}
                         >
-                            {$normalizeEffics ? normEffic.toFixed(3) : effic}
+                            {$normalizeValues ? effic.toFixed(3) : value}
                         </p>
                     {:else}
                         <p class="effic none"
-                           title={$normalizeEffics ? "Relative efficiency" : "Sanity value per token"}
+                           title={$normalizeValues ? "Relative efficiency" : "Sanity value per token"}
                         >
                             ——
                         </p>

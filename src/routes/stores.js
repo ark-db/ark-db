@@ -62,4 +62,4 @@ export const sortMode = writable("effic");
 
 
 // shops
-export const normalizeEffics = writable(false);
+export const normalizeValues = writable(false);
