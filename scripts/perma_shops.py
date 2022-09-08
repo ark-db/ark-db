@@ -14,7 +14,7 @@ with (open("./scripts/shop_data.json", "r") as f1,
                         {
                             "id": item["id"],
                             "count": item["count"],
-                            "stock": item.get("stock") or -1,
+                            "stock": item.get("stock") or -2,
                             "cost": item["cost"],
                             "value": round(value * item["count"] / item["cost"], 3) if value != -1 else -1
                         }
