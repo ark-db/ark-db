@@ -32,7 +32,7 @@ VALID_ITEMS = {
         "3003" # pure gold
     },
     "other": {
-        "4005", "4004", "REP_COIN", # green, yellow, intell. cert.
+        "4005", "4004", "REP_COIN", "EPGS_COIN", # green, yellow, intell. cert.; param. model
         "4003", "7003", "7004", # orundum; 1x, 10x headhunting permit
         "7001", "7002", # rec. permit; expedited plan
         "voucher_recruitR3_1", "voucher_recruitR4_1", # 3*, 4* rec. vouchers
