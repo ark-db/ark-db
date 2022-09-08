@@ -1,7 +1,7 @@
 [
     {
         "currency": "SOCIAL_PT",
-        "items": [
+        "items": [[
             {
                 "id": "4001",
                 "count": 1800,
@@ -127,7 +127,7 @@
                 "count": 1,
                 "cost": 80
             }
-        ]
+        ]]
     },
     {
         "currency": "4005",
@@ -310,7 +310,7 @@
     },
     {
         "currency": "4004",
-        "items": [
+        "items": [[
             {
                 "id": "mod_unlock_token",
                 "count": 1,
@@ -413,11 +413,11 @@
                 "stock": -1,
                 "cost": 15
             }
-        ]
+        ]]
     },
     {
         "currency": "EPGS_COIN",
-        "items": [
+        "items": [[
             {
                 "id": "31054",
                 "count": 1,
@@ -670,11 +670,11 @@
                 "stock": -1,
                 "cost": 15
             }
-        ]
+        ]]
     },
     {
         "currency": "REP_COIN",
-        "items": [
+        "items": [[
             {
                 "id": "4003",
                 "count": 100,
@@ -771,6 +771,6 @@
                 "count": 1,
                 "cost": 50
             }
-        ]
+        ]]
     }
 ]
