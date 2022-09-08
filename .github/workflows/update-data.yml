@@ -15,16 +15,19 @@ jobs:
     - name: Install Poetry
       run: pipx install poetry
 
-    - name: Setup Python
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: "3.10"
         cache: "poetry"
 
-    - name: Run script
+    - name: Set up Python environment
       run: |
         poetry env use 3.10
         poetry install
+    
+    - name: Run scripts
+      run: |
         poetry run python scripts/farming.py
         poetry run python scripts/perma_shops.py
         poetry run python scripts/event_shops.py
