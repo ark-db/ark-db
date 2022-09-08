@@ -1,7 +1,7 @@
 <script>
     import { assets } from "$app/paths";
     import { region, normalizeValues } from "@stores";
-    import shops from "$lib/data/event_shops.json";
+    import eventShops from "$lib/data/event_shops.json";
     import ShopItems from "$lib/components/ShopItems.svelte";
 </script>
 
@@ -20,8 +20,8 @@
 </section>
 
 {#each ["ss", "cc"] as type}
-    {@const eventName = shops.events[$region]?.[type]}
-    {@const shopItems = shops.shops[$region]?.[type]}
+    {@const eventName = eventShops.events[$region]?.[type]}
+    {@const shopItems = eventShops.shops[$region]?.[type]}
     {#if eventName}
         {@const src = `${assets}/images/events/${$region}_${type}_banner.webp`}
         <section class="event">
