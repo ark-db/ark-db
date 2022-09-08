@@ -12,7 +12,12 @@ ALLOWED_ITEMS = utils.VALID_ITEMS["material"] | utils.VALID_ITEMS["misc"]
 BYPROD_RATE_BONUS = 1.8
 # EXP_DEVALUE_FACTOR = 0.8
 MISC_SANITY_VALUES = {
+    "7001": -1,
     "3401": 0,
+    "4003": -1,
+    "7003": -1,
+    "7004": -1,
+    "mod_unlock_token": -1,
 }
 
 RECORDED_ITEMS = utils.VALID_ITEMS["material"]
