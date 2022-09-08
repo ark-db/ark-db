@@ -18,6 +18,8 @@ MISC_SANITY_VALUES = {
     "7003": -1,
     "7004": -1,
     "mod_unlock_token": -1,
+    "mod_update_token_1": -1,
+    "mod_update_token_2": -1,
 }
 
 RECORDED_ITEMS = utils.VALID_ITEMS["material"]
