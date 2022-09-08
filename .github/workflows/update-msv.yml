@@ -26,10 +26,12 @@ jobs:
         poetry env use 3.10
         poetry install
         poetry run python scripts/farming.py
+        poetry run python scripts/perma_shops.py
+        poetry run python scripts/event_shops.py
     
     - name: Commit updates
       run: |
         git config --global user.name "astral4"
         git config --global user.email "88992929+astral4@users.noreply.github.com"
-        git commit -am "Update material sanity values"
+        git commit -am "Update site data"
         git push
