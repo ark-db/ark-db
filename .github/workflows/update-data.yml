@@ -1,4 +1,4 @@
-name: Update material sanity values
+name: Update site data
 
 on:
   workflow_dispatch:
