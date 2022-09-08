@@ -53,7 +53,7 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> list[dict[str
                 "id": item_id,
                 "count": qty,
                 "stock": stock,
-                "effic": round(value * qty / cost, 3) if value != -1 else -1
+                "value": round(value * qty / cost, 3) if value != -1 else -1
             })
     return shop_effics
 
