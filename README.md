@@ -1,4 +1,7 @@
 # ArkDB
+
+[![Update site data](https://github.com/ark-db/ark-db/actions/workflows/update-data.yml/badge.svg)](https://github.com/ark-db/ark-db/actions/workflows/update-data.yml)
+
 ArkDB is a website of tools for Arknights. The project is currently in beta.
 
 ## Features
