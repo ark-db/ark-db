@@ -10,7 +10,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
-		"svelte": "3.49.0",
+		"svelte": "^3.50.1",
 		"svelte-dnd-action": "^0.9.19",
 		"svelte-typeahead": "^4.2.4",
 		"vite": "^3.1.0"
