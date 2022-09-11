@@ -1,8 +1,22 @@
 <script>
+    import { onMount } from "svelte";
     import Typeahead from "svelte-typeahead";
-    import operators from "../data/operators.json";
 
     export let selectedChar;
+
+    let data;
+
+    async function getCharData(id) {
+        let res = await fetch(`/api/operators?id=${id}`);
+        let resData = await res.json();
+        $selectedChar = resData;
+    };
+
+    onMount(async () => {
+        let res = await fetch("/api/operators?categories=charId,name");
+        let resData = await res.json();
+        data = Object.values(resData);
+    })
 
     const stripTags = str => str.replace(/(<([^>]+)>)/ig, "");
 </script>
@@ -11,12 +25,12 @@
 
 <Typeahead hideLabel={true}
            placeholder={"Search operators..."}
-           data={Object.values(operators)}
+           {data}
            extract={(id) => id.name}
            inputAfterSelect="clear"
            let:value
            let:result
-           on:select={({ detail }) => $selectedChar = detail.original}
+           on:select={({ detail }) => getCharData(detail.original.charId)}
 >
     <svelte:fragment slot="no-results">
         <span class="notfound">
