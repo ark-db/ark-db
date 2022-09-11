@@ -3,7 +3,7 @@ import operators from "$lib/data/operators.json";
 
 export function GET({ url }) {
     const charId = url.searchParams.get("id");
-    const categories = [url.searchParams.get("categories")].flat();
+    const categories = [...url.searchParams.get("categories")?.split(",") ?? []];
     if (charId) {
         const charData = operators?.[charId]
         if (charData) {
