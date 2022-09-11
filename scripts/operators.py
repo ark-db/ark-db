@@ -37,6 +37,7 @@ name_changes = {
     "char_197_poca": "Rosa",
     "char_1001_amiya2": "Amiya (Guard)",
     "char_4055_bgsnow": "Pozyomka",
+    "char_4064_mlynar": "Mlynar",
 }
 
 all_char_data = dict()
