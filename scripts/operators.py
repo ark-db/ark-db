@@ -87,27 +87,27 @@ for char_id, char_info in chars.items():
         })
 
 
-
-        for i, skill in enumerate(char_info["skills"], start=1):
-            upgrade_names = []
-
-            skill_id = get_skill_id(skill)
-            if skill_id not in skill_ids and char_info["rarity"] > 2:
-                skill_ids.add(skill_id)
-                icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/skills/skill_icon_{skill_id}.png"
-                utils.save_image(icon_url, "skills", skill_id)
-
-            for j, mastery in enumerate(skill["levelUpCostCond"], start=1):
-                name = f"Skill {i} Mastery {j}"
-                upgrade_names.append(name)
-                char_data["costs"].update({
-                    name: utils.format_cost(mastery["levelUpCost"])
+        if len(char_info["skills"]) > 1:
+            for i, skill in enumerate(char_info["skills"], start=1):
+                upgrade_names = []
+    
+                skill_id = get_skill_id(skill)
+                if skill_id not in skill_ids and char_info["rarity"] > 2:
+                    skill_ids.add(skill_id)
+                    icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/skills/skill_icon_{skill_id}.png"
+                    utils.save_image(icon_url, "skills", skill_id)
+    
+                for j, mastery in enumerate(skill["levelUpCostCond"], start=1):
+                    name = f"Skill {i} Mastery {j}"
+                    upgrade_names.append(name)
+                    char_data["costs"].update({
+                        name: utils.format_cost(mastery["levelUpCost"])
+                    })
+                char_data["upgrades"].append({
+                    "cls": "mastery",
+                    "skillId": skill_id,
+                    "names": upgrade_names
                 })
-            char_data["upgrades"].append({
-                "cls": "mastery",
-                "skillId": skill_id,
-                "names": upgrade_names
-            })
 
 
 
