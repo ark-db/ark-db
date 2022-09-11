@@ -12,9 +12,9 @@
 
     onMount(async () => {
         let res, resData;
-        res = await fetch(`/api/operators/name?id=${charId}`);
+        res = await fetch(`/api/operators/?id=${charId}&categories=name`);
         resData = await res.json();
-        charName = resData.data;
+        charName = resData.name;
         res = await fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`);
         resData = await res.json();
         upgradeCost = resData.data;
