@@ -8,7 +8,7 @@
 
     id; // stops SvelteKit from complaining
     let charName;
-    let upgradeCost;
+    let upgradeCost = [];
 
     onMount(async () => {
         let res, resData;
@@ -17,8 +17,8 @@
         charName = resData.name;
         res = await fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`);
         resData = await res.json();
-        upgradeCost = resData.data;
-    })
+        upgradeCost = resData;
+    });
 </script>
 
 

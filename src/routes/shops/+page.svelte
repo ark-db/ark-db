@@ -4,7 +4,7 @@
     import eventShops from "$lib/data/event_shops.json";
     import permaShops from "$lib/data/perma_shops.json";
     import ShopItems from "$lib/components/ShopItems.svelte";
-    import ItemIcon from "../../lib/components/ItemIcon.svelte";
+    import ItemIcon from "$lib/components/ItemIcon.svelte";
 
     async function getItemName(id) {
         let res = await fetch(`/api/items?id=${id}&categories=name`);
