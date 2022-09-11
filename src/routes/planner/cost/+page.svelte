@@ -12,7 +12,7 @@
     async function getCost({ charId, name }) {
         let res = await fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`);
         let resData = await res.json();
-        return resData.data;
+        return resData;
     };
     
     $: Promise.all($allSelected.filter(({ ready }) => $costFilter.includes(ready))
