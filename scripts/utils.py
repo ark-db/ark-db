@@ -49,11 +49,10 @@ def format_cost(cost: Cost) -> Cost:
 def save_image(url: str, category: str, image_id: str, overwrite=False):
     target_path = Path(f"./static/images/{category}/{image_id}.webp")
     if target_path.is_file() and not overwrite:
-        pass
+        return True
     elif (res := requests.get(url)):
         Image.open(BytesIO(res.content)) \
              .convert("RGBA") \
              .save(target_path, "webp")
-    else:
-        raise RuntimeError(f"Image \"{image_id}\" of type \"{category}\" could not be retrieved")
-        #print(f"{category}: {image_id}")
+        return True
+    return False
