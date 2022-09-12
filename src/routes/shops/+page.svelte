@@ -3,9 +3,14 @@
     import { region, normalizeValues } from "@stores";
     import eventShops from "$lib/data/event_shops.json";
     import permaShops from "$lib/data/perma_shops.json";
-    import items from "$lib/data/items.json";
     import ShopItems from "$lib/components/ShopItems.svelte";
-    import ItemIcon from "../../lib/components/ItemIcon.svelte";
+    import ItemIcon from "$lib/components/ItemIcon.svelte";
+
+    async function getItemName(id) {
+        let res = await fetch(`/api/items?id=${id}&categories=name`);
+        let resData = await res.json();
+        return resData.name;
+    };
 </script>
 
 
@@ -41,7 +46,9 @@
     <section class="event">
         <div class="top">
             <ItemIcon id={shop.currency} --size="100px"/>
-            <h1 class="title">{items[shop.currency].name} Store</h1>
+            {#await getItemName(shop.currency) then name}
+                <h1 class="title">{name} Store</h1>
+            {/await}
         </div>
         {#each shop.items as tier}
             <div class="tier">

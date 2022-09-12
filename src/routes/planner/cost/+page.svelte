@@ -1,23 +1,27 @@
 <script>
     import { allSelected, inventory, costFilter, itemFilter, makeT3 } from "@stores";
     import { sortItems } from "@utils";
-    import operators from "$lib/data/operators.json";
     import items from "$lib/data/items.json";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import NumberInput from "$lib/components/NumberInput.svelte";
 
     const min = 0;
     const max = 999999;
+    let allCosts = [];
+    $: itemCounter = new Map(Object.entries(
+        allCosts.filter(({ id }) => $itemFilter.includes(items[id].type))
+                .reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
+    ));
 
-    $: itemCounter = new Map(
-        Object.entries(
-            $allSelected.filter(({ ready }) => $costFilter.includes(ready))
-                        .map(({ charId, name })=> operators[charId].costs[name])
-                        .flat()
-                        .filter(({ id }) => $itemFilter.includes(items[id].type))
-                        .reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
-        )
-    );
+    async function getCost({ charId, name }) {
+        let res = await fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`);
+        let resData = await res.json();
+        return resData;
+    };
+    
+    $: Promise.all($allSelected.filter(({ ready }) => $costFilter.includes(ready))
+                               .map(upgrade => getCost(upgrade)))
+              .then(costs => allCosts = costs.flat());
 
     const normalize = counter => Array.from(counter).map(([id, count]) => ({id, count}));
 

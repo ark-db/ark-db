@@ -1,12 +1,19 @@
 <script>
-    import operators from "../data/operators.json";
+    import { onMount } from "svelte";
     import OperatorIcon from "./OperatorIcon.svelte";
     import ItemIcon from "./ItemIcon.svelte";
     import deleteIcon from "../images/delete.svg";
 
-    export let showCost, charId, name, ready, id;
+    export let showCost, charId, charName, name, ready, id;
 
     id; // stops SvelteKit from complaining
+    let upgradeCost = [];
+
+    onMount(async () => {
+        let res = await fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`);
+        let resData = await res.json();
+        upgradeCost = resData;
+    });
 </script>
 
 
@@ -18,13 +25,13 @@
             <div class="top">
                 <OperatorIcon {charId} --size="60px" --border="0px" />
                 <div class="upgrade-desc">
-                    <h3>{operators[charId].name}</h3>
+                    <h3>{charName}</h3>
                     <p>{name}</p>
                 </div>
             </div>
             {#if $showCost}
                 <div class="cost">
-                    {#each operators[charId].costs[name] as item}
+                    {#each upgradeCost as item}
                         <ItemIcon {...item} --size="60px" />
                     {/each}
                 </div>
