@@ -29,6 +29,19 @@ elite_lmd_costs = (
             ["evolveGoldCost"]
 )
 
+
+
+def is_operator(char_info: dict[str, str|list]):
+    return char_info["profession"] != "TOKEN" \
+           and char_info["profession"] != "TRAP" \
+           and not char_info["isNotObtainable"]
+
+def get_skill_id(skill: str) -> str:
+    skill_info = skills[skill["skillId"]]
+    return skill_info["iconId"] or skill_info["skillId"]
+
+
+
 name_changes = {
     "char_118_yuki": "Shirayuki",
     "char_196_sunbr": "Gummy",
@@ -43,14 +56,7 @@ name_changes = {
 all_char_data = dict()
 skill_ids = set()
 
-def is_operator(char_info: dict[str, str|list]):
-    return char_info["profession"] != "TOKEN" \
-           and char_info["profession"] != "TRAP" \
-           and not char_info["isNotObtainable"]
 
-def get_skill_id(skill: str) -> str:
-    skill_info = skills[skill["skillId"]]
-    return skill_info["iconId"] or skill_info["skillId"]
 
 for char_id, char_info in chars.items():
     if is_operator(char_info) and char_info["rarity"] > 1:
@@ -88,6 +94,7 @@ for char_id, char_info in chars.items():
         })
 
 
+
         if len(char_info["skills"]) > 1:
             for i, skill in enumerate(char_info["skills"], start=1):
                 upgrade_names = []
@@ -95,7 +102,7 @@ for char_id, char_info in chars.items():
                 skill_id = get_skill_id(skill)
                 if skill_id not in skill_ids and char_info["rarity"] > 2:
                     skill_ids.add(skill_id)
-                    icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/skills/skill_icon_{skill_id}.png"
+                    icon_url = f"https://raw.githubusercontent.com/Aceship/Arknight-Images/main/skills/skill_icon_{skill_id}.png"
                     utils.save_image(icon_url, "skills", skill_id)
     
                 for j, mastery in enumerate(skill["levelUpCostCond"], start=1):
@@ -116,7 +123,7 @@ for char_id, char_info in chars.items():
         for module_id in module_ids:
             upgrade_names = []
 
-            icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/equip/icon/{module_id}.png"
+            icon_url = f"https://raw.githubusercontent.com/Aceship/Arknight-Images/main/equip/icon/{module_id}.png"
             utils.save_image(icon_url, "modules", module_id)
 
             module_info = modules["equipDict"][module_id]
@@ -134,7 +141,7 @@ for char_id, char_info in chars.items():
 
 
 
-        icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/avatars/{char_id}.png"
+        icon_url = f"https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avatars/{char_id}.png"
         utils.save_image(icon_url, "operators", char_id)
 
         all_char_data.update({char_id: char_data})
