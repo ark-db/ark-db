@@ -6,7 +6,7 @@
     import RegionSelect from "./RegionSelect.svelte";
 
     let active = false;
-    let pageTitle = links.get($page.url.pathname);
+    $: pageTitle = links.get($page.url.pathname);
 
     const toggle = () => active = !active;
 </script>
