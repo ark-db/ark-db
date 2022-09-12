@@ -30,7 +30,7 @@
             <div class="top">
                 <OperatorIcon {charId} --size="60px" --border="0px" />
                 <div class="upgrade-desc">
-                    <h3>{charName}</h3>
+                    <h3>{charName ?? ""}</h3>
                     <p>{name}</p>
                 </div>
             </div>
