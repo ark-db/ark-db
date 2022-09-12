@@ -7,7 +7,11 @@
 
     const min = 0;
     const max = 999999;
-    let itemCounter = new Map();
+    let allCosts = [];
+    $: itemCounter = new Map(Object.entries(
+        allCosts.filter(({ id }) => $itemFilter.includes(items[id].type))
+                .reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
+    ));
 
     async function getCost({ charId, name }) {
         let res = await fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`);
@@ -17,13 +21,7 @@
     
     $: Promise.all($allSelected.filter(({ ready }) => $costFilter.includes(ready))
                                .map(upgrade => getCost(upgrade)))
-              .then(costs => {
-                    itemCounter = new Map(Object.entries(
-                        costs.flat()
-                             .filter(({ id }) => $itemFilter.includes(items[id].type))
-                             .reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
-                    ))
-              });
+              .then(costs => allCosts = costs.flat());
 
     const normalize = counter => Array.from(counter).map(([id, count]) => ({id, count}));
 
