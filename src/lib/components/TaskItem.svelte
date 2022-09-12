@@ -4,9 +4,10 @@
     import ItemIcon from "./ItemIcon.svelte";
     import deleteIcon from "../images/delete.svg";
 
-    export let showCost, charId, charName, name, ready, id;
+    export let showCost, charId, name, ready, id;
 
     id; // stops SvelteKit from complaining
+    let charName = "";
     let upgradeCost = [];
 
     onMount(async () => {
@@ -14,6 +15,12 @@
         let resData = await res.json();
         upgradeCost = resData;
     });
+
+    onMount(async () => {
+        let res = await fetch(`/api/operators?id=${charId}&categories=name`);
+        let resData = await res.json();
+        charName = resData.name;
+    })
 </script>
 
 
