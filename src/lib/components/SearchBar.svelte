@@ -7,7 +7,7 @@
     let data;
 
     async function getCharData(id) {
-        let res = await fetch(`/api/operators?id=${id}&categories=charId,upgrades`);
+        let res = await fetch(`/api/operators?id=${id}&categories=charId,name,upgrades`);
         let resData = await res.json();
         $selectedChar = resData;
     };

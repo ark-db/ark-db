@@ -32,6 +32,7 @@
             ...$allSelected,
             ...newNames.map(name => ({name,
                                       charId: $selectedChar.charId,
+                                      charName: $selectedChar.name,
                                       ready: false,
                                       id: orderId++})
             )
