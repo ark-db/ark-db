@@ -31,6 +31,7 @@ jobs:
         poetry run python scripts/farming.py
         poetry run python scripts/perma_shops.py
         poetry run python scripts/event_shops.py
+        poetry run python scripts/operators.py
     
     - name: Commit updates
       run: |
