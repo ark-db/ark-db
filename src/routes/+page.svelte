@@ -11,7 +11,7 @@
 
 <h1 class="title">ArkDB</h1>
 <h2>A utility website for Arknights players</h2>
-<p>v0.11.1</p>
+<p>v0.12.0</p>
 <a href="https://github.com/ark-db/ark-db/" target="_blank" rel="noreferrer">
     <img src={ghLogo} alt="GitHub logo">
 </a>
