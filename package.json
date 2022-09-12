@@ -8,7 +8,7 @@
 		"preview": "vite preview"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "next",
+		"@sveltejs/adapter-static": "^1.0.0-next.42",
 		"@sveltejs/kit": "next",
 		"svelte": "^3.50.1",
 		"svelte-dnd-action": "^0.9.19",
