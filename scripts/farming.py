@@ -270,3 +270,5 @@ with open("./scripts/msv.json", "w") as f:
 
 with open("./src/lib/data/farming.json", "w") as f:
     json.dump(all_farming_stages, f)
+
+print("Successfully updated farming data")
