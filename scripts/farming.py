@@ -140,6 +140,9 @@ drop_data = (
 stage_data = (
     pd.DataFrame(data=stages,
                  columns=["stageId", "code", "apCost"])
+      .merge(pd.DataFrame(data=stages,
+                          columns=["stageId", "stageType"]),
+             on="stageId")
       .set_index("stageId")
 )
 
@@ -263,7 +266,7 @@ for region in Region:
                     farming_stages_by_item[main_drop].append(
                         calc_drop_stats(stage, drop_rate)
                     )
-        elif main_drops == []:
+        elif stage.stageType == "ACTIVITY":
             stage_drops = curr_drop_data.loc[stage.stageId].dropna()
             for item_id, drop_rate in stage_drops.items():
                 if item_id in RECORDED_ITEMS and drop_rate > 0:
