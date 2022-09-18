@@ -29,3 +29,5 @@ with (open("./scripts/shop_data.json", "r") as f1,
     }
 
     json.dump(all_shop_data, f3)
+
+print("Successfully updated permanent shop data")
