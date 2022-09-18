@@ -110,6 +110,14 @@ def update_lmd_stages(df: pd.DataFrame, valid_stages: set[str]):
             df.at[stage_id, "lmd"] = lmd
     return df
 
+def calc_drop_stats(stage: tuple, drop_rate: float) -> dict[str, str|float]:
+    return {
+        "stage": stage.code,
+        "effic": round(stage.effic, 3),
+        "rate": round(drop_rate, 3),
+        "espd": round(stage.apCost / drop_rate, 2)
+    }
+
 
 
 drop_data = (
@@ -132,6 +140,9 @@ drop_data = (
 stage_data = (
     pd.DataFrame(data=stages,
                  columns=["stageId", "code", "apCost"])
+      .merge(pd.DataFrame(data=stages,
+                          columns=["stageId", "stageType"]),
+             on="stageId")
       .set_index("stageId")
 )
 
@@ -249,14 +260,19 @@ for region in Region:
     farming_stages_by_item = defaultdict(list)
 
     for stage in farming_stages.itertuples(index=False):
-        for main_drop in main_drops_by_stage[stage.stageId]:
-            if main_drop in RECORDED_ITEMS and (drop_rate := curr_drop_data.at[stage.stageId, main_drop]) > 0:
-                farming_stages_by_item[main_drop].append({
-                    "stage": stage.code,
-                    "effic": round(stage.effic, 3),
-                    "rate": round(drop_rate, 3),
-                    "espd": round(stage.apCost / drop_rate, 2)
-                })
+        if (main_drops := main_drops_by_stage[stage.stageId]):
+            for main_drop in main_drops:
+                if main_drop in RECORDED_ITEMS and (drop_rate := curr_drop_data.at[stage.stageId, main_drop]) > 0:
+                    farming_stages_by_item[main_drop].append(
+                        calc_drop_stats(stage, drop_rate)
+                    )
+        elif stage.stageType == "ACTIVITY":
+            stage_drops = curr_drop_data.loc[stage.stageId].dropna()
+            for item_id, drop_rate in stage_drops.items():
+                if item_id in RECORDED_ITEMS and drop_rate > 0:
+                    farming_stages_by_item[item_id].append(
+                        calc_drop_stats(stage, drop_rate)
+                    )
 
     all_farming_stages.update({
         region.name.lower(): [
