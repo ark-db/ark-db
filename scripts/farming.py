@@ -266,7 +266,7 @@ for region in Region:
         elif main_drops == []:
             stage_drops = curr_drop_data.loc[stage.stageId].dropna()
             for item_id, drop_rate in stage_drops.items():
-                if main_drop in RECORDED_ITEMS and drop_rate > 0:
+                if item_id in RECORDED_ITEMS and drop_rate > 0:
                     farming_stages_by_item[item_id].append(
                         calc_drop_stats(stage, drop_rate)
                     )
