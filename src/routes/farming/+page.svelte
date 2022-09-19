@@ -31,7 +31,7 @@
         <div class="item">
             <ItemIcon {id} --size="75px" />
             <div class="stages">
-                {#each sortStages(stages, $sortMode).slice(0, 4) as stage}
+                {#each sortStages(stages, $sortMode).slice(0, 3) as stage}
                     <FarmingStage {...stage} />
                 {/each}
             </div>
@@ -61,7 +61,7 @@
     .grid {
         margin: 2em 0;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(10em, 22.5em));
+        grid-template-columns: repeat(auto-fill, minmax(10em, 30em));
         justify-content: center;
         gap: 4em 1em;
     }
@@ -73,6 +73,6 @@
         margin-left: 1em;
         display: flex;
         flex-wrap: wrap;
-        gap: 1em 1.5em;
+        gap: 1em;
     }
 </style>
