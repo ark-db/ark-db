@@ -223,6 +223,6 @@ with open("./scripts/msv.json", "r") as f1, open("./src/lib/data/event_shops.jso
                 })
             break
 
-    json.dump(all_shop_effics, f2, ensure_ascii=False)
+    json.dump(all_shop_effics, f2)
 
 print("Successfully updated event shop data")
