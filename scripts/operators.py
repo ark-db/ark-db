@@ -177,3 +177,5 @@ with open("./src/lib/data/operators.json", "r+") as f:
 
 with open("./src/lib/data/operators.json", "w") as f:
     json.dump(existing_char_data, f)
+
+print("Successfully updated operator data")
