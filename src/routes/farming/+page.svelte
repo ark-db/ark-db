@@ -63,7 +63,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(10em, 22.5em));
         justify-content: center;
-        gap: 3em 1em;
+        gap: 4em 1em;
     }
     .item {
         display: flex;
@@ -73,6 +73,6 @@
         margin-left: 1em;
         display: flex;
         flex-wrap: wrap;
-        gap: 0.75em 1.5em;
+        gap: 1em 1.5em;
     }
 </style>
