@@ -73,6 +73,6 @@
         margin-left: 1em;
         display: flex;
         flex-wrap: wrap;
-        gap: 1em;
+        gap: 1.5em;
     }
 </style>
