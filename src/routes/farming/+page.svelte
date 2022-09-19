@@ -63,16 +63,16 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(10em, 30em));
         justify-content: center;
-        gap: 3em 1em;
+        gap: 4em 1em;
     }
     .item {
         display: flex;
         align-items: center;
     }
     .stages {
-        margin-left: 0.75em;
+        margin-left: 1em;
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5em 1.5em;
+        gap: 1.5em;
     }
 </style>

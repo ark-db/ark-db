@@ -49,7 +49,7 @@
         justify-content: center;
     }
     p {
-        margin: 0.25em;
-        font-size: 0.8em;
+        margin: 0.25em 0.1em;
+        font-size: 0.75em;
     }
 </style>
