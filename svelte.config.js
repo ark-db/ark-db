@@ -11,6 +11,7 @@ const config = {
 				"style-src": ["self", "https://rsms.me/inter/inter.css"],
 				"font-src": ["self", "https://rsms.me/inter/font-files/ *"],
 				"object-src": ["none"],
+				"frame-ancestors": ["none"],
 				"base-uri": ["none"],
 				"frame-ancestors": ["none"],
 				"form-action": ["none"],
