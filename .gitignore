@@ -2,7 +2,8 @@
 
 # JavaScript
 node_modules
-/.svelte-kit
+.svelte-kit
+.vercel
 /package
 .env
 .env.*
