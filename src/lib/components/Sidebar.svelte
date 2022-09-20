@@ -67,7 +67,7 @@
         box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.75);
     }
     .top {
-        padding: 1em 0.5em;
+        padding: 0.75em 0.5em 1em;
         display: flex;
         align-items: center;
         gap: 1em;
