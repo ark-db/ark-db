@@ -237,8 +237,8 @@
         flex-grow: 1;
     }
     .taskboard {
-        margin-top: 15px;
-        padding: 10px;
+        margin: 15px 10px 0;
+        padding: 7.5px;
         border: 1px solid var(--light-moderate);
         background-color: var(--dark-moderate);
         display: flex;
