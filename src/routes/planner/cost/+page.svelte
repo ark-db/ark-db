@@ -215,10 +215,7 @@
         gap: 10px;
     }
     .costs > div {
-        flex: 1 1 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        flex-grow: 1;
     }
     .items {
         margin-top: 25px;
