@@ -12,7 +12,7 @@
                     "value": "DENY"
                 },
                 {
-                    "key": "Referer",
+                    "key": "Referrer-Policy",
                     "value": "strict-origin-when-cross-origin"
                 }
             ]
