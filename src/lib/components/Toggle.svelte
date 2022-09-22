@@ -1,11 +1,11 @@
 <script>
-    export let toggled = false;
+    export let setting;
 </script>
 
 
 
 <label class="toggle">
-    <input type="checkbox" class="toggle-input" bind:checked={toggled}>
+    <input type="checkbox" class="toggle-input" bind:checked={$setting}>
     <span class="track">
         <span class="indicator">
             <span class="check">
