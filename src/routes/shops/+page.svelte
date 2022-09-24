@@ -27,6 +27,7 @@
     </label>
 </section>
 
+{#key $region}
 {#each ["ss", "cc"] as type}
     {@const eventName = eventShops.events[$region]?.[type]}
     {@const shopItems = eventShops.shops[$region]?.[type]}
@@ -41,6 +42,7 @@
         </section>
     {/if}
 {/each}
+{/key}
 
 {#each permaShops[$region] as shop}
     <section class="event">

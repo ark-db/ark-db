@@ -9,9 +9,17 @@
     $: pageTitle = links.get($page.url.pathname);
 
     const toggle = () => active = !active;
+
+    function handleKeydown(event) {
+        if (event.key === "Escape") {
+            active = false;
+        }
+    };
 </script>
 
 
+
+<svelte:window on:keydown={handleKeydown}/>
 
 {#if active}
     <div class="filter" on:click={toggle} transition:fly={{x: 100, duration: 150}} />
@@ -67,7 +75,7 @@
         box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.75);
     }
     .top {
-        padding: 1em 0.5em;
+        padding: 0.75em 0.5em 1em;
         display: flex;
         align-items: center;
         gap: 1em;

@@ -12,11 +12,6 @@ def convert_to_utc(df: pd.DataFrame):
     df["活动开始时间"] = df["活动开始时间"].dt.tz_localize("UTC")
     return df
 
-def get_name_of_latest(df: pd.DataFrame) -> str:
-    latest_event = df.iloc[0]
-    name = latest_event["name"].replace("·复刻", str(latest_event["活动开始时间"].year))
-    return name
-
 def get_cc_page_url(name: str):
     return f"https://prts.wiki/w/{quote('危机合约')}/{quote(name)}"
 
@@ -73,7 +68,7 @@ all_events = (
 )
 
 cn_to_en_event_name = {
-    event["label_i18n"]["zh"]: event["label_i18n"]["en"] for event in all_events
+    event["label_i18n"]["zh"].replace("・", "·"): event["label_i18n"]["en"] for event in all_events
 }
 
 cn_events = (
@@ -95,7 +90,7 @@ cc_events = (
 )
 
 ss_events = (
-    cn_events.pipe(lambda df: df[df["活动分类"].isin({"支线故事", "故事集"})])
+    cn_events.pipe(lambda df: df[df["活动分类"].str.contains(r"支线故事|故事集")])
              .reset_index(drop=True)
 )
 

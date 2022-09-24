@@ -210,15 +210,16 @@
     }
     .costs {
         display: flex;
-        flex-wrap: wrap;
         align-items: flex-start;
         gap: 10px;
     }
+    @media (max-width: 750px) {
+        .costs {
+            flex-wrap: wrap;
+        }
+    }
     .costs > div {
-        flex: 1 1 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        flex-basis: 100%;
     }
     .items {
         margin-top: 25px;
