@@ -8,10 +8,6 @@
     const min = 0;
     const max = 999999;
     let allCosts = [];
-    $: itemCounter = new Map(Object.entries(
-        allCosts.filter(({ id }) => $itemFilter.includes(items[id].type))
-                .reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
-    ));
 
     async function getCost({ charId, name }) {
         let res = await fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`);
@@ -22,6 +18,14 @@
     $: Promise.all($allSelected.filter(({ ready }) => $costFilter.includes(ready))
                                .map(upgrade => getCost(upgrade)))
               .then(costs => allCosts = costs.flat());
+
+    $: itemCounter = new Map(Object.entries(
+        allCosts.filter(({ id }) => $itemFilter.includes(items[id].type))
+                .reduce((prev, curr) => ({...prev, [curr.id]: curr.count + (prev[curr.id] ?? 0)}), {})
+    ));
+
+    $: costs = itemCounter.size > 0 ? sortItems(normalize($makeT3 ? convertToT3(itemCounter) : itemCounter)) : undefined;
+    $: deficits = itemCounter.size > 0 ? sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter)) : undefined;
 
     const normalize = counter => Array.from(counter).map(([id, count]) => ({id, count}));
 
@@ -142,12 +146,11 @@
     </label>
 </section>
 
-{#key [$makeT3, $costFilter, $itemFilter, $inventory]}
 <section class="costs">
     <div>
         <h1 class="title">Upgrade Costs</h1>
-        {#if itemCounter.size > 0}
-            {@const costs = sortItems(normalize($makeT3 ? convertToT3(itemCounter) : itemCounter))}
+        {#key costs}
+        {#if costs}
             <section class="items">
                 {#each costs as item}
                     <ItemIcon {...item} --size="100px" />
@@ -156,10 +159,11 @@
         {:else}
             <p class="placeholder">No upgrades found</p>
         {/if}
+        {/key}
     </div>
     
-    {#if itemCounter.size > 0}
-        {@const deficits = sortItems($makeT3 ? getDeficitsT3($inventory, itemCounter) : getDeficits($inventory, itemCounter))}
+    {#key deficits}
+    {#if deficits}
         <div>
             <h1 class="title">Item Deficits</h1>
             {#if deficits.length > 0}
@@ -173,8 +177,8 @@
             {/if}
         </div>
     {/if}
+    {/key}
 </section>
-{/key}
 
 <h1 class="title">Inventory</h1>
 <section class="content items inv">
