@@ -5,6 +5,7 @@
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import FarmingStage from "$lib/components/FarmingStage.svelte";
 
+    // by decreasing efficiency or increasing expected sanity per drop
     const sortStages = (stages, mode) => stages.sort((prev, curr) => (prev[mode] - curr[mode]) * (mode === "effic" ? -1 : 1));
 </script>
 
