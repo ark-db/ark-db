@@ -7,8 +7,9 @@ from bs4 import BeautifulSoup
 import unicodedata
 import re
 
+# for prts.wiki datetimes
 def convert_to_utc(df: pd.DataFrame):
-    df["活动开始时间"] -= pd.Timedelta(hours=8) # prts.wiki times are in Beijing Time
+    df["活动开始时间"] -= pd.Timedelta(hours=8)
     df["活动开始时间"] = df["活动开始时间"].dt.tz_localize("UTC")
     return df
 
@@ -24,7 +25,12 @@ def get_ss_page_url(name: str, year: int):
 
 def save_event_banner_img(soup: BeautifulSoup, name: str):
     event_banner_url = soup.select_one("img[alt*='活动预告']")["data-src"]
-    utils.save_image(f"https://prts.wiki{event_banner_url}", "events", name, overwrite=True)
+    utils.save_image(
+        f"https://prts.wiki{event_banner_url}", 
+        category="events",
+        image_id=name,
+        overwrite=True
+    )
 
 def get_shop_table(url: str) -> pd.DataFrame:
     shop = (
