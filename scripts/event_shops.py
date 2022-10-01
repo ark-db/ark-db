@@ -7,6 +7,10 @@ from bs4 import BeautifulSoup
 import unicodedata
 import re
 
+
+
+Effics = list[dict[str, str|int|float]]
+
 # for prts.wiki datetimes
 def convert_to_utc(df: pd.DataFrame):
     # prts.wiki uses Beijing Time
@@ -44,7 +48,7 @@ def get_shop_table(url: str) -> pd.DataFrame:
     )
     return shop
 
-def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> list[dict[str, str|int|float]]:
+def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> Effics:
     shop_effics = []
     for item in shop.itertuples(index=False):
         name, _, qty = item.可兑换道具.partition("×")
@@ -133,8 +137,8 @@ all_shop_effics = {
 
 
  
-with open("./scripts/msv.json", "r") as f1, \
-     open("./src/lib/data/event_shops.json", "w") as f2:
+with (open("./scripts/msv.json", "r") as f1,
+      open("./src/lib/data/event_shops.json", "w") as f2):
     sanity_values = json.load(f1)
 
     for ss in ss_events.itertuples():

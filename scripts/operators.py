@@ -4,6 +4,8 @@ import json
 from bs4 import BeautifulSoup
 from urllib.parse import quote
 
+
+
 chars = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/character_table.json")
             .json()
@@ -118,10 +120,10 @@ with open("./src/lib/data/operators.json", "r+") as f:
                     skill_id = get_skill_id(skill)
                     if  char_info["rarity"] > 2:
                         icon_url = f"https://raw.githubusercontent.com/Aceship/Arknight-Images/main/skills/skill_icon_{skill_id}.png"
-                        if not utils.save_image(icon_url, "skills", skill_id):
+                        if not utils.save_image(icon_url, category="skills", image_id=skill_id):
                             skill_name = skills[skill_id]["levels"][0]["name"]
                             icon_url = get_prts_image_src(soup, skill_name)
-                            if not utils.save_image(icon_url, "skills", skill_id):
+                            if not utils.save_image(icon_url, category="skills", image_id=skill_id):
                                 raise RuntimeError(f"Could not save image of skill with ID \"{skill_id}\"")
 
                     for j, mastery in enumerate(skill["levelUpCostCond"], start=1):
@@ -144,7 +146,7 @@ with open("./src/lib/data/operators.json", "r+") as f:
                 upgrade_names = []
 
                 icon_url = f"https://raw.githubusercontent.com/Aceship/Arknight-Images/main/equip/icon/{module_id}.png"
-                if not utils.save_image(icon_url, "modules", module_id):
+                if not utils.save_image(icon_url, category="modules", image_id=module_id):
                     module_name = module_info["uniEquipName"]
                     icon_url = get_prts_image_src(soup, module_name)
                     if not utils.save_image(icon_url, "modules", module_id):
@@ -166,9 +168,9 @@ with open("./src/lib/data/operators.json", "r+") as f:
 
 
             icon_url = f"https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avatars/{char_id}.png"
-            if not utils.save_image(icon_url, "operators", char_id):
+            if not utils.save_image(icon_url, category="operators", image_id=char_id):
                 icon_url = get_prts_image_src(char_soup, char_info["name"])
-                if not utils.save_image(icon_url, "operators", char_id):
+                if not utils.save_image(icon_url, category="operators", image_id=char_id):
                     raise RuntimeError(f"Could not save image of operator with ID \"{char_id}\"")
 
             existing_char_data.update({char_id: char_data})
