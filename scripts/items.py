@@ -47,7 +47,7 @@ for type, items in utils.VALID_ITEMS.items():
             item_data.update({"recipe": utils.format_cost(cost)})
 
         icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{item_info['iconId']}.png"
-        utils.save_image(icon_url, category="items", image_id=id)
+        utils.save_image(icon_url, category="items", name=id)
 
         all_item_data.update({id: item_data})
 
