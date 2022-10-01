@@ -4,13 +4,19 @@ from enum import Enum
 import pandas as pd
 from collections import defaultdict
 from scipy.optimize import linprog
-import numpy as np
+from numpy import zeros
 import json
 
+
+
 MIN_RUN_THRESHOLD = 100
+
 ALLOWED_ITEMS = utils.VALID_ITEMS["material"] | utils.VALID_ITEMS["skill"] | utils.VALID_ITEMS["misc"]
+
 BYPROD_RATE_BONUS = 1.8
-# EXP_DEVALUE_FACTOR = 0.8
+
+# hardcoded sanity values for some materials that don't drop in story stages
+# -1 in data represents unvalued item
 MISC_SANITY_VALUES = {
     "4003": -1,
     "7003": -1,
@@ -51,21 +57,34 @@ class Region(Enum):
     CN = "CN"
 
 def update_mat_relations(df: pd.DataFrame):
-    # relationships between exp cards + pure gold; base unit is Drill Battle Record (200 exp)
+    '''
+    Ties values of EXP cards and Pure Gold together.
+    The base unit is the Drill Battle Record (worth 200 EXP).
+    Value of Pure Gold = value of EXP that can be produced in the same amount of time as 1 Pure Gold
+    '''
     MAT_RELATIONS = {
         "2002": 2,
         "2003": 5,
         "2004": 10,
-        "3003": 2, # value of pure gold = value of exp produced in factory for the same duration as 1 pure gold
+        "3003": 2,
     }
+
     for item_id, count in MAT_RELATIONS.items():
         df.at[(item_id, 1), "2001"] = count
+
     return df
 
 def fill_diagonal(df: pd.DataFrame):
-    # adds recipes' outcome quantities to the recipe matrix
-    for item_id, count in zip(df.index.get_level_values("itemId"), df.index.get_level_values("count")):
+    '''
+    Adds recipes' yield quantities to the recipe matrix.
+    Sort of like manipulating elements of the main diagonal of a square matrix
+    '''
+    product_ids = df.index.get_level_values("itemId")
+    recipe_yields = df.index.get_level_values("count")
+
+    for item_id, count in zip(product_ids, recipe_yields):
         df.at[item_id, item_id] = count
+
     return df
 
 def get_stage_ids(region: Region) -> set[str]:
@@ -74,10 +93,13 @@ def get_stage_ids(region: Region) -> set[str]:
                 .json()
                 ["matrix"]
     )
+
     current_stage_ids = set(
+        item["stageId"] for item in current_drops
         # GT (a001) and OF (a003) event stage IDs don't start with "act"
-        item["stageId"] for item in current_drops if item["stageId"].startswith(("main", "sub", "wk", "act", "a001", "a003"))
+        if item["stageId"].startswith(("main", "sub", "wk", "act", "a001", "a003"))
     )
+
     return current_stage_ids
 
 def update_lmd_stages(df: pd.DataFrame, valid_stages: set[str]):
@@ -105,9 +127,11 @@ def update_lmd_stages(df: pd.DataFrame, valid_stages: set[str]):
         "main_09-01": 2700,
         "main_10-07": 3480, # same as tough_10-07
     }
+
     for stage_id, lmd in LMD_STAGES.items():
         if stage_id in valid_stages:
             df.at[stage_id, "lmd"] = lmd
+
     return df
 
 def calc_drop_stats(stage: tuple, drop_rate: float) -> dict[str, str|float]:
@@ -130,7 +154,7 @@ drop_data = (
              columns="itemId",
              values="drop_rate")
       .fillna(0)
-      # below: combine "tough" and "normal" stage drop data (for ch.10+)
+      # combine drop data from "tough" and "normal" stage difficulties (for ch.10+)
       .assign(norm_id = lambda df: df.index.str.replace("tough", "main"))
       .groupby("norm_id")
       .mean()
@@ -139,14 +163,12 @@ drop_data = (
 
 stage_data = (
     pd.DataFrame(data=stages,
-                 columns=["stageId", "code", "apCost"])
-      .merge(pd.DataFrame(data=stages,
-                          columns=["stageId", "stageType"]),
-             on="stageId")
+                 columns=["stageId", "code", "apCost", "stageType"])
       .set_index("stageId")
 )
 
-# handle entries for non-stages and things without drop info
+# handle entries that aren't stages or don't have drop info so that they can be
+# processed by json_normalize() without throwing an error
 for stage in stages:
     if (not stage.get("dropInfos")) or stage["stageId"] == "recruit":
         stage.update({"dropInfos": []})
@@ -155,7 +177,8 @@ main_drops = (
     pd.json_normalize(data=stages,
                       record_path="dropInfos",
                       meta="stageId")
-      .pipe(lambda df: df[df["dropType"] == "NORMAL_DROP"]) # NORMAL_DROP = main drop of a stage
+      # "NORMAL_DROP" = main drop of a stage
+      .pipe(lambda df: df[df["dropType"] == "NORMAL_DROP"])
       .filter(["stageId", "itemId"])
       .pipe(lambda df: df[~df["itemId"].isna()])
 )
@@ -192,8 +215,8 @@ byprod_value_matrix = (
       .pipe(lambda df: df[df["itemId"].isin(ALLOWED_ITEMS)])
       .assign(total_weight = lambda df: df.groupby("itemId")
                                           ["byprod_weight"]
-                                          .transform("sum"))
-      .assign(byprod_value = lambda df: BYPROD_RATE_BONUS *
+                                          .transform("sum"),
+              byprod_value = lambda df: BYPROD_RATE_BONUS *
                                         df["extraOutcomeRate"] *
                                         df["byprod_weight"] /
                                         df["total_weight"])
@@ -204,8 +227,13 @@ byprod_value_matrix = (
                columns=ALLOWED_ITEMS)
 )
 
-item_rel_matrix = recipe_matrix.to_numpy(na_value=0) + byprod_value_matrix.to_numpy(na_value=0)
-num_rows, _ = item_rel_matrix.shape
+# Each row of this matrix describes a relationship between an item's value
+# and other items' values. The relationships are derived from workshop recipes.
+# value of item = value of ingredients + (LMD cost * value of LMD) - (byproduct rate * weighted avg. of byproduct values)
+# V(item) - Σ V(ing) - n_lmd * V(lmd) + R * avg(byp) = 0
+# In the linear programming problem, A_eq = this matrix; b_eq = vector of 0s
+item_rel_matrix = recipe_matrix.to_numpy(na_value=0) \
+                  + byprod_value_matrix.to_numpy(na_value=0)
 
 
 
@@ -217,7 +245,7 @@ for region in Region:
 
     curr_drop_data = (
         drop_data.pipe(lambda df: df[df.index.isin(valid_stage_ids)])
-                 .assign(lmd = stage_data["apCost"] * 12) # implicit reindexing of stage_data
+                 .assign(lmd = stage_data["apCost"] * 12)
                  .pipe(update_lmd_stages, valid_stage_ids)
                  .rename(columns={"lmd": "4001"})
                  .reindex(columns=ALLOWED_ITEMS)
@@ -232,22 +260,29 @@ for region in Region:
 
     drop_matrix = curr_drop_data.to_numpy(na_value=0)
 
+    # The assumption behind Moe's calculations is that the "sanity return"
+    # of a stage cannot be greater than the sanity cost. So, the vector of all
+    # stage sanity costs is b_ub.
+    # sanity return = item drop rates @ item sanity values, so drop_matrix is A_ub.
+    # The goal is to maximize the total sanity return of all stages. Therefore,
+    # the objective function (c) to maximize is the column-wise sum of drop_matrix.
+    # linprog() minimizes, so the additive inverse is used instead.
     sanity_values = (
         linprog(-drop_matrix.sum(axis=0),
                 drop_matrix,
                 sanity_cost_vec,
                 item_rel_matrix,
-                np.zeros(num_rows))
+                zeros(item_rel_matrix.shape[0]))
         .x
     )
 
     all_sanity_values.update({
         region.name.lower(): {
-            item_id: sanity_value for item_id, sanity_value in zip(ALLOWED_ITEMS, sanity_values)
+            item: value for item, value in zip(ALLOWED_ITEMS, sanity_values)
         } | MISC_SANITY_VALUES
     })
 
-    stage_effics = (drop_matrix.dot(sanity_values) - sanity_cost_vec) / sanity_cost_vec + 1
+    stage_effics = drop_matrix @ sanity_values / sanity_cost_vec
 
     farming_stages = (
         pd.DataFrame(data=stage_effics,
@@ -261,16 +296,18 @@ for region in Region:
 
     for stage in farming_stages.itertuples(index=False):
         if (main_drops := main_drops_by_stage[stage.stageId]):
-            for main_drop in main_drops:
-                if main_drop in RECORDED_ITEMS and (drop_rate := curr_drop_data.at[stage.stageId, main_drop]) > 0:
-                    farming_stages_by_item[main_drop].append(
+            for item in main_drops:
+                if item in RECORDED_ITEMS \
+                   and (drop_rate := curr_drop_data.at[stage.stageId, item]) > 0:
+                    farming_stages_by_item[item].append(
                         calc_drop_stats(stage, drop_rate)
                     )
+        # sometimes Penguin Statistics doesn't list main drops of event stages
         elif stage.stageType == "ACTIVITY":
             stage_drops = curr_drop_data.loc[stage.stageId].dropna()
-            for item_id, drop_rate in stage_drops.items():
-                if item_id in RECORDED_ITEMS and drop_rate > 0:
-                    farming_stages_by_item[item_id].append(
+            for item, drop_rate in stage_drops.items():
+                if item in RECORDED_ITEMS and drop_rate > 0:
+                    farming_stages_by_item[item].append(
                         calc_drop_stats(stage, drop_rate)
                     )
 

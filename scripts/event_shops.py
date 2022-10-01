@@ -9,8 +9,8 @@ import re
 
 # for prts.wiki datetimes
 def convert_to_utc(df: pd.DataFrame):
-    df["活动开始时间"] -= pd.Timedelta(hours=8)
-    df["活动开始时间"] = df["活动开始时间"].dt.tz_localize("UTC")
+    # prts.wiki uses Beijing Time
+    df["活动开始时间"] = (df["活动开始时间"] - pd.Timedelta(hours=8)).dt.tz_localize("UTC")
     return df
 
 def get_cc_page_url(name: str):
