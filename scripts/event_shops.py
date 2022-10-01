@@ -32,7 +32,7 @@ def save_event_banner_img(soup: BeautifulSoup, name: str):
     utils.save_image(
         f"https://prts.wiki{event_banner_url}", 
         category="events",
-        image_id=name,
+        name=name,
         overwrite=True
     )
 
