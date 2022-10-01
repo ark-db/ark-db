@@ -41,7 +41,7 @@
         $selectedChar = {};
     };
 
-    function remove(upgrade) {
+    const remove = upgrade => {
         $allSelected = $allSelected.filter(up => !(up.charId === upgrade.charId
                                                    && up.name === upgrade.name));
         updateStoredUpgrades($allSelected);
@@ -60,11 +60,11 @@
 		}
 	});
 
-    function handleDnd(event) {
+    const handleDnd = event => {
         $allSelected = event.detail.items;
     };
 
-    function handleDndFinal(event) {
+    const handleDndFinal = event => {
         $allSelected = event.detail.items;
         updateStoredUpgrades($allSelected);
     };

@@ -3,6 +3,8 @@ import requests
 from PIL import Image
 from io import BytesIO
 
+
+
 Cost = list[dict[str, str|int] | None]
 
 VALID_ITEMS = {
@@ -34,9 +36,8 @@ VALID_ITEMS = {
     "other": {
         "4005", "4004", "REP_COIN", "EPGS_COIN", # green, yellow, intell. cert.; param. model
         "SOCIAL_PT", # friend credit
-        "4003", "7003", #"7004", # orundum; 1x, 10x headhunting permit
-        "7001", #"7002", # rec. permit; expedited plan
-        #"voucher_recruitR3_1", "voucher_recruitR4_1", # 3*, 4* rec. vouchers
+        "4003", "7003", # orundum; 1x headhunting permit
+        "7001", # rec. permit
         "3401", # furniture part
     }
 }
@@ -46,8 +47,8 @@ def format_cost(cost: Cost) -> Cost:
         return [{k: v for k, v in mat.items() if k != "type"} for mat in cost]
     return []
 
-def save_image(url: str, category: str, image_id: str, overwrite=False):
-    target_path = Path(f"./static/images/{category}/{image_id}.webp")
+def save_image(url: str, category: str, name: str, overwrite: bool = False) -> bool:
+    target_path = Path(f"./static/images/{category}/{name}.webp")
     if target_path.is_file() and not overwrite:
         return True
     elif (res := requests.get(url)):
