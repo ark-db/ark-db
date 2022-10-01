@@ -2,6 +2,8 @@ import utils
 import requests
 import json
 
+
+
 EXCLUDED_RECIPES = (
     "3211", "3221", "3231", "3241", "3251", "3261", "3271", "3281",
     "3212", "3222", "3232", "3242", "3252", "3262", "3272", "3282",
@@ -45,7 +47,7 @@ for type, items in utils.VALID_ITEMS.items():
             item_data.update({"recipe": utils.format_cost(cost)})
 
         icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{item_info['iconId']}.png"
-        utils.save_image(icon_url, "items", id)
+        utils.save_image(icon_url, category="items", image_id=id)
 
         all_item_data.update({id: item_data})
 

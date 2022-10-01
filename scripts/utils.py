@@ -3,6 +3,8 @@ import requests
 from PIL import Image
 from io import BytesIO
 
+
+
 Cost = list[dict[str, str|int] | None]
 
 VALID_ITEMS = {
@@ -36,7 +38,6 @@ VALID_ITEMS = {
         "SOCIAL_PT", # friend credit
         "4003", "7003", #"7004", # orundum; 1x, 10x headhunting permit
         "7001", #"7002", # rec. permit; expedited plan
-        #"voucher_recruitR3_1", "voucher_recruitR4_1", # 3*, 4* rec. vouchers
         "3401", # furniture part
     }
 }
