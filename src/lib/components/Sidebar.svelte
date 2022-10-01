@@ -10,10 +10,8 @@
 
     const toggle = () => active = !active;
 
-    function handleKeydown(event) {
-        if (event.key === "Escape") {
-            active = false;
-        }
+    const handleKeydown = event => {
+        if (event.key === "Escape") active = false;
     };
 </script>
 
@@ -33,7 +31,10 @@
         <div class="divider" />
         <nav>
             {#each [...links.entries()] as [ href, title ]}
-			    <a {href} class:active={href === "/" ? $page.url.pathname === href : $page.url.pathname.startsWith(href)} on:click={toggle}>
+			    <a {href}
+                   class:active={href === "/" ? $page.url.pathname === href : $page.url.pathname.startsWith(href)}
+                   on:click={toggle}
+                >
 				    {title}
 			    </a>
 		    {/each}
