@@ -33,7 +33,7 @@
         const itemCounts = new Map();
         
         function convert(id, count) {
-            const { rarity, recipe = undefined } = items[id];
+            const { rarity, recipe } = items[id];
             if (rarity === 2) {
                 itemCounts.set(id, (itemCounts.get(id) ?? 0) + count);
             } else if (rarity > 2 && recipe) {
@@ -63,7 +63,7 @@
         function searchForDeficits(id, qtyNeeded) {
             stock.set(id, stock.get(id) - qtyNeeded);
             if (stock.get(id) < 0) {
-                const { rarity, recipe = undefined } = items[id];
+                const { rarity, recipe } = items[id];
                 if (rarity > 2 && recipe) {
                     recipe.forEach(({ id: matId, count }) => searchForDeficits(matId, -stock.get(id)*count));
                     stock.set(id, 0);
@@ -74,7 +74,7 @@
         };
 
         function patchDeficits(itemId) {
-            const { recipe = undefined } = items[itemId];
+            const { recipe } = items[itemId];
             if (recipe) {
                 let minCraftable = Infinity;
                 for (const { id, count } of recipe) {
@@ -92,6 +92,7 @@
         }
 
         Array.from(deficits)
+             .filter(id => items[id].rarity < 3)
              .sort((prev, curr) => items[prev].rarity - items[curr].rarity)
              .forEach(id => patchDeficits(id));
         

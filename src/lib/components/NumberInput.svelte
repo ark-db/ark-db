@@ -8,13 +8,9 @@
 
     $: error = value == null || value > max || value < min;
 
-    function updateValue(direction) {
-        value = Math.max(min, Math.min(value + direction, max));
-    };
+    const updateValue = step => value = Math.max(min, Math.min(value + step, max));
 
-    function parse(raw) {
-        return raw != "" ? Number(raw) : null;
-    };
+    const parse = raw => raw != "" ? Number(raw) : null;
 </script>
 
 
