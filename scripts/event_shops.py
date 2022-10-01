@@ -12,25 +12,25 @@ import re
 Effics = list[dict[str, str|int|float]]
 
 # for prts.wiki datetimes
-def convert_to_utc(df: pd.DataFrame):
+def convert_to_utc(df: pd.DataFrame) -> pd.DataFrame:
     # prts.wiki uses Beijing Time
     df["活动开始时间"] = (df["活动开始时间"] - pd.Timedelta(hours=8)).dt.tz_localize("UTC")
     return df
 
-def get_cc_page_url(name: str):
+def get_cc_page_url(name: str) -> str:
     return f"https://prts.wiki/w/{quote('危机合约')}/{quote(name)}"
 
-def remove_punctuation(text: str):
+def remove_punctuation(text: str) -> str:
     return "".join(ch for ch in text if unicodedata.category(ch)[0] != "P")
 
-def get_ss_page_url(name: str, year: int):
+def get_ss_page_url(name: str, year: int) -> str:
     formatted_name = remove_punctuation(name.replace("·复刻", str(year)))
     return f"https://prts.wiki/w/{quote(formatted_name)}"
 
-def save_event_banner_img(soup: BeautifulSoup, name: str):
-    event_banner_url = soup.select_one("img[alt*='活动预告']")["data-src"]
+def save_banner_img(soup: BeautifulSoup, name: str) -> None:
+    banner_url = soup.select_one("img[alt*='活动预告']")["data-src"]
     utils.save_image(
-        f"https://prts.wiki{event_banner_url}", 
+        f"https://prts.wiki{banner_url}", 
         category="events",
         name=name,
         overwrite=True
@@ -176,7 +176,7 @@ with (open("./scripts/msv.json", "r") as f1,
 
             # if event hasn't ended already
             if end_time_utc > pd.Timestamp.utcnow():
-                save_event_banner_img(prts_soup, "cn_ss_banner")
+                save_banner_img(prts_soup, "cn_ss_banner")
 
                 cn_ss_shop = get_shop_table(page_url)
                 all_shop_effics["shops"]["cn"].update({
@@ -193,7 +193,7 @@ with (open("./scripts/msv.json", "r") as f1,
                 soup = BeautifulSoup(requests.get(page_url)
                                              .text,
                                      "lxml")
-                save_event_banner_img(soup, "glb_ss_banner")
+                save_banner_img(soup, "glb_ss_banner")
 
                 en_ss_shop = get_shop_table(page_url)
                 all_shop_effics["shops"]["glb"].update({
@@ -234,7 +234,7 @@ with (open("./scripts/msv.json", "r") as f1,
 
             # if event hasn't ended already
             if end_time_utc > pd.Timestamp.utcnow():
-                save_event_banner_img(soup, "cn_cc_banner")
+                save_banner_img(soup, "cn_cc_banner")
 
                 cn_cc_shop = get_shop_table(page_url)
                 all_shop_effics["shops"]["cn"].update({
@@ -248,7 +248,7 @@ with (open("./scripts/msv.json", "r") as f1,
         if not en_cc_event.empty:
             # if event hasn't ended already
             if en_cc_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
-                save_event_banner_img(soup, "glb_cc_banner")
+                save_banner_img(soup, "glb_cc_banner")
 
                 en_cc_shop = get_shop_table(page_url)
                 all_shop_effics["shops"]["glb"].update({
