@@ -56,11 +56,11 @@ class Region(Enum):
     GLB = "US"
     CN = "CN"
 
-def update_mat_relations(df: pd.DataFrame):
+def update_mat_relations(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Ties values of EXP cards and Pure Gold together.
     The base unit is the Drill Battle Record (worth 200 EXP).
-    Value of Pure Gold = value of EXP that can be produced in the same amount of time as 1 Pure Gold
+    value of Pure Gold = value of EXP that can be produced in the same amount of time as 1 Pure Gold
     '''
     MAT_RELATIONS = {
         "2002": 2,
@@ -74,7 +74,7 @@ def update_mat_relations(df: pd.DataFrame):
 
     return df
 
-def fill_diagonal(df: pd.DataFrame):
+def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Adds recipes' yield quantities to the recipe matrix.
     Sort of like manipulating elements of the main diagonal of a square matrix
@@ -102,7 +102,7 @@ def get_stage_ids(region: Region) -> set[str]:
 
     return current_stage_ids
 
-def update_lmd_stages(df: pd.DataFrame, valid_stages: set[str]):
+def update_lmd_stages(df: pd.DataFrame, valid_stages: set[str]) -> pd.DataFrame:
     LMD_STAGES = {
         "wk_melee_1": 1700,
         "wk_melee_2": 2800,

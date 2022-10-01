@@ -35,7 +35,7 @@ elite_lmd_costs = (
 
 
 
-def is_operator(char_info: dict[str, str|list]):
+def is_operator(char_info: dict[str, str|list]) -> bool:
     return char_info["profession"] != "TOKEN" \
            and char_info["profession"] != "TRAP" \
            and not char_info["isNotObtainable"]
@@ -44,7 +44,7 @@ def get_skill_id(skill: str) -> str:
     skill_info = skills[skill["skillId"]]
     return skill_info["iconId"] or skill_info["skillId"]
 
-def get_prts_image_src(soup: BeautifulSoup, search_text: str):
+def get_prts_image_src(soup: BeautifulSoup, search_text: str) -> str:
     img_url = soup.select_one(f"img[alt*='{search_text}']")["data-src"]
     return f"https://prts.wiki{img_url}"
 
