@@ -47,7 +47,7 @@ def format_cost(cost: Cost) -> Cost:
         return [{k: v for k, v in mat.items() if k != "type"} for mat in cost]
     return []
 
-def save_image(url: str, category: str, name: str, overwrite=False) -> bool:
+def save_image(url: str, category: str, name: str, overwrite: bool = False) -> bool:
     target_path = Path(f"./static/images/{category}/{name}.webp")
     if target_path.is_file() and not overwrite:
         return True
