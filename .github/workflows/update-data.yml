@@ -2,6 +2,9 @@ name: Update site data
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - "main"
   schedule:
     - cron: "0 16 * * *"
 
@@ -28,10 +31,11 @@ jobs:
     
     - name: Run scripts
       run: |
-        poetry run python scripts/farming.py
-        poetry run python scripts/perma_shops.py
-        poetry run python scripts/event_shops.py
-        poetry run python scripts/operators.py
+        cd scripts
+        poetry run python farming.py
+        poetry run python perma_shops.py
+        poetry run python event_shops.py
+        poetry run python operators.py
     
     - name: Commit updates
       run: |
