@@ -2,6 +2,7 @@
     import { region, sortMode } from "@stores";
     import { sortItems } from "@utils";
     import farming from "$lib/data/farming.json";
+    import HeadTags from "$lib/components/HeadTags.svelte";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import FarmingStage from "$lib/components/FarmingStage.svelte";
 
@@ -11,12 +12,10 @@
 
 
 
-<svelte:head>
-    <title>Farming Stages</title>
-    <meta property="og:title" content="Farming Stages">
-    <meta name="description" content="A list of the best Arknights farming stages for materials, with stage efficiencies, drop rates, and expected sanity costs.">
-    <meta property="og:description" content="A list of the best Arknights farming stages for materials, with stage efficiencies, drop rates, and expected sanity costs.">
-</svelte:head>
+<HeadTags
+    title={"Farming Stages"}
+    desc={"A list of the best Arknights farming stages for materials, with stage efficiencies, drop rates, and expected sanity costs."}
+/>
 
 <section class="content settings">
     <label>

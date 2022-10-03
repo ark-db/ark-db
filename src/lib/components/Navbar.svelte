@@ -4,7 +4,9 @@
 	import RegionSelect from "./RegionSelect.svelte";
 </script>
 
-
+<svelte:head>
+	<meta property="og:url" content={`https://${location.hostname}${$page.url.pathname}`}>
+</svelte:head>
 
 <header>
     <a href="/">

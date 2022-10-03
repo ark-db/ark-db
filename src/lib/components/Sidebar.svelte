@@ -17,6 +17,10 @@
 
 
 
+<svelte:head>
+	<meta property="og:url" content={`https://${location.hostname}${$page.url.pathname}`}>
+</svelte:head>
+
 <svelte:window on:keydown={handleKeydown}/>
 
 {#if active}

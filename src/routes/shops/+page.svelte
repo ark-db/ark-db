@@ -3,6 +3,7 @@
     import { region, normalizeValues } from "@stores";
     import eventShops from "$lib/data/event_shops.json";
     import permaShops from "$lib/data/perma_shops.json";
+    import HeadTags from "$lib/components/HeadTags.svelte";
     import ShopItems from "$lib/components/ShopItems.svelte";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
 
@@ -15,12 +16,10 @@
 
 
 
-<svelte:head>
-    <title>Shop Efficiencies</title>
-    <meta property="og:title" content="Shop Efficiencies">
-    <meta name="description" content="A list of item efficiencies of certificate and current event shops.">
-    <meta property="og:description" content="A list of item efficiencies of certificate and current event shops.">
-</svelte:head>
+<HeadTags
+    title={"Shop Efficiencies"}
+    desc={"A list of item efficiencies of certificate and current event shops."}
+/>
 
 <section class="content settings">
     <label>
