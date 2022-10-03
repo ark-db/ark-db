@@ -4,6 +4,7 @@
     import { dndzone } from "svelte-dnd-action";
 	import { crossfade } from "svelte/transition";
     import { selectedChar, activeCategory, allSelected, updateStoredUpgrades, splitByStatus, showCost } from "@stores";
+    import HeadTags from "$lib/components/HeadTags.svelte";
     import SearchBar from "$lib/components/SearchBar.svelte";
     import OperatorIcon from "$lib/components/OperatorIcon.svelte";
     import UpgradeSeries from "$lib/components/UpgradeSeries.svelte";
@@ -72,12 +73,10 @@
 
 
 
-<svelte:head>
-    <title>Upgrade Planner</title>
-    <meta property="og:title" content="Upgrade Planner">
-    <meta name="description" content="An Arknights operator upgrade planner.">
-    <meta property="og:description" content="An Arknights operator upgrade planner.">
-</svelte:head>
+<HeadTags
+    title={"Upgrade Planner"}
+    desc={"An Arknights operator upgrade planner."}
+/>
 
 <svelte:window bind:innerWidth={innerWidth} />
 
