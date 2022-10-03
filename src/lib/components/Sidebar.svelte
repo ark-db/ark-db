@@ -1,4 +1,5 @@
 <script>
+    import { browser } from "$app/environment";
     import { page } from "$app/stores";
     import { fly } from "svelte/transition";
     import { links } from "@utils";
@@ -16,6 +17,12 @@
 </script>
 
 
+
+<svelte:head>
+    {#if browser}
+	    <meta property="og:url" content={`https://${location.hostname}${$page.url.pathname}`}>
+    {/if}
+</svelte:head>
 
 <svelte:window on:keydown={handleKeydown}/>
 

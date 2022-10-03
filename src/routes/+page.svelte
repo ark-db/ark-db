@@ -1,13 +1,14 @@
 <script>
+    import HeadTags from "$lib/components/HeadTags.svelte";
     import ghLogo from "$lib/images/github-logo.svg";
 </script>
 
 
 
-<svelte:head>
-    <title>ArkDB - Arknights Tools</title>
-    <meta name="description" content="Utility website for Arknights players">
-</svelte:head>
+<HeadTags
+    title={"ArkDB"}
+    desc={"Utility website for Arknights players"}
+/>
 
 <h1 class="title">ArkDB</h1>
 <h2>A utility website for Arknights players</h2>

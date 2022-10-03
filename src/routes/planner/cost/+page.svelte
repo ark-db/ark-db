@@ -2,6 +2,7 @@
     import { allSelected, inventory, costFilter, itemFilter, makeT3 } from "@stores";
     import { sortItems } from "@utils";
     import items from "$lib/data/items.json";
+    import HeadTags from "$lib/components/HeadTags.svelte";
     import ItemIcon from "$lib/components/ItemIcon.svelte";
     import NumberInput from "$lib/components/NumberInput.svelte";
 
@@ -102,10 +103,10 @@
 
 
 
-<svelte:head>
-    <title>Cost Calculator</title>
-    <meta name="description" content="A calculator for upgrade costs of operators in Arknights.">
-</svelte:head>
+<HeadTags
+    title={"Cost Calculator"}
+    desc={"A calculator for upgrade costs of operators in Arknights."}
+/>
 
 <section class="content settings">
     <div id="filter-status">
