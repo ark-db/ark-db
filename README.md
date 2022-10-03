@@ -1,6 +1,7 @@
 # ArkDB
 
 [![Update site data](https://github.com/ark-db/ark-db/actions/workflows/update-data.yml/badge.svg)](https://github.com/ark-db/ark-db/actions/workflows/update-data.yml)
+![GitHub release](https://img.shields.io/github/v/release/ark-db/ark-db?color=05B2DC&include_prereleases)
 
 ArkDB is a website of tools for Arknights. The project is currently in beta.
 
