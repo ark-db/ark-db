@@ -19,6 +19,7 @@
     <title>Shop Efficiencies</title>
     <meta property="og:title" content="Shop Efficiencies">
     <meta name="description" content="A list of item efficiencies of certificate and current event shops.">
+    <meta property="og:description" content="A list of item efficiencies of certificate and current event shops.">
 </svelte:head>
 
 <section class="content settings">

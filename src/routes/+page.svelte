@@ -8,6 +8,7 @@
     <title>ArkDB</title>
     <meta property="og:title" content="ArkDB">
     <meta name="description" content="Utility website for Arknights players">
+    <meta property="og:description" content="Utility website for Arknights players">
 </svelte:head>
 
 <h1 class="title">ArkDB</h1>
