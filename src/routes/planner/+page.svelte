@@ -76,6 +76,7 @@
     <title>Upgrade Planner</title>
     <meta property="og:title" content="Upgrade Planner">
     <meta name="description" content="An Arknights operator upgrade planner.">
+    <meta property="og:description" content="An Arknights operator upgrade planner.">
 </svelte:head>
 
 <svelte:window bind:innerWidth={innerWidth} />
