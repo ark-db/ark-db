@@ -104,6 +104,7 @@
 
 <svelte:head>
     <title>Cost Calculator</title>
+    <meta property="og:title" content="Cost Calculator">
     <meta name="description" content="A calculator for upgrade costs of operators in Arknights.">
 </svelte:head>
 
