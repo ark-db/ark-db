@@ -1,4 +1,5 @@
 import utils
+import en_scraper
 import requests
 import pandas as pd
 import json
@@ -6,6 +7,7 @@ from urllib.parse import quote # request URLs need to be encoded
 from bs4 import BeautifulSoup
 import unicodedata
 import re
+import dateparser
 
 
 
@@ -36,6 +38,12 @@ def save_banner_img(soup: BeautifulSoup, name: str) -> None:
         overwrite=True
     )
 
+def remove_multiindex(df: pd.DataFrame) -> pd.DataFrame:
+    if df.columns.nlevels > 1:
+        return df.droplevel([i for i in range(1, df.columns.nlevels)],
+                            axis=1)
+    return df
+
 def get_shop_table(url: str) -> pd.DataFrame:
     shop = (
         pd.read_html(url,
@@ -44,6 +52,7 @@ def get_shop_table(url: str) -> pd.DataFrame:
           # remove column of checkboxes and row of total item costs
           .iloc[:-1, 1:]
           # remove shop section divider rows
+          .pipe(remove_multiindex)
           .pipe(lambda df: df[df["单价"].str.isdecimal()])
     )
     return shop
@@ -66,6 +75,9 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> Effics:
             })
     return shop_effics
 
+def condense_str(text: str) -> str:
+    return remove_punctuation(text).replace(" ", "").lower()
+
 
 
 cn_items = (
@@ -82,8 +94,7 @@ all_events = (
 )
 
 cn_to_en_event_name = {
-    # the dot symbols prts.wiki and Penguin Stats use for rerun event names are different
-    event["label_i18n"]["zh"].replace("・", "·"): event["label_i18n"]["en"] for event in all_events
+    condense_str(event["label_i18n"]["zh"]): event["label_i18n"]["en"] for event in all_events
 }
 
 cn_events = (
@@ -110,16 +121,6 @@ ss_events = (
              .reset_index(drop=True)
 )
 
-en_events = (
-    pd.read_html(requests.get("https://gamepress.gg/arknights/other/event-and-campaign-list")
-                         .text)
-      [0]
-      # parse Gamepress' datetime format and convert to UTC
-      .assign(end_time = lambda df: (pd.to_datetime(df["Period"].str.partition(" ~ ")[2])
-                                     + pd.Timedelta(hours=10, minutes=59))
-                                    .dt.tz_localize("UTC"))
-)
-
 event_period_regex = re.compile("活动时间|关卡开放时间", flags=re.U)
 
 cc_start_regex = re.compile("赛季开启时间", flags=re.U)
@@ -141,16 +142,14 @@ with (open("./scripts/msv.json", "r") as f1,
       open("./src/lib/data/event_shops.json", "w") as f2):
     sanity_values = json.load(f1)
 
+    foo = False
+    bar = False
+
     for ss in ss_events.itertuples():
+        if foo:
+            break
         page_url = get_ss_page_url(ss.name, ss.活动开始时间.year)
-        en_ss_name = cn_to_en_event_name[ss.name]
-        # this DataFrame will be empty if the event does not exist in global yet
-        en_ss_event = en_events.pipe(
-            lambda df: df[
-                df["Event / Campaign"].str.lower()
-                                      .str.contains(remove_punctuation(en_ss_name).lower())
-            ]
-        )
+        en_ss_name = cn_to_en_event_name[condense_str(ss.name)]
 
         # latest side-story event
         if ss.Index == 0:
@@ -187,26 +186,36 @@ with (open("./scripts/msv.json", "r") as f1,
                 })
 
         # if event exists in global
-        if not en_ss_event.empty:
-            # if event hasn't ended already
-            if en_ss_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
-                soup = BeautifulSoup(requests.get(page_url)
-                                             .text,
-                                     "lxml")
-                save_banner_img(soup, "glb_ss_banner")
+        search_str = condense_str(en_ss_name)
 
-                en_ss_shop = get_shop_table(page_url)
-                all_shop_effics["shops"]["glb"].update({
-                    "ss": get_shop_effics(en_ss_shop, sanity_values["glb"])
-                })
-                all_shop_effics["events"]["glb"].update({
-                    "ss": en_ss_name
-                })
-            # program will have found the latest global event by this point,
-            # so no need to keep looking
-            break
+        for news_title, news_url in en_scraper.events.items():
+            if search_str in condense_str(news_title):
+                foo = True
+                soup = en_scraper.get_soup(news_url)
+                event_period = (
+                    soup("strong", text=re.compile("DURATION:"))
+                    [0].parent.contents[1]
+                )
+                end_time = dateparser.parse(event_period.partition(" – ")[2])
+                # if event hasn't ended already
+                if pd.Timestamp(end_time) > pd.Timestamp.utcnow():
+                    soup = BeautifulSoup(requests.get(page_url)
+                                                 .text,
+                                         "lxml")
+                    save_banner_img(soup, "glb_ss_banner")
+
+                    en_ss_shop = get_shop_table(page_url)
+                    all_shop_effics["shops"]["glb"].update({
+                        "ss": get_shop_effics(en_ss_shop, sanity_values["glb"])
+                    })
+                    all_shop_effics["events"]["glb"].update({
+                        "ss": en_ss_name
+                    })
+                break
 
     for cc in cc_events.itertuples():
+        if bar:
+            break
         page_url = get_cc_page_url(cc.name)
         soup = BeautifulSoup(requests.get(page_url)
                                      .text,
@@ -214,9 +223,6 @@ with (open("./scripts/msv.json", "r") as f1,
         en_cc_name = (
             soup.select_one("td > .nodesktop")
                 .text
-        )
-        en_cc_event = en_events.pipe(
-            lambda df: df[df["Event / Campaign"].str.contains(en_cc_name)]
         )
 
         # latest Contingency Contract event
@@ -244,22 +250,30 @@ with (open("./scripts/msv.json", "r") as f1,
                     "cc": en_cc_name
                 })
 
-        # if event exists in global
-        if not en_cc_event.empty:
-            # if event hasn't ended already
-            if en_cc_event.iloc[0]["end_time"] > pd.Timestamp.utcnow():
-                save_banner_img(soup, "glb_cc_banner")
+        search_str = condense_str(en_cc_name)
 
-                en_cc_shop = get_shop_table(page_url)
-                all_shop_effics["shops"]["glb"].update({
-                    "cc": get_shop_effics(en_cc_shop, sanity_values["glb"])
-                })
-                all_shop_effics["events"]["glb"].update({
-                    "cc": en_cc_name
-                })
-            # program will have found the latest global event by this point,
-            # so no need to keep looking
-            break
+        for news_title, news_url in en_scraper.events.items():
+            if search_str in condense_str(news_title):
+                bar = True
+                soup = en_scraper.get_soup(news_url)
+                event_period = (
+                    soup("strong", text="DURATION:")
+                    [0].parent.contents[1]
+                )
+                end_time = dateparser.parse(event_period.partition(" – ")[2])
+                # if event hasn't ended already
+
+                if pd.Timestamp(end_time) > pd.Timestamp.utcnow():
+                    save_banner_img(soup, "glb_cc_banner")
+
+                    en_cc_shop = get_shop_table(page_url)
+                    all_shop_effics["shops"]["glb"].update({
+                        "cc": get_shop_effics(en_cc_shop, sanity_values["glb"])
+                    })
+                    all_shop_effics["events"]["glb"].update({
+                        "cc": en_cc_name
+                    })
+                break
 
     json.dump(all_shop_effics, f2)
 
