@@ -1,6 +1,6 @@
 {
-	"name": "ark-db",
-	"version": "0.13.1",
+	"private": true,
+	"license": "AGPL-3.0-or-later",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
