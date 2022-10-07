@@ -61,9 +61,9 @@ def remove_multiindex(df: pd.DataFrame) -> pd.DataFrame:
                             axis=1)
     return df
 
-def get_shop_table(url: str) -> pd.DataFrame:
+def get_shop_table(soup: BeautifulSoup) -> pd.DataFrame:
     shop = (
-        pd.read_html(url,
+        pd.read_html(str(soup),
                      match="可兑换道具")
           [0]
           # remove column of checkboxes and row of total item costs
@@ -112,7 +112,7 @@ def update_en_data(prts_url: str, event_name: str, event_type: str) -> bool:
                                              .text,
                                      "lxml")
                 save_banner_img(soup, f"glb_{event_type}_banner")
-                shop_table = get_shop_table(prts_url)
+                shop_table = get_shop_table(soup)
                 all_shop_effics["shops"]["glb"].update({
                     event_type: get_shop_effics(shop_table, sanity_values["glb"])
                 })
@@ -201,7 +201,7 @@ with (open("./scripts/msv.json", "r") as f1,
             if end_time_utc > pd.Timestamp.utcnow():
                 save_banner_img(prts_soup, "cn_ss_banner")
 
-                cn_ss_shop = get_shop_table(page_url)
+                cn_ss_shop = get_shop_table(prts_soup)
                 all_shop_effics["shops"]["cn"].update({
                     "ss": get_shop_effics(cn_ss_shop, sanity_values["cn"]) 
                 })
@@ -241,7 +241,7 @@ with (open("./scripts/msv.json", "r") as f1,
             if end_time_utc > pd.Timestamp.utcnow():
                 save_banner_img(soup, "cn_cc_banner")
 
-                cn_cc_shop = get_shop_table(page_url)
+                cn_cc_shop = get_shop_table(soup)
                 all_shop_effics["shops"]["cn"].update({
                     "cc": get_shop_effics(cn_cc_shop, sanity_values["cn"])
                 })
