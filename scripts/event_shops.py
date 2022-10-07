@@ -30,13 +30,9 @@ all_shop_effics = {
 
 
 
-# for prts.wiki datetimes
-def convert_to_utc(df: pd.DataFrame) -> pd.DataFrame:
-    df["活动开始时间"] = df["活动开始时间"].dt.tz_localize("Asia/Shanghai").dt.tz_convert("UTC")
+def add_cn_timezone(df: pd.DataFrame) -> pd.DataFrame:
+    df["活动开始时间"] = df["活动开始时间"].dt.tz_localize("Asia/Shanghai")
     return df
-
-def get_cc_page_url(name: str) -> str:
-    return f"https://prts.wiki/w/{quote('危机合约')}/{quote(name)}"
 
 def remove_punctuation(text: str) -> str:
     return "".join(ch for ch in text if unicodedata.category(ch)[0] != "P")
@@ -44,6 +40,9 @@ def remove_punctuation(text: str) -> str:
 def get_ss_page_url(name: str, year: int) -> str:
     formatted_name = remove_punctuation(name.replace("·复刻", str(year)))
     return f"https://prts.wiki/w/{quote(formatted_name)}"
+
+def get_cc_page_url(name: str) -> str:
+    return f"https://prts.wiki/w/{quote('危机合约')}/{quote(name)}"
 
 def get_cn_event_end_time(period: str) -> pd.Timestamp:
     return (
@@ -108,17 +107,21 @@ def update_en_data(prts_url: str, event_name: str, event_type: str) -> bool:
     for news_title, news_url in en_scraper.events.items():
         if search_str in condense_str(news_title):
             soup = en_scraper.get_soup(news_url)
+
             event_period = (
                 soup("strong", text=en_period_regex)
                 [0].parent.contents[1]
             )
+
             end_time = dateparser.parse(event_period.partition(" – ")[2])
-            # if event hasn't ended already
+
             if pd.Timestamp(end_time) > pd.Timestamp.utcnow():
                 soup = BeautifulSoup(requests.get(prts_url)
                                              .text,
                                      "lxml")
+
                 save_banner_img(soup, f"glb_{event_type}_banner")
+
                 shop_table = get_shop_table(soup)
                 all_shop_effics["shops"]["glb"].update({
                     event_type: get_shop_effics(shop_table, sanity_values["glb"])
@@ -154,7 +157,7 @@ cn_events = (
                      parse_dates=["活动开始时间"])
           [:2],
         ignore_index=True)
-      .pipe(convert_to_utc)
+      .pipe(add_cn_timezone)
       .pipe(lambda df: df[df["活动开始时间"] < pd.Timestamp.utcnow()])
       # remove inlined JS in chips that appear next to latest events
       .assign(name = lambda df: df["活动页面"].str.partition("(")[0]
@@ -193,9 +196,9 @@ with (open("./scripts/msv.json", "r") as f1,
             )
 
             hg_soup = BeautifulSoup(requests.get(news_link)
-                                         .content
-                                         .decode("utf-8", "ignore"),
-                                 "lxml")
+                                            .content
+                                            .decode("utf-8", "ignore"),
+                                    "lxml")
             event_period = (
                 hg_soup("strong", text=cn_period_regex)
                        [0].parent.contents[1]
