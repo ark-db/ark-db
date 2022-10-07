@@ -18,16 +18,12 @@ cn_period_regex = re.compile("活动时间|关卡开放时间", flags=re.U)
 cc_start_regex = re.compile("赛季开启时间", flags=re.U)
 
 all_shop_effics = {
-    "shops": {
-        "glb": dict(),
-        "cn": dict()
-    },
-    "events": {
-        "glb": dict(),
-        "cn": dict()
+    category: {
+        region.name.lower(): dict()
+        for region in utils.Region
     }
+    for category in ("shops", "events")
 }
-
 
 
 def add_cn_timezone(df: pd.DataFrame) -> pd.DataFrame:
@@ -46,9 +42,8 @@ def get_cc_page_url(name: str) -> str:
 
 def get_cn_event_end_time(period: str) -> pd.Timestamp:
     return (
-        pd.to_datetime(
-            str(pd.Timestamp.now().year) + "年" + period.partition(" - ")[2],
-                format="%Y年%m月%d日 %H:%M")
+        pd.to_datetime(str(pd.Timestamp.now().year) + "年" + period.partition(" - ")[2],
+                       format="%Y年%m月%d日 %H:%M")
           .tz_localize("Asia/Shanghai")
     )
 
@@ -101,6 +96,17 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> Effics:
 def condense_str(text: str) -> str:
     return remove_punctuation(text).replace(" ", "").lower()
 
+def get_soup(url: str, parse_as_bytes: bool = False) -> BeautifulSoup:
+    if parse_as_bytes:
+        return BeautifulSoup(
+            requests.get(url).content.decode("utf-8", "ignore"),
+            "lxml"
+        )
+    return BeautifulSoup(
+        requests.get(url).text,
+        "lxml"
+    )
+
 def update_data(soup: BeautifulSoup, region: utils.Region, event_type: utils.Event, event_name: str) -> None:
     region = region.name.lower()
     event_type = event_type.value
@@ -121,20 +127,17 @@ def update_en_data(prts_url: str, event_name: str, event_type: utils.Event) -> b
     for news_title, news_url in en_scraper.events.items():
         if search_str in condense_str(news_title):
             soup = en_scraper.get_soup(news_url)
-
             event_period = (
                 soup("strong", text=en_period_regex)
                 [0].parent.contents[1]
             )
-
             end_time = dateparser.parse(event_period.partition(" – ")[2])
 
             if pd.Timestamp(end_time) > pd.Timestamp.utcnow():
-                soup = BeautifulSoup(requests.get(prts_url)
-                                             .text,
-                                     "lxml")
-                update_data(soup, utils.Region.GLB, event_type, event_name)
+                update_data(get_soup(prts_url), utils.Region.GLB, event_type, event_name)
+
             return True
+
     return False
 
 
@@ -192,22 +195,18 @@ with (open("./scripts/msv.json", "r") as f1,
 
         # latest Side Story event
         if ss.Index == 0:
-            prts_soup = BeautifulSoup(requests.get(page_url)
-                                              .text,
-                                      "lxml")
+            prts_soup = get_soup(page_url)
             news_link = (
                 prts_soup.select_one("a[href*='https://ak.hypergryph.com/news/']")
                          ["href"]
             )
-            hg_soup = BeautifulSoup(requests.get(news_link)
-                                            .content
-                                            .decode("utf-8", "ignore"),
-                                    "lxml")
+            hg_soup = get_soup(news_link, parse_as_bytes=True)
             event_period = (
                 hg_soup("strong", text=cn_period_regex)
                        [0].parent.contents[1]
                        .rstrip()
             )
+
             if get_cn_event_end_time(event_period) > pd.Timestamp.utcnow():
                 update_data(prts_soup, utils.Region.CN, utils.Event.SS, en_name)
 
@@ -216,9 +215,7 @@ with (open("./scripts/msv.json", "r") as f1,
 
     for cc in cc_events.itertuples():
         page_url = get_cc_page_url(cc.name)
-        soup = BeautifulSoup(requests.get(page_url)
-                                     .text,
-                             "lxml")
+        soup = get_soup(page_url)
         en_name = (
             soup.select_one("td > .nodesktop")
                 .text
@@ -231,6 +228,7 @@ with (open("./scripts/msv.json", "r") as f1,
                     [0].parent.contents[1]
                     .rstrip()
             )
+
             if get_cn_event_end_time(event_period) > pd.Timestamp.utcnow():
                 update_data(soup, utils.Region.CN, utils.Event.CC, en_name)
 
