@@ -1,6 +1,5 @@
 import utils
 import requests
-from enum import Enum
 import pandas as pd
 from collections import defaultdict
 from scipy.optimize import linprog
@@ -52,9 +51,7 @@ stages = (
 
 
 
-class Region(Enum):
-    GLB = "US"
-    CN = "CN"
+
 
 def update_mat_relations(df: pd.DataFrame) -> pd.DataFrame:
     '''
@@ -87,7 +84,7 @@ def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
-def get_stage_ids(region: Region) -> set[str]:
+def get_stage_ids(region: utils.Region) -> set[str]:
     current_drops = (
         requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region.value}")
                 .json()
@@ -240,7 +237,7 @@ item_rel_matrix = recipe_matrix.to_numpy(na_value=0) \
 all_sanity_values = dict()
 all_farming_stages = dict()
 
-for region in Region:
+for region in utils.Region:
     valid_stage_ids = get_stage_ids(region)
 
     curr_drop_data = (
