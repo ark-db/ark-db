@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "ark-db"
-version = "0.13.1"
+version = "0.14.0"
 description = "Updates ark-db data"
 authors = ["astral4 <88992929+astral4@users.noreply.github.com>"]
-license = "GNU General Public License v3.0"
+license = "AGPL-3.0-or-later"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
@@ -15,6 +15,9 @@ scipy = "^1.9.1"
 beautifulsoup4 = "^4.11.1"
 lxml = "^4.9.1"
 html5lib = "^1.1"
+selenium = "^4.5.0"
+webdriver-manager = "^3.8.3"
+dateparser = "^1.1.1"
 
 [tool.poetry.dev-dependencies]
 
