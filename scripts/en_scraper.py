@@ -1,5 +1,6 @@
 import os
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,12 +8,19 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.firefox import GeckoDriverManager
 from bs4 import BeautifulSoup
 
+
+
 BASE_URL = "https://arknights.global"
 
 os.environ['WDM_LOCAL'] = '1'
 
+options = Options()
+options.add_argument("--headless")
+options.add_argument("--disable-gpu")
+
 driver = webdriver.Firefox(
-    service=Service(GeckoDriverManager(path="./").install())
+    service=Service(GeckoDriverManager(path="./").install()),
+    options=options
 )
 
 wait = WebDriverWait(driver, 10)
