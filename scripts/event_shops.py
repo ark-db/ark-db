@@ -173,7 +173,7 @@ with (open("./scripts/msv.json", "r") as f1,
 
     for ss in ss_events.itertuples():
         page_url = get_ss_page_url(ss.name, ss.活动开始时间.year)
-        en_ss_name = cn_to_en_event_name[condense_str(ss.name)]
+        en_name = cn_to_en_event_name[condense_str(ss.name)]
 
         # latest side-story event
         if ss.Index == 0:
@@ -201,16 +201,16 @@ with (open("./scripts/msv.json", "r") as f1,
             if end_time_utc > pd.Timestamp.utcnow():
                 save_banner_img(prts_soup, "cn_ss_banner")
 
-                cn_ss_shop = get_shop_table(prts_soup)
+                shop_table = get_shop_table(prts_soup)
                 all_shop_effics["shops"]["cn"].update({
-                    "ss": get_shop_effics(cn_ss_shop, sanity_values["cn"]) 
+                    "ss": get_shop_effics(shop_table, sanity_values["cn"]) 
                 })
                 all_shop_effics["events"]["cn"].update({
-                    "ss": en_ss_name
+                    "ss": en_name
                 })
 
         if update_en_data(prts_url=page_url, 
-                          event_name=en_ss_name,
+                          event_name=en_name,
                           event_type="ss"):
             break
 
@@ -219,7 +219,7 @@ with (open("./scripts/msv.json", "r") as f1,
         soup = BeautifulSoup(requests.get(page_url)
                                      .text,
                              "lxml")
-        en_cc_name = (
+        en_name = (
             soup.select_one("td > .nodesktop")
                 .text
         )
@@ -241,16 +241,16 @@ with (open("./scripts/msv.json", "r") as f1,
             if end_time_utc > pd.Timestamp.utcnow():
                 save_banner_img(soup, "cn_cc_banner")
 
-                cn_cc_shop = get_shop_table(soup)
+                shop_table = get_shop_table(soup)
                 all_shop_effics["shops"]["cn"].update({
-                    "cc": get_shop_effics(cn_cc_shop, sanity_values["cn"])
+                    "cc": get_shop_effics(shop_table, sanity_values["cn"])
                 })
                 all_shop_effics["events"]["cn"].update({
-                    "cc": en_cc_name
+                    "cc": en_name
                 })
 
         if update_en_data(prts_url=page_url,
-                          event_name=en_cc_name,
+                          event_name=en_name,
                           event_type="cc"):
             break
 
