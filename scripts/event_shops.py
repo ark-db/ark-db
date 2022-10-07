@@ -78,6 +78,33 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> Effics:
 def condense_str(text: str) -> str:
     return remove_punctuation(text).replace(" ", "").lower()
 
+def update_en_data(prts_url: str, event_name: str, event_type: str) -> bool:
+    search_str = condense_str(event_name)
+
+    for news_title, news_url in en_scraper.events.items():
+        if search_str in condense_str(news_title):
+            soup = en_scraper.get_soup(news_url)
+            event_period = (
+                soup("strong", text=re.compile("DURATION:"))
+                [0].parent.contents[1]
+            )
+            end_time = dateparser.parse(event_period.partition(" – ")[2])
+            # if event hasn't ended already
+            if pd.Timestamp(end_time) > pd.Timestamp.utcnow():
+                soup = BeautifulSoup(requests.get(prts_url)
+                                             .text,
+                                     "lxml")
+                save_banner_img(soup, f"glb_{event_type}_banner")
+                shop_table = get_shop_table(prts_url)
+                all_shop_effics["shops"]["glb"].update({
+                    event_type: get_shop_effics(shop_table, sanity_values["glb"])
+                })
+                all_shop_effics["events"]["glb"].update({
+                    event_type: event_name
+                })
+            return True
+
+    return False
 
 
 cn_items = (
@@ -142,12 +169,7 @@ with (open("./scripts/msv.json", "r") as f1,
       open("./src/lib/data/event_shops.json", "w") as f2):
     sanity_values = json.load(f1)
 
-    foo = False
-    bar = False
-
     for ss in ss_events.itertuples():
-        if foo:
-            break
         page_url = get_ss_page_url(ss.name, ss.活动开始时间.year)
         en_ss_name = cn_to_en_event_name[condense_str(ss.name)]
 
@@ -185,37 +207,12 @@ with (open("./scripts/msv.json", "r") as f1,
                     "ss": en_ss_name
                 })
 
-        # if event exists in global
-        search_str = condense_str(en_ss_name)
-
-        for news_title, news_url in en_scraper.events.items():
-            if search_str in condense_str(news_title):
-                foo = True
-                soup = en_scraper.get_soup(news_url)
-                event_period = (
-                    soup("strong", text=re.compile("DURATION:"))
-                    [0].parent.contents[1]
-                )
-                end_time = dateparser.parse(event_period.partition(" – ")[2])
-                # if event hasn't ended already
-                if pd.Timestamp(end_time) > pd.Timestamp.utcnow():
-                    soup = BeautifulSoup(requests.get(page_url)
-                                                 .text,
-                                         "lxml")
-                    save_banner_img(soup, "glb_ss_banner")
-
-                    en_ss_shop = get_shop_table(page_url)
-                    all_shop_effics["shops"]["glb"].update({
-                        "ss": get_shop_effics(en_ss_shop, sanity_values["glb"])
-                    })
-                    all_shop_effics["events"]["glb"].update({
-                        "ss": en_ss_name
-                    })
-                break
+        if update_en_data(prts_url=page_url, 
+                          event_name=en_ss_name,
+                          event_type="ss"):
+            break
 
     for cc in cc_events.itertuples():
-        if bar:
-            break
         page_url = get_cc_page_url(cc.name)
         soup = BeautifulSoup(requests.get(page_url)
                                      .text,
@@ -250,31 +247,13 @@ with (open("./scripts/msv.json", "r") as f1,
                     "cc": en_cc_name
                 })
 
-        search_str = condense_str(en_cc_name)
-
-        for news_title, news_url in en_scraper.events.items():
-            if search_str in condense_str(news_title):
-                bar = True
-                soup = en_scraper.get_soup(news_url)
-                event_period = (
-                    soup("strong", text="DURATION:")
-                    [0].parent.contents[1]
-                )
-                end_time = dateparser.parse(event_period.partition(" – ")[2])
-                # if event hasn't ended already
-
-                if pd.Timestamp(end_time) > pd.Timestamp.utcnow():
-                    save_banner_img(soup, "glb_cc_banner")
-
-                    en_cc_shop = get_shop_table(page_url)
-                    all_shop_effics["shops"]["glb"].update({
-                        "cc": get_shop_effics(en_cc_shop, sanity_values["glb"])
-                    })
-                    all_shop_effics["events"]["glb"].update({
-                        "cc": en_cc_name
-                    })
-                break
+        if update_en_data(prts_url=page_url,
+                          event_name=en_cc_name,
+                          event_type="cc"):
+            break
 
     json.dump(all_shop_effics, f2)
+
+en_scraper.driver.close()
 
 print("Successfully updated event shop data")
