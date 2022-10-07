@@ -101,7 +101,21 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> Effics:
 def condense_str(text: str) -> str:
     return remove_punctuation(text).replace(" ", "").lower()
 
-def update_en_data(prts_url: str, event_name: str, event_type: str) -> bool:
+def update_data(soup: BeautifulSoup, region: utils.Region, event_type: utils.Event, event_name: str) -> None:
+    region = region.name.lower()
+    event_type = event_type.value
+
+    save_banner_img(soup, f"{region}_{event_type}_banner")
+
+    shop_table = get_shop_table(soup)
+    all_shop_effics["shops"][region].update({
+        event_type: get_shop_effics(shop_table, sanity_values[region])
+    })
+    all_shop_effics["events"][region].update({
+        event_type: event_name
+    })
+
+def update_en_data(prts_url: str, event_name: str, event_type: utils.Event) -> bool:
     search_str = condense_str(event_name)
 
     for news_title, news_url in en_scraper.events.items():
@@ -119,19 +133,10 @@ def update_en_data(prts_url: str, event_name: str, event_type: str) -> bool:
                 soup = BeautifulSoup(requests.get(prts_url)
                                              .text,
                                      "lxml")
-
-                save_banner_img(soup, f"glb_{event_type}_banner")
-
-                shop_table = get_shop_table(soup)
-                all_shop_effics["shops"]["glb"].update({
-                    event_type: get_shop_effics(shop_table, sanity_values["glb"])
-                })
-                all_shop_effics["events"]["glb"].update({
-                    event_type: event_name
-                })
+                update_data(soup, utils.Region.GLB, event_type, event_name)
             return True
-
     return False
+
 
 
 cn_items = (
@@ -185,7 +190,7 @@ with (open("./scripts/msv.json", "r") as f1,
         page_url = get_ss_page_url(ss.name, ss.活动开始时间.year)
         en_name = cn_to_en_event_name[condense_str(ss.name)]
 
-        # latest side-story event
+        # latest Side Story event
         if ss.Index == 0:
             prts_soup = BeautifulSoup(requests.get(page_url)
                                               .text,
@@ -194,7 +199,6 @@ with (open("./scripts/msv.json", "r") as f1,
                 prts_soup.select_one("a[href*='https://ak.hypergryph.com/news/']")
                          ["href"]
             )
-
             hg_soup = BeautifulSoup(requests.get(news_link)
                                             .content
                                             .decode("utf-8", "ignore"),
@@ -204,21 +208,10 @@ with (open("./scripts/msv.json", "r") as f1,
                        [0].parent.contents[1]
                        .rstrip()
             )
-
             if get_cn_event_end_time(event_period) > pd.Timestamp.utcnow():
-                save_banner_img(prts_soup, "cn_ss_banner")
+                update_data(prts_soup, utils.Region.CN, utils.Event.SS, en_name)
 
-                shop_table = get_shop_table(prts_soup)
-                all_shop_effics["shops"]["cn"].update({
-                    "ss": get_shop_effics(shop_table, sanity_values["cn"]) 
-                })
-                all_shop_effics["events"]["cn"].update({
-                    "ss": en_name
-                })
-
-        if update_en_data(prts_url=page_url, 
-                          event_name=en_name,
-                          event_type="ss"):
+        if update_en_data(page_url, en_name, utils.Event.SS):
             break
 
     for cc in cc_events.itertuples():
@@ -238,21 +231,10 @@ with (open("./scripts/msv.json", "r") as f1,
                     [0].parent.contents[1]
                     .rstrip()
             )
-
             if get_cn_event_end_time(event_period) > pd.Timestamp.utcnow():
-                save_banner_img(soup, "cn_cc_banner")
+                update_data(soup, utils.Region.CN, utils.Event.CC, en_name)
 
-                shop_table = get_shop_table(soup)
-                all_shop_effics["shops"]["cn"].update({
-                    "cc": get_shop_effics(shop_table, sanity_values["cn"])
-                })
-                all_shop_effics["events"]["cn"].update({
-                    "cc": en_name
-                })
-
-        if update_en_data(prts_url=page_url,
-                          event_name=en_name,
-                          event_type="cc"):
+        if update_en_data(page_url, en_name, utils.Event.CC):
             break
 
     json.dump(all_shop_effics, f2)
