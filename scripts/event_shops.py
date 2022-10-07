@@ -32,8 +32,7 @@ all_shop_effics = {
 
 # for prts.wiki datetimes
 def convert_to_utc(df: pd.DataFrame) -> pd.DataFrame:
-    # prts.wiki uses Beijing Time
-    df["活动开始时间"] = (df["活动开始时间"] - pd.Timedelta(hours=8)).dt.tz_localize("UTC")
+    df["活动开始时间"] = df["活动开始时间"].dt.tz_localize("Asia/Shanghai").dt.tz_convert("UTC")
     return df
 
 def get_cc_page_url(name: str) -> str:
@@ -191,11 +190,16 @@ with (open("./scripts/msv.json", "r") as f1,
                        [0].parent.contents[1]
                        .rstrip()
             )
+
             end_time = pd.to_datetime(
                 str(pd.Timestamp.now().year) + "年" + event_period.partition(" - ")[2],
                 format="%Y年%m月%d日 %H:%M"
             )
-            end_time_utc = (end_time - pd.Timedelta(hours=8)).tz_localize("UTC")
+
+            end_time_utc = (
+                end_time.tz_localize("Asia/Shanghai")
+                        .tz_convert("UTC")
+            )
 
             # if event hasn't ended already
             if end_time_utc > pd.Timestamp.utcnow():
@@ -231,11 +235,16 @@ with (open("./scripts/msv.json", "r") as f1,
                     [0].parent.contents[1]
                     .rstrip()
             )
+
             end_time = pd.to_datetime(
                 str(pd.Timestamp.now().year) + "年" + event_period.partition(" - ")[2],
                 format="%Y年%m月%d日 %H:%M"
-            )            
-            end_time_utc = (end_time - pd.Timedelta(hours=8)).tz_localize("UTC")
+            )         
+   
+            end_time_utc = (
+                end_time.tz_localize("Asia/Shanghai")
+                        .tz_convert("UTC")
+            )
 
             # if event hasn't ended already
             if end_time_utc > pd.Timestamp.utcnow():
