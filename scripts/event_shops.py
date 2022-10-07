@@ -13,6 +13,23 @@ import dateparser
 
 Effics = list[dict[str, str|int|float]]
 
+en_period_regex = re.compile("DURATION:")
+cn_period_regex = re.compile("活动时间|关卡开放时间", flags=re.U)
+cc_start_regex = re.compile("赛季开启时间", flags=re.U)
+
+all_shop_effics = {
+    "shops": {
+        "glb": dict(),
+        "cn": dict()
+    },
+    "events": {
+        "glb": dict(),
+        "cn": dict()
+    }
+}
+
+
+
 # for prts.wiki datetimes
 def convert_to_utc(df: pd.DataFrame) -> pd.DataFrame:
     # prts.wiki uses Beijing Time
@@ -85,7 +102,7 @@ def update_en_data(prts_url: str, event_name: str, event_type: str) -> bool:
         if search_str in condense_str(news_title):
             soup = en_scraper.get_soup(news_url)
             event_period = (
-                soup("strong", text=re.compile("DURATION:"))
+                soup("strong", text=en_period_regex)
                 [0].parent.contents[1]
             )
             end_time = dateparser.parse(event_period.partition(" – ")[2])
@@ -148,23 +165,8 @@ ss_events = (
              .reset_index(drop=True)
 )
 
-event_period_regex = re.compile("活动时间|关卡开放时间", flags=re.U)
-
-cc_start_regex = re.compile("赛季开启时间", flags=re.U)
-
-all_shop_effics = {
-    "shops": {
-        "glb": dict(),
-        "cn": dict()
-    },
-    "events": {
-        "glb": dict(),
-        "cn": dict()
-    }
-}
 
 
- 
 with (open("./scripts/msv.json", "r") as f1,
       open("./src/lib/data/event_shops.json", "w") as f2):
     sanity_values = json.load(f1)
@@ -185,7 +187,7 @@ with (open("./scripts/msv.json", "r") as f1,
                                          .decode("utf-8", "ignore"),
                                  "lxml")
             event_period = (
-                hg_soup("strong", text=event_period_regex)
+                hg_soup("strong", text=cn_period_regex)
                        [0].parent.contents[1]
                        .rstrip()
             )
