@@ -45,6 +45,14 @@ def get_ss_page_url(name: str, year: int) -> str:
     formatted_name = remove_punctuation(name.replace("·复刻", str(year)))
     return f"https://prts.wiki/w/{quote(formatted_name)}"
 
+def get_cn_event_end_time(period: str) -> pd.Timestamp:
+    return (
+        pd.to_datetime(
+            str(pd.Timestamp.now().year) + "年" + period.partition(" - ")[2],
+                format="%Y年%m月%d日 %H:%M")
+          .tz_localize("Asia/Shanghai")
+    )
+
 def save_banner_img(soup: BeautifulSoup, name: str) -> None:
     banner_url = soup.select_one("img[alt*='活动预告']")["data-src"]
     utils.save_image(
@@ -179,7 +187,10 @@ with (open("./scripts/msv.json", "r") as f1,
             prts_soup = BeautifulSoup(requests.get(page_url)
                                               .text,
                                       "lxml")
-            news_link = prts_soup.select_one("a[href*='https://ak.hypergryph.com/news/']")["href"]
+            news_link = (
+                prts_soup.select_one("a[href*='https://ak.hypergryph.com/news/']")
+                         ["href"]
+            )
 
             hg_soup = BeautifulSoup(requests.get(news_link)
                                          .content
@@ -191,18 +202,7 @@ with (open("./scripts/msv.json", "r") as f1,
                        .rstrip()
             )
 
-            end_time = pd.to_datetime(
-                str(pd.Timestamp.now().year) + "年" + event_period.partition(" - ")[2],
-                format="%Y年%m月%d日 %H:%M"
-            )
-
-            end_time_utc = (
-                end_time.tz_localize("Asia/Shanghai")
-                        .tz_convert("UTC")
-            )
-
-            # if event hasn't ended already
-            if end_time_utc > pd.Timestamp.utcnow():
+            if get_cn_event_end_time(event_period) > pd.Timestamp.utcnow():
                 save_banner_img(prts_soup, "cn_ss_banner")
 
                 shop_table = get_shop_table(prts_soup)
@@ -236,18 +236,7 @@ with (open("./scripts/msv.json", "r") as f1,
                     .rstrip()
             )
 
-            end_time = pd.to_datetime(
-                str(pd.Timestamp.now().year) + "年" + event_period.partition(" - ")[2],
-                format="%Y年%m月%d日 %H:%M"
-            )         
-   
-            end_time_utc = (
-                end_time.tz_localize("Asia/Shanghai")
-                        .tz_convert("UTC")
-            )
-
-            # if event hasn't ended already
-            if end_time_utc > pd.Timestamp.utcnow():
+            if get_cn_event_end_time(event_period) > pd.Timestamp.utcnow():
                 save_banner_img(soup, "cn_cc_banner")
 
                 shop_table = get_shop_table(soup)
