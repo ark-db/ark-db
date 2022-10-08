@@ -9,6 +9,7 @@
     const min = 0;
     const max = 999999;
     let allCosts = [];
+    const itemIconSize = 100;
 
     async function getCost({ charId, name }) {
         let res = await fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`);
@@ -155,7 +156,7 @@
         {#if costs}
             <section class="items">
                 {#each costs as item}
-                    <ItemIcon {...item} --size="100px" />
+                    <ItemIcon {...item} size={itemIconSize} />
                 {/each}
             </section>
         {:else}
@@ -171,7 +172,7 @@
             {#if deficits.length > 0}
                 <section class="items">
                     {#each deficits as item}
-                        <ItemIcon {...item} --size="100px" />
+                        <ItemIcon {...item} size={itemIconSize} />
                     {/each}
                 </section>
             {:else}
@@ -186,7 +187,7 @@
 <section class="content items inv">
     {#each $inventory as item}
         <div>
-            <ItemIcon {...item} --size="100px" />
+            <ItemIcon {...item} size={itemIconSize} />
             <NumberInput {min} {max} bind:value={item.count} />
         </div>
     {/each}

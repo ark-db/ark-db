@@ -7,13 +7,13 @@
     export let showCost, charId, charName, name, ready, id;
 
     id; // stops SvelteKit from complaining
+    const size = 60;
     let upgradeCost = [];
 
-    onMount(async () => {
-        let res = await fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`);
-        let resData = await res.json();
-        upgradeCost = resData;
-    });
+    onMount(async () => fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`)
+        .then(res => res.json())
+        .then(json => upgradeCost = json)
+    )
 </script>
 
 
@@ -23,7 +23,7 @@
         <input type="checkbox" bind:checked={ready}>
         <div class="info">
             <div class="top">
-                <OperatorIcon {charId} --size="60px" --border="0px" />
+                <OperatorIcon {charId} {size} />
                 <div class="upgrade-desc">
                     <h3>{charName}</h3>
                     <p>{name}</p>
@@ -32,7 +32,7 @@
             {#if $showCost}
                 <div class="cost">
                     {#each upgradeCost as item}
-                        <ItemIcon {...item} --size="60px" />
+                        <ItemIcon {...item} {size} />
                     {/each}
                 </div>
             {/if}

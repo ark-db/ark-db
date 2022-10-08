@@ -6,17 +6,16 @@
 
     let data;
 
+    onMount(async () => fetch("/api/operators?categories=charId,name")
+        .then(res => res.json())
+        .then(json => data = Object.values(json))
+    );
+
     async function getCharData(id) {
         let res = await fetch(`/api/operators?id=${id}&categories=charId,name,upgrades`);
         let resData = await res.json();
         $selectedChar = resData;
     };
-
-    onMount(async () => {
-        let res = await fetch("/api/operators?categories=charId,name");
-        let resData = await res.json();
-        data = Object.values(resData);
-    })
 
     const stripTags = str => str.replace(/(<([^>]+)>)/ig, "");
 </script>

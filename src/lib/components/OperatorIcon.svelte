@@ -2,20 +2,18 @@
     import { onMount } from "svelte";
     import { assets } from "$app/paths";
 
-    export let charId;
+    export let charId, size;
+    export let border = 0;
 
     const src = `${assets}/images/operators/${charId}.webp`;
     let name, rarity;
     
-    async function getCharData(id) {
-        let res = await fetch(`/api/operators?id=${id}&categories=name,rarity`);
-        let resData = await res.json();
-        return [resData.name, resData.rarity]
-    };
-
-    onMount(async () => {
-        [name, rarity] = await getCharData(charId);
-    })
+    onMount(async () => fetch(`/api/operators?id=${charId}&categories=name,rarity`)
+        .then(res => res.json())
+        .then(json => {
+            ({ name, rarity } = json);
+        })
+    );
 </script>
 
 
@@ -24,7 +22,10 @@
      {src}
      title={name}
      alt={name}
+     height={size}
+     width={size}
      loading="lazy"
+     style="--border:{border}px; --size:{size}px;"
 >
 
 
@@ -33,9 +34,10 @@
     img {
         border-width: var(--border);
         border-style: solid;
-        width: 100%;
+        width: auto;
+        height: auto;
         max-width: var(--size);
-        min-width: var(--size);
+        max-height: var(--size);
     }
     .\36 {
         border-color: #ed702d;
