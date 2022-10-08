@@ -1,5 +1,4 @@
 <script>
-    import { onMount } from "svelte";
     import { assets } from "$app/paths";
 
     export let charId, size;
@@ -8,15 +7,11 @@
     const src = `${assets}/images/operators/${charId}.webp`;
     let name, rarity;
     
-    async function getCharData(id) {
-        let res = await fetch(`/api/operators?id=${id}&categories=name,rarity`);
-        let resData = await res.json();
-        return [resData.name, resData.rarity]
-    };
-
-    onMount(async () => {
-        [name, rarity] = await getCharData(charId);
-    })
+    fetch(`/api/operators?id=${charId}&categories=name,rarity`)
+        .then(res => res.json())
+        .then(res => {
+            ({ name, rarity } = res);
+        });
 </script>
 
 
