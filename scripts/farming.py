@@ -126,7 +126,8 @@ def update_lmd_stages(df: pd.DataFrame) -> pd.DataFrame:
     }
 
     for stage_id, lmd in LMD_STAGES.items():
-        df.at[stage_id, "lmd"] = lmd
+        if stage_id in df.index:
+            df.at[stage_id, "lmd"] = lmd
 
     return df
 
