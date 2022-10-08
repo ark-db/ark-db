@@ -18,19 +18,16 @@ cn_period_regex = re.compile("活动时间|关卡开放时间", flags=re.U)
 cc_start_regex = re.compile("赛季开启时间", flags=re.U)
 
 all_shop_effics = {
-    "shops": {
-        "glb": dict(),
-        "cn": dict()
-    },
-    "events": {
-        "glb": dict(),
-        "cn": dict()
+    category: {
+        region.name.lower(): dict()
+        for region in utils.Region
     }
+    for category in ("shops", "events")
 }
 
 
 
-def add_cn_timezone(df: pd.DataFrame) -> pd.DataFrame:
+def set_cn_timezone(df: pd.DataFrame) -> pd.DataFrame:
     df["活动开始时间"] = df["活动开始时间"].dt.tz_localize("Asia/Shanghai")
     return df
 
@@ -46,9 +43,8 @@ def get_cc_page_url(name: str) -> str:
 
 def get_cn_event_end_time(period: str) -> pd.Timestamp:
     return (
-        pd.to_datetime(
-            str(pd.Timestamp.now().year) + "年" + period.partition(" - ")[2],
-                format="%Y年%m月%d日 %H:%M")
+        pd.to_datetime(str(pd.Timestamp.now().year) + "年" + period.partition(" - ")[2],
+                       format="%Y年%m月%d日 %H:%M")
           .tz_localize("Asia/Shanghai")
     )
 
@@ -101,37 +97,55 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> Effics:
 def condense_str(text: str) -> str:
     return remove_punctuation(text).replace(" ", "").lower()
 
-def update_en_data(prts_url: str, event_name: str, event_type: str) -> bool:
+def get_soup(url: str, parse_as_bytes: bool = False) -> BeautifulSoup:
+    if parse_as_bytes:
+        return BeautifulSoup(
+            requests.get(url).content.decode("utf-8", "ignore"),
+            "lxml"
+        )
+    return BeautifulSoup(
+        requests.get(url).text,
+        "lxml"
+    )
+
+def update_data(soup: BeautifulSoup, region: utils.Region, event_type: utils.Event, event_name: str) -> None:
+    region = region.name.lower()
+    event_type = event_type.value
+
+    save_banner_img(soup, f"{region}_{event_type}_banner")
+
+    shop_table = get_shop_table(soup)
+    all_shop_effics["shops"][region].update({
+        event_type: get_shop_effics(shop_table, sanity_values[region])
+    })
+    all_shop_effics["events"][region].update({
+        event_type: event_name
+    })
+
+def update_en_data(data: str|BeautifulSoup, event_type: utils.Event, event_name: str) -> bool:
     search_str = condense_str(event_name)
 
     for news_title, news_url in en_scraper.events.items():
         if search_str in condense_str(news_title):
             soup = en_scraper.get_soup(news_url)
-
             event_period = (
                 soup("strong", text=en_period_regex)
                 [0].parent.contents[1]
             )
-
             end_time = dateparser.parse(event_period.partition(" – ")[2])
 
             if pd.Timestamp(end_time) > pd.Timestamp.utcnow():
-                soup = BeautifulSoup(requests.get(prts_url)
-                                             .text,
-                                     "lxml")
+                update_data(
+                    data if isinstance(data, BeautifulSoup) else get_soup(data),
+                    utils.Region.GLB,
+                    event_type,
+                    event_name
+                )
 
-                save_banner_img(soup, f"glb_{event_type}_banner")
-
-                shop_table = get_shop_table(soup)
-                all_shop_effics["shops"]["glb"].update({
-                    event_type: get_shop_effics(shop_table, sanity_values["glb"])
-                })
-                all_shop_effics["events"]["glb"].update({
-                    event_type: event_name
-                })
             return True
 
     return False
+
 
 
 cn_items = (
@@ -152,12 +166,10 @@ cn_to_en_event_name = {
 }
 
 cn_events = (
-    pd.concat(
-        pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
-                     parse_dates=["活动开始时间"])
-          [:2],
-        ignore_index=True)
-      .pipe(add_cn_timezone)
+    pd.concat(pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
+                           parse_dates=["活动开始时间"])[:2],
+              ignore_index=True)
+      .pipe(set_cn_timezone)
       .pipe(lambda df: df[df["活动开始时间"] < pd.Timestamp.utcnow()])
       # remove inlined JS in chips that appear next to latest events
       .assign(name = lambda df: df["活动页面"].str.partition("(")[0]
@@ -185,20 +197,14 @@ with (open("./scripts/msv.json", "r") as f1,
         page_url = get_ss_page_url(ss.name, ss.活动开始时间.year)
         en_name = cn_to_en_event_name[condense_str(ss.name)]
 
-        # latest side-story event
+        # latest Side Story event
         if ss.Index == 0:
-            prts_soup = BeautifulSoup(requests.get(page_url)
-                                              .text,
-                                      "lxml")
+            prts_soup = get_soup(page_url)
             news_link = (
                 prts_soup.select_one("a[href*='https://ak.hypergryph.com/news/']")
                          ["href"]
             )
-
-            hg_soup = BeautifulSoup(requests.get(news_link)
-                                            .content
-                                            .decode("utf-8", "ignore"),
-                                    "lxml")
+            hg_soup = get_soup(news_link, parse_as_bytes=True)
             event_period = (
                 hg_soup("strong", text=cn_period_regex)
                        [0].parent.contents[1]
@@ -206,26 +212,14 @@ with (open("./scripts/msv.json", "r") as f1,
             )
 
             if get_cn_event_end_time(event_period) > pd.Timestamp.utcnow():
-                save_banner_img(prts_soup, "cn_ss_banner")
+                update_data(prts_soup, utils.Region.CN, utils.Event.SS, en_name)
 
-                shop_table = get_shop_table(prts_soup)
-                all_shop_effics["shops"]["cn"].update({
-                    "ss": get_shop_effics(shop_table, sanity_values["cn"]) 
-                })
-                all_shop_effics["events"]["cn"].update({
-                    "ss": en_name
-                })
-
-        if update_en_data(prts_url=page_url, 
-                          event_name=en_name,
-                          event_type="ss"):
+        if update_en_data(page_url, utils.Event.SS, en_name):
             break
 
     for cc in cc_events.itertuples():
         page_url = get_cc_page_url(cc.name)
-        soup = BeautifulSoup(requests.get(page_url)
-                                     .text,
-                             "lxml")
+        soup = get_soup(page_url)
         en_name = (
             soup.select_one("td > .nodesktop")
                 .text
@@ -240,19 +234,9 @@ with (open("./scripts/msv.json", "r") as f1,
             )
 
             if get_cn_event_end_time(event_period) > pd.Timestamp.utcnow():
-                save_banner_img(soup, "cn_cc_banner")
+                update_data(soup, utils.Region.CN, utils.Event.CC, en_name)
 
-                shop_table = get_shop_table(soup)
-                all_shop_effics["shops"]["cn"].update({
-                    "cc": get_shop_effics(shop_table, sanity_values["cn"])
-                })
-                all_shop_effics["events"]["cn"].update({
-                    "cc": en_name
-                })
-
-        if update_en_data(prts_url=page_url,
-                          event_name=en_name,
-                          event_type="cc"):
+        if update_en_data(soup, utils.Event.CC, en_name):
             break
 
     json.dump(all_shop_effics, f2)

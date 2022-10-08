@@ -1,3 +1,4 @@
+from enum import Enum
 from pathlib import Path
 import requests
 from PIL import Image
@@ -6,6 +7,14 @@ from io import BytesIO
 
 
 Cost = list[dict[str, str|int] | None]
+
+class Region(Enum):
+    GLB = "US"
+    CN = "CN"
+
+class Event(Enum):
+    SS = "ss"
+    CC = "cc"
 
 VALID_ITEMS = {
     "material": {
