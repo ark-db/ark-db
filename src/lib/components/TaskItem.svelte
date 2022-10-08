@@ -12,7 +12,7 @@
 
     onMount(async () => fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`)
         .then(res => res.json())
-        .then(res => upgradeCost = res)
+        .then(json => upgradeCost = json)
     )
 </script>
 
