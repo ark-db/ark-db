@@ -26,6 +26,7 @@ all_shop_effics = {
 }
 
 
+
 def add_cn_timezone(df: pd.DataFrame) -> pd.DataFrame:
     df["活动开始时间"] = df["活动开始时间"].dt.tz_localize("Asia/Shanghai")
     return df
@@ -121,7 +122,7 @@ def update_data(soup: BeautifulSoup, region: utils.Region, event_type: utils.Eve
         event_type: event_name
     })
 
-def update_en_data(prts_url: str, event_name: str, event_type: utils.Event) -> bool:
+def update_en_data(data: str|BeautifulSoup, event_type: utils.Event, event_name: str, soup_input: bool = False) -> bool:
     search_str = condense_str(event_name)
 
     for news_title, news_url in en_scraper.events.items():
@@ -134,7 +135,12 @@ def update_en_data(prts_url: str, event_name: str, event_type: utils.Event) -> b
             end_time = dateparser.parse(event_period.partition(" – ")[2])
 
             if pd.Timestamp(end_time) > pd.Timestamp.utcnow():
-                update_data(get_soup(prts_url), utils.Region.GLB, event_type, event_name)
+                update_data(
+                    data if soup_input else get_soup(data),
+                    utils.Region.GLB,
+                    event_type,
+                    event_name
+                )
 
             return True
 
@@ -160,11 +166,9 @@ cn_to_en_event_name = {
 }
 
 cn_events = (
-    pd.concat(
-        pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
-                     parse_dates=["活动开始时间"])
-          [:2],
-        ignore_index=True)
+    pd.concat(pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
+                           parse_dates=["活动开始时间"])[:2],
+              ignore_index=True)
       .pipe(add_cn_timezone)
       .pipe(lambda df: df[df["活动开始时间"] < pd.Timestamp.utcnow()])
       # remove inlined JS in chips that appear next to latest events
@@ -210,7 +214,7 @@ with (open("./scripts/msv.json", "r") as f1,
             if get_cn_event_end_time(event_period) > pd.Timestamp.utcnow():
                 update_data(prts_soup, utils.Region.CN, utils.Event.SS, en_name)
 
-        if update_en_data(page_url, en_name, utils.Event.SS):
+        if update_en_data(page_url, utils.Event.SS, en_name):
             break
 
     for cc in cc_events.itertuples():
@@ -232,7 +236,7 @@ with (open("./scripts/msv.json", "r") as f1,
             if get_cn_event_end_time(event_period) > pd.Timestamp.utcnow():
                 update_data(soup, utils.Region.CN, utils.Event.CC, en_name)
 
-        if update_en_data(page_url, en_name, utils.Event.CC):
+        if update_en_data(soup, utils.Event.CC, en_name, soup_input=True):
             break
 
     json.dump(all_shop_effics, f2)
