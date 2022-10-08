@@ -48,7 +48,7 @@
 {#each permaShops[$region] as shop}
     <section class="event">
         <div class="top">
-            <ItemIcon id={shop.currency} --size="100px"/>
+            <ItemIcon id={shop.currency} size={100}/>
             {#await getItemName(shop.currency) then name}
                 <h1 class="title">{name} Store</h1>
             {/await}

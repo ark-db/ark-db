@@ -2,7 +2,7 @@
     import { assets } from "$app/paths";
     import items from "../data/items.json";
 
-    export let id;
+    export let id, size;
     export let count = undefined;
 
     const itemSrc = `${assets}/images/items/${id}.webp`;
@@ -17,9 +17,9 @@
 
 
 
-<div>
-    <img src={bgSrc} alt="background" loading="lazy">
-    <img src={itemSrc} title={name} alt={name} loading="lazy">
+<div style="--size:{size}px;">
+    <img src={bgSrc} alt="background" width={size} loading="lazy">
+    <img src={itemSrc} title={name} alt={name} width={size} loading="lazy">
     {#if count !== undefined}
         <p class:neg={count < 0}>
             {compactNum.format(count)}
@@ -40,6 +40,7 @@
         place-self: center;
         width: auto;
         max-width: var(--size);
+        height: auto;
         max-height: var(--size);
     }
     p {

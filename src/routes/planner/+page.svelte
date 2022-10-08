@@ -98,7 +98,7 @@
 {#if $selectedChar?.charId !== undefined}
     <section class="content banner">
         <div>
-            <OperatorIcon charId={$selectedChar.charId} --size="100px" --border="7.5px" />
+            <OperatorIcon charId={$selectedChar.charId} size={100} border={7.5} />
             <h1>{$selectedChar.name}</h1>
         </div>
         {#if $activeCategory && innerWidth >= 800}

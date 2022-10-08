@@ -31,7 +31,7 @@
 <section class="grid">
     {#each sortItems(farming[$region]) as { id, stages }}
         <div class="item">
-            <ItemIcon {id} --size="75px" />
+            <ItemIcon {id} size={75} />
             <div class="stages">
                 {#each sortStages(stages, $sortMode).slice(0, 3) as stage}
                     <FarmingStage {...stage} />
