@@ -1,7 +1,5 @@
 import json
 
-
-
 with (open("./scripts/shop_data.json", "r") as f1,
       open("./scripts/msv.json", "r") as f2,
       open("./src/lib/data/perma_shops.json", "w") as f3):

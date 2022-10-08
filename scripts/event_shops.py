@@ -27,7 +27,7 @@ all_shop_effics = {
 
 
 
-def add_cn_timezone(df: pd.DataFrame) -> pd.DataFrame:
+def set_cn_timezone(df: pd.DataFrame) -> pd.DataFrame:
     df["活动开始时间"] = df["活动开始时间"].dt.tz_localize("Asia/Shanghai")
     return df
 
@@ -169,7 +169,7 @@ cn_events = (
     pd.concat(pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
                            parse_dates=["活动开始时间"])[:2],
               ignore_index=True)
-      .pipe(add_cn_timezone)
+      .pipe(set_cn_timezone)
       .pipe(lambda df: df[df["活动开始时间"] < pd.Timestamp.utcnow()])
       # remove inlined JS in chips that appear next to latest events
       .assign(name = lambda df: df["活动页面"].str.partition("(")[0]

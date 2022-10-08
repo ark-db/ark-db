@@ -19,7 +19,6 @@ driver = webdriver.Firefox(
     service=Service(GeckoDriverManager().install()),
     options=options
 )
-
 wait = WebDriverWait(driver, 10)
 
 driver.get(BASE_URL)
