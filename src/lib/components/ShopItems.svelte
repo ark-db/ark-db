@@ -3,6 +3,7 @@
     export let items, normalizeValues;
 
     let maxValue = Math.max(...items.map(item => item.value));
+    const size = 75;
 
     function categorize(score) {
         if (score < 0.5) return "poor";
@@ -19,7 +20,7 @@
     {#each items as { id, count, stock, value }}
         {@const effic = value / maxValue}
         <div class="item">
-            <ItemIcon {id} {count} --size="75px"/>
+            <ItemIcon {id} {count} {size} />
             {#if stock !== -2}
                 <p class="stock" title="Item stock">
                     {stock !== -1 ? stock : "∞"}
