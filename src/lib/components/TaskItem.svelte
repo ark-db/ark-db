@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from "svelte";
     import OperatorIcon from "./OperatorIcon.svelte";
     import ItemIcon from "./ItemIcon.svelte";
     import deleteIcon from "../images/delete.svg";
@@ -9,9 +10,10 @@
     const size = 60;
     let upgradeCost = [];
 
-    fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`)
+    onMount(async () => fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`)
         .then(res => res.json())
-        .then(res => upgradeCost = res);
+        .then(res => upgradeCost = res)
+    )
 </script>
 
 

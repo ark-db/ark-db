@@ -1,13 +1,15 @@
 <script>
+    import { onMount } from "svelte";
     import Typeahead from "svelte-typeahead";
 
     export let selectedChar;
 
     let data;
 
-    fetch("/api/operators?categories=charId,name")
+    onMount(async () => fetch("/api/operators?categories=charId,name")
         .then(res => res.json())
-        .then(res => data = Object.values(res));
+        .then(res => data = Object.values(res))
+    );
 
     async function getCharData(id) {
         let res = await fetch(`/api/operators?id=${id}&categories=charId,name,upgrades`);
