@@ -8,7 +8,7 @@
 
     onMount(async () => fetch("/api/operators?categories=charId,name")
         .then(res => res.json())
-        .then(res => data = Object.values(res))
+        .then(json => data = Object.values(json))
     );
 
     async function getCharData(id) {

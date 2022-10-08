@@ -10,8 +10,8 @@
     
     onMount(async () => fetch(`/api/operators?id=${charId}&categories=name,rarity`)
         .then(res => res.json())
-        .then(res => {
-            ({ name, rarity } = res);
+        .then(json => {
+            ({ name, rarity } = json);
         })
     );
 </script>
