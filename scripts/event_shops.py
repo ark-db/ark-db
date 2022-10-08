@@ -64,7 +64,7 @@ def remove_multiindex(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def get_shop_table(soup: BeautifulSoup) -> pd.DataFrame:
-    shop = (
+    return (
         pd.read_html(str(soup),
                      match="可兑换道具")
           [0]
@@ -74,7 +74,6 @@ def get_shop_table(soup: BeautifulSoup) -> pd.DataFrame:
           .pipe(remove_multiindex)
           .pipe(lambda df: df[df["单价"].str.isdecimal()])
     )
-    return shop
 
 def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> Effics:
     shop_effics = []
