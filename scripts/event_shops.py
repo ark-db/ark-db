@@ -122,7 +122,7 @@ def update_data(soup: BeautifulSoup, region: utils.Region, event_type: utils.Eve
         event_type: event_name
     })
 
-def update_en_data(data: str|BeautifulSoup, event_type: utils.Event, event_name: str, soup_input: bool = False) -> bool:
+def update_en_data(data: str|BeautifulSoup, event_type: utils.Event, event_name: str) -> bool:
     search_str = condense_str(event_name)
 
     for news_title, news_url in en_scraper.events.items():
@@ -136,7 +136,7 @@ def update_en_data(data: str|BeautifulSoup, event_type: utils.Event, event_name:
 
             if pd.Timestamp(end_time) > pd.Timestamp.utcnow():
                 update_data(
-                    data if soup_input else get_soup(data),
+                    data if isinstance(data, BeautifulSoup) else get_soup(data),
                     utils.Region.GLB,
                     event_type,
                     event_name
@@ -236,7 +236,7 @@ with (open("./scripts/msv.json", "r") as f1,
             if get_cn_event_end_time(event_period) > pd.Timestamp.utcnow():
                 update_data(soup, utils.Region.CN, utils.Event.CC, en_name)
 
-        if update_en_data(soup, utils.Event.CC, en_name, soup_input=True):
+        if update_en_data(soup, utils.Event.CC, en_name):
             break
 
     json.dump(all_shop_effics, f2)
