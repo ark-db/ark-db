@@ -7,7 +7,7 @@
     const src = `${assets}/images/operators/${charId}.webp`;
     let name, rarity;
     
-    fetch(`/api/operators?id=${charId}&categories=name,rarity`)
+    fetch(`./api/operators?id=${charId}&categories=name,rarity`)
         .then(res => res.json())
         .then(res => {
             ({ name, rarity } = res);

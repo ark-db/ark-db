@@ -5,7 +5,7 @@
 
     let data;
 
-    fetch("/api/operators?categories=charId,name")
+    fetch("./api/operators?categories=charId,name")
         .then(res => res.json())
         .then(res => data = Object.values(res));
 

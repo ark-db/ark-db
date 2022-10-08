@@ -9,7 +9,7 @@
     const size = 60;
     let upgradeCost = [];
 
-    fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`)
+    fetch(`./api/operators/cost?id=${charId}&upgrade=${name}`)
         .then(res => res.json())
         .then(res => upgradeCost = res);
 </script>
