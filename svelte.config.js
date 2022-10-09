@@ -17,6 +17,9 @@ const config = {
 				"upgrade-insecure-requests": true,
 			},
 		},
+		version: {
+			name: "0.14.3"
+		}
 	}
 };
 
