@@ -46,7 +46,7 @@ for type, items in utils.VALID_ITEMS.items():
         if (cost := item_id_to_recipe_cost.get(id)):
             item_data.update({"recipe": utils.format_cost(cost)})
 
-        icon_url = f"https://raw.githubusercontent.com/Aceship/AN-EN-Tags/master/img/items/{item_info['iconId']}.png"
+        icon_url = f"https://raw.githubusercontent.com/Aceship/Arknight-Images/main/items/{item_info['iconId']}.png"
         if not utils.save_image(icon_url, category="items", name=id):
             raise RuntimeError(f"Could not save image of item with ID \"{id}\"")
 

@@ -63,6 +63,10 @@ def save_image(url: str, category: str, name: str, overwrite: bool = False) -> b
     elif (res := requests.get(url)):
         Image.open(BytesIO(res.content)) \
              .convert("RGBA") \
-             .save(target_path, "webp")
+             .save(target_path, "webp", quality=25)
         return True
     return False
+
+if __name__ == "__main__":
+    for img in Path('./static/images/rarities/').glob('*.webp'):
+        Image.open(img).save(Path(f"./{img}"), "webp", quality=25)
