@@ -99,7 +99,7 @@ def get_stage_ids(region: utils.Region) -> set[str]:
 
     return current_stage_ids
 
-def update_lmd_stages(df: pd.DataFrame, valid_stages: set[str]) -> pd.DataFrame:
+def update_lmd_stages(df: pd.DataFrame) -> pd.DataFrame:
     LMD_STAGES = {
         "wk_melee_1": 1700,
         "wk_melee_2": 2800,
@@ -126,7 +126,7 @@ def update_lmd_stages(df: pd.DataFrame, valid_stages: set[str]) -> pd.DataFrame:
     }
 
     for stage_id, lmd in LMD_STAGES.items():
-        if stage_id in valid_stages:
+        if stage_id in df.index:
             df.at[stage_id, "lmd"] = lmd
 
     return df
@@ -140,6 +140,12 @@ def calc_drop_stats(stage: tuple, drop_rate: float) -> dict[str, str|float]:
     }
 
 
+
+stage_data = (
+    pd.DataFrame(data=stages,
+                 columns=["stageId", "code", "apCost", "stageType"])
+      .set_index("stageId")
+)
 
 drop_data = (
     pd.DataFrame(data=drops,
@@ -156,12 +162,11 @@ drop_data = (
       .groupby("norm_id")
       .mean()
       .rename_axis("stageId")
-)
-
-stage_data = (
-    pd.DataFrame(data=stages,
-                 columns=["stageId", "code", "apCost", "stageType"])
-      .set_index("stageId")
+      # add LMD drop info
+      .assign(lmd = stage_data["apCost"] * 12)
+      .pipe(update_lmd_stages)
+      .rename(columns={"lmd": "4001"})
+      .reindex(columns=ALLOWED_ITEMS)
 )
 
 # handle entries that aren't stages or don't have drop info so that they can be
@@ -240,13 +245,9 @@ all_farming_stages = dict()
 for region in utils.Region:
     valid_stage_ids = get_stage_ids(region)
 
-    curr_drop_data = (
-        drop_data.pipe(lambda df: df[df.index.isin(valid_stage_ids)])
-                 .assign(lmd = stage_data["apCost"] * 12)
-                 .pipe(update_lmd_stages, valid_stage_ids)
-                 .rename(columns={"lmd": "4001"})
-                 .reindex(columns=ALLOWED_ITEMS)
-    )
+    curr_drop_data = drop_data[drop_data.index.isin(valid_stage_ids)]
+
+    drop_matrix = curr_drop_data.to_numpy(na_value=0)
 
     sanity_cost_vec = (
         stage_data["apCost"]
@@ -254,8 +255,6 @@ for region in utils.Region:
                   .to_numpy()
                   .flatten()
     )
-
-    drop_matrix = curr_drop_data.to_numpy(na_value=0)
 
     # The assumption behind Moe's calculations is that the "sanity return"
     # of a stage cannot be greater than the sanity cost. So, the vector of all

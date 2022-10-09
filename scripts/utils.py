@@ -8,6 +8,14 @@ from io import BytesIO
 
 Cost = list[dict[str, str|int] | None]
 
+class Asset(Enum):
+    CHAR = "operators"
+    SKILL = "skills"
+    MODULE = "modules"
+    ITEM = "items"
+    RARITY = "rarities"
+    EVENT = "events"
+
 class Region(Enum):
     GLB = "US"
     CN = "CN"
@@ -56,13 +64,18 @@ def format_cost(cost: Cost) -> Cost:
         return [{k: v for k, v in mat.items() if k != "type"} for mat in cost]
     return []
 
-def save_image(url: str, category: str, name: str, overwrite: bool = False) -> bool:
-    target_path = Path(f"./static/images/{category}/{name}.webp")
-    if target_path.is_file() and not overwrite:
+def save_image(url: str, category: Asset, name: str) -> bool:
+    target_path = Path(f"./static/images/{category.value}/{name}.webp")
+    if target_path.is_file() and category is not Asset.EVENT:
         return True
     elif (res := requests.get(url)):
         Image.open(BytesIO(res.content)) \
              .convert("RGBA") \
-             .save(target_path, "webp")
+             .save(target_path, "webp", quality=25)
         return True
     return False
+
+if __name__ == "__main__":
+    for i in range(5):
+        icon_url = f"https://raw.githubusercontent.com/Aceship/Arknight-Images/main/material/bg/item-{i+1}.png"
+        save_image(icon_url, "rarities", str(i), True)

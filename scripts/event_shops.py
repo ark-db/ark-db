@@ -50,12 +50,7 @@ def get_cn_event_end_time(period: str) -> pd.Timestamp:
 
 def save_banner_img(soup: BeautifulSoup, name: str) -> None:
     banner_url = soup.select_one("img[alt*='活动预告']")["data-src"]
-    utils.save_image(
-        f"https://prts.wiki{banner_url}", 
-        category="events",
-        name=name,
-        overwrite=True
-    )
+    utils.save_image(f"https://prts.wiki{banner_url}", utils.Asset.EVENT, name=name)
 
 def remove_multiindex(df: pd.DataFrame) -> pd.DataFrame:
     if df.columns.nlevels > 1:
@@ -64,7 +59,7 @@ def remove_multiindex(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def get_shop_table(soup: BeautifulSoup) -> pd.DataFrame:
-    shop = (
+    return (
         pd.read_html(str(soup),
                      match="可兑换道具")
           [0]
@@ -74,7 +69,6 @@ def get_shop_table(soup: BeautifulSoup) -> pd.DataFrame:
           .pipe(remove_multiindex)
           .pipe(lambda df: df[df["单价"].str.isdecimal()])
     )
-    return shop
 
 def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> Effics:
     shop_effics = []
