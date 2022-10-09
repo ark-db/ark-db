@@ -68,5 +68,6 @@ def save_image(url: str, category: str, name: str, overwrite: bool = False) -> b
     return False
 
 if __name__ == "__main__":
-    for img in Path('./static/images/rarities/').glob('*.webp'):
-        Image.open(img).save(Path(f"./{img}"), "webp", quality=25)
+    for i in range(5):
+        icon_url = f"https://raw.githubusercontent.com/Aceship/Arknight-Images/main/material/bg/item-{i+1}.png"
+        save_image(icon_url, "rarities", str(i), True)
