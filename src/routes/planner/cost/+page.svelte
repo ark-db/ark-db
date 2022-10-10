@@ -185,7 +185,7 @@
 
 <h1 class="title">Inventory</h1>
 <section class="content items inv">
-    {#each $inventory as item}
+    {#each sortItems($inventory) as item}
         <div>
             <ItemIcon {...item} size={itemIconSize} />
             <NumberInput {min} {max} bind:value={item.count} />

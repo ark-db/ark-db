@@ -11,12 +11,12 @@
 		<div class="logo">
 			<slot name="logo" />
 		</div>
-		<h1>ArkDB</h1>
+		<h1 tabindex=0>ArkDB</h1>
 	</a>
     <nav>
 		{#each [...links.entries()] as [ href, title ]}
 			<a {href} class:active={href === "/" ? $page.url.pathname === href : $page.url.pathname.startsWith(href)}>
-				{title}
+				<span tabindex=0>{title}</span>
 			</a>
 		{/each}
     </nav>
