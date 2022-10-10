@@ -10,7 +10,7 @@
 </h1>
 
 <figure>
-    <img {src} alt="Fallen Skalter">
+    <img {src} alt="Fallen Skalter" height=622 width=880>
     <figcaption>
         Illustration by KuroTofu - 
         <a href="https://twitter.com/Kuro_Tofu/status/1454254316710096899"
