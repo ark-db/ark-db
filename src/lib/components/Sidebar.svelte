@@ -26,7 +26,7 @@
             <div class="logo">
                 <slot name="logo" />
             </div>
-            <h1 class="name">ArkDB</h1>
+            <h1 class="name" tabindex=0>ArkDB</h1>
         </div>
         <div class="divider" />
         <nav>
@@ -35,7 +35,7 @@
                    class:active={href === "/" ? $page.url.pathname === href : $page.url.pathname.startsWith(href)}
                    on:click={toggle}
                 >
-				    {title}
+				    <span tabindex=0>{title}</span>
 			    </a>
 		    {/each}
         </nav>
