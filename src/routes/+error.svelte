@@ -33,6 +33,7 @@
     }
     img {
         max-width: clamp(0px, 80vw, 800px);
+        object-fit: contain;
     }
     figcaption {
         margin: 1em 20vw;
