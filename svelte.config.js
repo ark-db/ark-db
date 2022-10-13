@@ -18,7 +18,7 @@ const config = {
 			},
 		},
 		version: {
-			name: "0.14.4"
+			name: "0.14.5"
 		}
 	}
 };
