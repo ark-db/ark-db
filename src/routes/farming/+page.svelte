@@ -29,6 +29,7 @@
 </section>
 
 <section class="grid">
+    {#key $region}
     {#each sortItems(farming[$region]) as { id, stages }}
         <div class="item">
             <ItemIcon {id} size={75} />
@@ -39,6 +40,7 @@
             </div>
         </div>
     {/each}
+    {/key}
 </section>
 
 
