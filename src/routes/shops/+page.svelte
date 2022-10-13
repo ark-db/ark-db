@@ -37,7 +37,12 @@
         <section class="event">
             <div class="top">
                 <h1 class="title">{eventName}</h1>
-                <img class="banner" {src} alt={eventName}>
+                <img class="banner"
+                     {src}
+                     alt={eventName}
+                     height={type === "ss" ? 250 : 256}
+                     width={type === "ss" ? 780 : 800}
+                >
             </div>
             <ShopItems items={shopItems} {normalizeValues}/>
         </section>
