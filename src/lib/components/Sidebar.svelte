@@ -17,16 +17,17 @@
 
 
 
-<svelte:window on:keydown={handleKeydown}/>
+<svelte:window on:keydown={handleKeydown} />
 
 {#if active}
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="filter" on:click={toggle} transition:fly={{x: 100, duration: 150}} />
     <div class="sidebar" transition:fly={{x: -100, duration: 300}}>
         <div class="top">
             <div class="logo">
                 <slot name="logo" />
             </div>
-            <h1 class="name" tabindex=0>ArkDB</h1>
+            <h1 class="name">ArkDB</h1>
         </div>
         <div class="divider" />
         <nav>
@@ -35,6 +36,7 @@
                    class:active={href === "/" ? $page.url.pathname === href : $page.url.pathname.startsWith(href)}
                    on:click={toggle}
                 >
+                    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				    <span tabindex=0>{title}</span>
 			    </a>
 		    {/each}
