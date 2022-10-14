@@ -98,6 +98,7 @@
     }
     .banner {
         width: clamp(1px, 80vw, 600px);
+        object-fit: contain;
     }
     .tier {
         padding-top: 1em;

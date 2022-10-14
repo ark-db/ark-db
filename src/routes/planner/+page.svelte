@@ -13,11 +13,10 @@
     let innerWidth;
     const flipDurationMs = 150;
 
-    $: orderId = $allSelected.length;
+    $: selectedUpgradeNames = writable(new Array($selectedChar?.upgrades?.length).fill(new Set()));
+
     $: allReady = $allSelected.filter(upgrade => upgrade.ready);
     $: allNotReady = $allSelected.filter(upgrade => !upgrade.ready);
-
-    $: selectedUpgradeNames = writable(new Array($selectedChar?.upgrades?.length).fill(new Set()));
 
     function submitUpgrades() {
         const selectedNames = $selectedUpgradeNames.map(set => Array.from(set))
@@ -29,15 +28,18 @@
                                                             .map(upgrade => upgrade.name)
                                                             .includes(name));
 
+        let idx = 0;
+
         $allSelected = [
             ...$allSelected,
-            ...newNames.map(name => ({name,
-                                      charId: $selectedChar.charId,
-                                      charName: $selectedChar.name,
-                                      ready: false,
-                                      id: orderId++})
-            )
-        ];
+            ...newNames.map(name => ({
+                name,
+                charId: $selectedChar.charId,
+                charName: $selectedChar.name,
+                ready: false
+            }))
+        ].map(upgrade => ({...upgrade, id: idx++}));
+
         updateStoredUpgrades($allSelected);
         $selectedChar = {};
     };

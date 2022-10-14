@@ -13,10 +13,7 @@
     <img {src} alt="Fallen Skalter" height=622 width=880>
     <figcaption>
         Illustration by KuroTofu - 
-        <a href="https://twitter.com/Kuro_Tofu/status/1454254316710096899"
-           target="_blank"
-           rel="noreferrer"
-        >
+        <a href="https://twitter.com/Kuro_Tofu/status/1454254316710096899">
             source
         </a>
     </figcaption>
@@ -33,6 +30,7 @@
     }
     img {
         max-width: clamp(0px, 80vw, 800px);
+        object-fit: contain;
     }
     figcaption {
         margin: 1em 20vw;
