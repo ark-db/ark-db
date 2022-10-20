@@ -91,7 +91,7 @@ def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
 def is_available_stage(data: dict[str, bool|int]) -> bool:
     start = pd.Timestamp(ts) if (ts := data.get("openTime")) else pd.Timestamp.min
     end = pd.Timestamp(ts) if (ts := data.get("closeTime")) else pd.Timestamp.max
-    return start <= pd.Timestamp.now() <= end
+    return data["exist"] and start <= pd.Timestamp.now() <= end
 
 def get_stage_ids(region: utils.Region) -> set[str]:
     return {
@@ -99,8 +99,7 @@ def get_stage_ids(region: utils.Region) -> set[str]:
         for stage in stages
         # GT (a001) and OF (a003) stage IDs don't start with "act", unlike other events
         if stage["stageId"].startswith(("main", "sub", "wk", "act", "a001", "a003"))
-        and (data := stage["existence"][region.value])["exist"]
-        and is_available_stage(data)
+        and is_available_stage(stage["existence"][region.value])
     }
 
 def update_lmd_stages(df: pd.DataFrame) -> pd.DataFrame:
@@ -126,7 +125,9 @@ def update_lmd_stages(df: pd.DataFrame) -> pd.DataFrame:
         "main_08-01": 2700,
         "main_08-04": 1216,
         "main_09-01": 2700,
-        "main_10-07": 3480, # same as tough_10-07
+        # stages drop the same qty of LMD regardless of difficulty mode
+        "main_10-07": 3480,
+        "main_11-08": 3480,
     }
 
     for stage_id, lmd in LMD_STAGES.items():
@@ -274,7 +275,8 @@ for region in utils.Region:
 
     all_sanity_values.update({
         region.name.lower(): {
-            item: value for item, value in zip(ALLOWED_ITEMS, sanity_values)
+            item: value
+            for item, value in zip(ALLOWED_ITEMS, sanity_values)
         } | MISC_SANITY_VALUES
     })
 
