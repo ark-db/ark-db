@@ -10,7 +10,7 @@ import warnings
 Cost = list[dict[str, str|int] | None]
 
 class Asset(Enum):
-    CHAR = "operators"
+    OPERATOR = "operators"
     SKILL = "skills"
     MODULE = "modules"
     ITEM = "items"

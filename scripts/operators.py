@@ -163,9 +163,9 @@ for char_id, char_info in chars.items():
             })
 
         icon_url = f"https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avatars/{char_id}.png"
-        if not utils.save_image(icon_url, utils.Asset.CHAR, name=char_id):
+        if not utils.save_image(icon_url, utils.Asset.OPERATOR, name=char_id):
             icon_url = get_prts_image_src(ALL_CHARS_SOUP, char_info["name"])
-            utils.save_image(icon_url, utils.Asset.CHAR, name=char_id, warn=True)
+            utils.save_image(icon_url, utils.Asset.OPERATOR, name=char_id, warn=True)
 
         all_char_data.update({char_id: char_data})
 
