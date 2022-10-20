@@ -28,8 +28,11 @@ base_data = (
 
 recipes = list(base_data["manufactFormulas"].values()) + list(base_data["workshopFormulas"].values())
 
-item_id_to_recipe_cost = {id: recipe["costs"]
-                          for recipe in recipes if (id := recipe["itemId"]) not in EXCLUDED_RECIPES}
+item_id_to_recipe_cost = {
+    id: recipe["costs"]
+    for recipe in recipes
+    if (id := recipe["itemId"]) not in EXCLUDED_RECIPES
+}
 
 all_item_data = dict()
 
