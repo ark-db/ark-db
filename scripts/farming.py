@@ -52,7 +52,7 @@ stages = (
 # handle entries that aren't stages or don't have drop info so that they can be
 # processed by json_normalize() without throwing an error
 for stage in stages:
-    if (not stage.get("dropInfos")) or stage["stageId"] == "recruit":
+    if stage["stageId"] == "recruit" or not stage.get("dropInfos"):
         stage.update({"dropInfos": []})
 
 
@@ -88,20 +88,20 @@ def fill_diagonal(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+def is_available_stage(data: dict[str, bool|int]) -> bool:
+    start = pd.Timestamp(ts) if (ts := data.get("openTime")) else pd.Timestamp.min
+    end = pd.Timestamp(ts) if (ts := data.get("closeTime")) else pd.Timestamp.max
+    return start <= pd.Timestamp.now() <= end
+
 def get_stage_ids(region: utils.Region) -> set[str]:
-    current_drops = (
-        requests.get(f"https://penguin-stats.io/PenguinStats/api/v2/result/matrix?server={region.value}")
-                .json()
-                ["matrix"]
-    )
-
-    current_stage_ids = set(
-        item["stageId"] for item in current_drops
+    return {
+        stage["stageId"]
+        for stage in stages
         # GT (a001) and OF (a003) stage IDs don't start with "act", unlike other events
-        if item["stageId"].startswith(("main", "sub", "wk", "act", "a001", "a003"))
-    )
-
-    return current_stage_ids
+        if stage["stageId"].startswith(("main", "sub", "wk", "act", "a001", "a003"))
+        and (data := stage["existence"][region.value])["exist"]
+        and is_available_stage(data)
+    }
 
 def update_lmd_stages(df: pd.DataFrame) -> pd.DataFrame:
     LMD_STAGES = {
@@ -243,9 +243,9 @@ all_sanity_values = dict()
 all_farming_stages = dict()
 
 for region in utils.Region:
-    valid_stage_ids = get_stage_ids(region)
-
-    curr_drop_data = DROP_DATA[DROP_DATA.index.isin(valid_stage_ids)]
+    curr_drop_data = DROP_DATA[
+        DROP_DATA.index.isin(get_stage_ids(region))
+    ]
 
     drop_matrix = curr_drop_data.to_numpy(na_value=0)
 
