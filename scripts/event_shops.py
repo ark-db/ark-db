@@ -29,11 +29,6 @@ ALL_EVENTS = (
             .json()
 )
 
-CN_TO_EN_EVENT_NAME = {
-    condense_str(event["label_i18n"]["zh"]): event["label_i18n"]["en"]
-    for event in ALL_EVENTS
-}
-
 EN_PERIOD_REGEX = re.compile("DURATION:")
 CN_PERIOD_REGEX = re.compile("活动时间|关卡开放时间", flags=re.U)
 CC_START_REGEX = re.compile("赛季开启时间", flags=re.U)
@@ -164,6 +159,11 @@ def update_en_data(data: str|BeautifulSoup, event_type: utils.Event, event_name:
     return False
 
 
+
+CN_TO_EN_EVENT_NAME = {
+    condense_str(event["label_i18n"]["zh"]): event["label_i18n"]["en"]
+    for event in ALL_EVENTS
+}
 
 CN_EVENTS = (
     pd.concat(pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
