@@ -10,7 +10,11 @@ import json
 
 MIN_RUN_THRESHOLD = 100
 
-ALLOWED_ITEMS = utils.VALID_ITEMS["material"] | utils.VALID_ITEMS["skill"] | utils.VALID_ITEMS["misc"]
+ALLOWED_ITEMS = (
+    utils.VALID_ITEMS["material"]
+    | utils.VALID_ITEMS["skill"]
+    | utils.VALID_ITEMS["misc"]
+)
 
 BYPROD_RATE_BONUS = 1.8
 
@@ -57,6 +61,40 @@ for stage in stages:
 
 
 
+def update_lmd_stages(df: pd.DataFrame) -> pd.DataFrame:
+    LMD_STAGES = {
+        "wk_melee_1": 1700,
+        "wk_melee_2": 2800,
+        "wk_melee_3": 4100,
+        "wk_melee_4": 5700,
+        "wk_melee_5": 7500,
+        "wk_melee_6": 10000,
+        "main_01-01": 660,
+        "main_02-07": 1500,
+        "sub_02-02": 1020,
+        "main_03-06": 2040,
+        "main_04-01": 2700,
+        "sub_04-2-3": 3480,
+        "sub_05-1-2": 2700,
+        "sub_05-2-1": 1216,
+        "main_06-01": 1216,
+        "sub_06-2-2": 2700,
+        "sub_07-1-1": 2700,
+        "sub_07-1-2": 1216,
+        "main_08-01": 2700,
+        "main_08-04": 1216,
+        "main_09-01": 2700,
+        # stages drop the same qty of LMD regardless of difficulty mode
+        "main_10-07": 3480,
+        "main_11-08": 3480,
+    }
+
+    for stage_id, lmd in LMD_STAGES.items():
+        if stage_id in df.index:
+            df.at[stage_id, "lmd"] = lmd
+
+    return df
+
 def update_mat_relations(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Ties values of EXP cards and Pure Gold together.
@@ -101,40 +139,6 @@ def get_stage_ids(region: utils.Region) -> set[str]:
         if stage["stageId"].startswith(("main", "sub", "wk", "act", "a001", "a003"))
         and is_available_stage(stage["existence"][region.value])
     }
-
-def update_lmd_stages(df: pd.DataFrame) -> pd.DataFrame:
-    LMD_STAGES = {
-        "wk_melee_1": 1700,
-        "wk_melee_2": 2800,
-        "wk_melee_3": 4100,
-        "wk_melee_4": 5700,
-        "wk_melee_5": 7500,
-        "wk_melee_6": 10000,
-        "main_01-01": 660,
-        "main_02-07": 1500,
-        "sub_02-02": 1020,
-        "main_03-06": 2040,
-        "main_04-01": 2700,
-        "sub_04-2-3": 3480,
-        "sub_05-1-2": 2700,
-        "sub_05-2-1": 1216,
-        "main_06-01": 1216,
-        "sub_06-2-2": 2700,
-        "sub_07-1-1": 2700,
-        "sub_07-1-2": 1216,
-        "main_08-01": 2700,
-        "main_08-04": 1216,
-        "main_09-01": 2700,
-        # stages drop the same qty of LMD regardless of difficulty mode
-        "main_10-07": 3480,
-        "main_11-08": 3480,
-    }
-
-    for stage_id, lmd in LMD_STAGES.items():
-        if stage_id in df.index:
-            df.at[stage_id, "lmd"] = lmd
-
-    return df
 
 def calc_drop_stats(stage: tuple, drop_rate: float) -> dict[str, str|float]:
     return {

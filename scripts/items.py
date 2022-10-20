@@ -9,28 +9,31 @@ EXCLUDED_RECIPES = (
     "3212", "3222", "3232", "3242", "3252", "3262", "3272", "3282",
 )
 
-cn_items = (
+CN_ITEMS = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/item_table.json")
             .json()
             ["items"]
 )
 
-en_items = (
+EN_ITEMS = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/item_table.json")
             .json()
             ["items"]
 )
 
-base_data = (
+BASE_DATA = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
             .json()
 )
 
-recipes = list(base_data["manufactFormulas"].values()) + list(base_data["workshopFormulas"].values())
+RECIPES = (
+    list(BASE_DATA["manufactFormulas"].values())
+    + list(BASE_DATA["workshopFormulas"].values())
+)
 
-item_id_to_recipe_cost = {
+ITEM_ID_TO_RECIPE_COST = {
     id: recipe["costs"]
-    for recipe in recipes
+    for recipe in RECIPES
     if (id := recipe["itemId"]) not in EXCLUDED_RECIPES
 }
 
@@ -38,15 +41,15 @@ all_item_data = dict()
 
 for type, items in utils.VALID_ITEMS.items():
     for id in items:
-        item_info = cn_items[id]
+        item_info = CN_ITEMS[id]
         item_data = {
-            "name": en_items.get(id, cn_items[id])["name"],
+            "name": EN_ITEMS.get(id, CN_ITEMS[id])["name"],
             "type": type,
             "rarity": item_info["rarity"],
             "sortId": item_info["sortId"]
         }
 
-        if (cost := item_id_to_recipe_cost.get(id)):
+        if (cost := ITEM_ID_TO_RECIPE_COST.get(id)):
             item_data.update({"recipe": utils.format_cost(cost)})
 
         icon_url = f"https://raw.githubusercontent.com/Aceship/Arknight-Images/main/items/{item_info['iconId']}.png"

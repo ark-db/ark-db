@@ -9,26 +9,27 @@ from bs4 import BeautifulSoup
 
 
 
-BASE_URL = "https://arknights.global"
+_BASE_URL = "https://arknights.global"
 
-options = Options()
-options.add_argument("--headless")
-options.add_argument("--disable-gpu")
+_options = Options()
+_options.add_argument("--headless")
+_options.add_argument("--disable-gpu")
 
 driver = webdriver.Firefox(
     service=Service(GeckoDriverManager().install()),
-    options=options
+    options=_options
 )
-wait = WebDriverWait(driver, 10)
+_wait = WebDriverWait(driver, 10)
 
-driver.get(BASE_URL)
-soup = BeautifulSoup(driver.page_source, "lxml")
-events = {
-    article.select_one("p.news-title").get_text(): BASE_URL + article["href"]
-    for article in soup.select("a.news-box")
+driver.get(_BASE_URL)
+_soup = BeautifulSoup(driver.page_source, "lxml")
+
+EVENTS = {
+    article.select_one("p.news-title").get_text(): _BASE_URL + article["href"]
+    for article in _soup.select("a.news-box")
 }
 
 def get_soup(url: str) -> BeautifulSoup:
     driver.get(url)
-    wait.until(EC.presence_of_element_located((By.CLASS_NAME, "news-detail-title")))
+    _wait.until(EC.presence_of_element_located((By.CLASS_NAME, "news-detail-title")))
     return BeautifulSoup(driver.page_source, "lxml")

@@ -43,7 +43,7 @@ all_shop_effics = {
 
 
 
-def set_cn_timezone(df: pd.DataFrame) -> pd.DataFrame:
+def set_timezone_as_cn(df: pd.DataFrame) -> pd.DataFrame:
     df["活动开始时间"] = df["活动开始时间"].dt.tz_localize("Asia/Shanghai")
     return df
 
@@ -128,7 +128,7 @@ def update_data(soup: BeautifulSoup, region: utils.Region, event_type: utils.Eve
 
     shop_table = get_shop_table(soup)
     all_shop_effics["shops"][region].update({
-        event_type: get_shop_effics(shop_table, sanity_values[region])
+        event_type: get_shop_effics(shop_table, SANITY_VALUES[region])
     })
     all_shop_effics["events"][region].update({
         event_type: event_name
@@ -137,7 +137,7 @@ def update_data(soup: BeautifulSoup, region: utils.Region, event_type: utils.Eve
 def update_en_data(data: str|BeautifulSoup, event_type: utils.Event, event_name: str) -> bool:
     search_str = condense_str(event_name)
 
-    for news_title, news_url in en_scraper.events.items():
+    for news_title, news_url in en_scraper.EVENTS.items():
         if search_str in condense_str(news_title):
             soup = en_scraper.get_soup(news_url)
             event_period = (
@@ -169,7 +169,7 @@ CN_EVENTS = (
     pd.concat(pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
                            parse_dates=["活动开始时间"])[:2],
               ignore_index=True)
-      .pipe(set_cn_timezone)
+      .pipe(set_timezone_as_cn)
       .pipe(lambda df: df[df["活动开始时间"] < pd.Timestamp.utcnow()])
       # remove inlined JS in chips that appear next to latest events
       .assign(name = lambda df: df["活动页面"].str.partition("(")[0]
@@ -191,7 +191,7 @@ SS_EVENTS = (
 
 with (open("./scripts/msv.json", "r") as f1,
       open("./src/lib/data/event_shops.json", "w") as f2):
-    sanity_values = json.load(f1)
+    SANITY_VALUES = json.load(f1)
 
     for ss in SS_EVENTS.itertuples():
         page_url = get_ss_page_url(ss.name, ss.活动开始时间.year)
