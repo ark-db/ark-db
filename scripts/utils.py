@@ -42,7 +42,7 @@ VALID_ITEMS = {
         "3211", "3221", "3231", "3241", "3251", "3261", "3271", "3281",
         "3212", "3222", "3232", "3242", "3252", "3262", "3272", "3282",
         "3213", "3223", "3233", "3243", "3253", "3263", "3273", "3283",
-        "32001"
+        "32001" # chip catalyst
     },
     "misc": {
         "4001", # LMD
@@ -51,10 +51,10 @@ VALID_ITEMS = {
         "3003" # pure gold
     },
     "other": {
-        "4005", "4004", "REP_COIN", "EPGS_COIN", # green, yellow, intell. cert.; param. model
+        "4005", "4004", "REP_COIN", "EPGS_COIN", # green, yellow, intelligence cert.; parametric model
         "SOCIAL_PT", # friend credit
         "4003", "7003", # orundum; 1x headhunting permit
-        "7001", # rec. permit
+        "7001", # recruitment permit
         "3401", # furniture part
     }
 }
