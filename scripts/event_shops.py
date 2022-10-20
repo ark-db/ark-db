@@ -13,9 +13,26 @@ import dateparser
 
 Effics = list[dict[str, str|int|float]]
 
-en_period_regex = re.compile("DURATION:")
-cn_period_regex = re.compile("活动时间|关卡开放时间", flags=re.U)
-cc_start_regex = re.compile("赛季开启时间", flags=re.U)
+CN_ITEMS = (
+    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/item_table.json")
+            .json()
+            ["items"]
+)
+
+ITEM_NAME_TO_ID = {data["name"]: data["itemId"] for data in CN_ITEMS.values()}
+
+ALL_EVENTS = (
+    requests.get("https://penguin-stats.io/PenguinStats/api/v2/period")
+            .json()
+)
+
+CN_TO_EN_EVENT_NAME = {
+    condense_str(event["label_i18n"]["zh"]): event["label_i18n"]["en"] for event in ALL_EVENTS
+}
+
+EN_PERIOD_REGEX = re.compile("DURATION:")
+CN_PERIOD_REGEX = re.compile("活动时间|关卡开放时间", flags=re.U)
+CC_START_REGEX = re.compile("赛季开启时间", flags=re.U)
 
 all_shop_effics = {
     category: {
@@ -74,7 +91,7 @@ def get_shop_effics(shop: pd.DataFrame, msvs: dict[str, float]) -> Effics:
     shop_effics = []
     for item in shop.itertuples(index=False):
         name, _, qty = item.可兑换道具.partition("×")
-        if (item_id := item_name_to_id.get(name)) and (value := msvs.get(item_id)):
+        if (item_id := ITEM_NAME_TO_ID.get(name)) and (value := msvs.get(item_id)):
             qty = int(qty) if qty else 1
             # -1 in data represents unlimited stock
             stock = int(item.库存) if item.库存 != "∞" else -1
@@ -123,7 +140,7 @@ def update_en_data(data: str|BeautifulSoup, event_type: utils.Event, event_name:
         if search_str in condense_str(news_title):
             soup = en_scraper.get_soup(news_url)
             event_period = (
-                soup("strong", text=en_period_regex)
+                soup("strong", text=EN_PERIOD_REGEX)
                 [0].parent.contents[1]
             )
             end_time = dateparser.parse(event_period.partition(" – ")[2])
@@ -142,24 +159,7 @@ def update_en_data(data: str|BeautifulSoup, event_type: utils.Event, event_name:
 
 
 
-cn_items = (
-    requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/item_table.json")
-            .json()
-            ["items"]
-)
-
-item_name_to_id = {data["name"]: data["itemId"] for data in cn_items.values()}
-
-all_events = (
-    requests.get("https://penguin-stats.io/PenguinStats/api/v2/period")
-            .json()
-)
-
-cn_to_en_event_name = {
-    condense_str(event["label_i18n"]["zh"]): event["label_i18n"]["en"] for event in all_events
-}
-
-cn_events = (
+CN_EVENTS = (
     pd.concat(pd.read_html("https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88",
                            parse_dates=["活动开始时间"])[:2],
               ignore_index=True)
@@ -171,13 +171,13 @@ cn_events = (
       .drop(columns=["活动页面", "官网公告"])
 )
 
-cc_events = (
-    cn_events.pipe(lambda df: df[df["活动分类"] == "危机合约"])
+CC_EVENTS = (
+    CN_EVENTS.pipe(lambda df: df[df["活动分类"] == "危机合约"])
              .reset_index(drop=True)
 )
 
-ss_events = (
-    cn_events.pipe(lambda df: df[df["活动分类"].str.contains(r"支线故事|故事集")])
+SS_EVENTS = (
+    CN_EVENTS.pipe(lambda df: df[df["活动分类"].str.contains(r"支线故事|故事集")])
              .reset_index(drop=True)
 )
 
@@ -187,9 +187,9 @@ with (open("./scripts/msv.json", "r") as f1,
       open("./src/lib/data/event_shops.json", "w") as f2):
     sanity_values = json.load(f1)
 
-    for ss in ss_events.itertuples():
+    for ss in SS_EVENTS.itertuples():
         page_url = get_ss_page_url(ss.name, ss.活动开始时间.year)
-        en_name = cn_to_en_event_name[condense_str(ss.name)]
+        en_name = CN_TO_EN_EVENT_NAME[condense_str(ss.name)]
 
         # latest Side Story event
         if ss.Index == 0:
@@ -200,7 +200,7 @@ with (open("./scripts/msv.json", "r") as f1,
             )
             hg_soup = get_soup(news_link, parse_as_bytes=True)
             event_period = (
-                hg_soup("strong", text=cn_period_regex)
+                hg_soup("strong", text=CN_PERIOD_REGEX)
                        [0].parent.contents[1]
                        .rstrip()
             )
@@ -211,7 +211,7 @@ with (open("./scripts/msv.json", "r") as f1,
         if update_en_data(page_url, utils.Event.SS, en_name):
             break
 
-    for cc in cc_events.itertuples():
+    for cc in CC_EVENTS.itertuples():
         page_url = get_cc_page_url(cc.name)
         soup = get_soup(page_url)
         en_name = (
@@ -222,7 +222,7 @@ with (open("./scripts/msv.json", "r") as f1,
         # latest Contingency Contract event
         if cc.Index == 0:
             event_period = (
-                soup("b", text=cc_start_regex)
+                soup("b", text=CC_START_REGEX)
                     [0].parent.contents[1]
                     .rstrip()
             )
