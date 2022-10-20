@@ -31,14 +31,14 @@ MISC_SANITY_VALUES = {
 
 RECORDED_ITEMS = utils.VALID_ITEMS["material"]
 
-recipes = (
+RECIPES = (
     requests.get("https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/building_data.json")
             .json()
             ["workshopFormulas"]
             .values()
 )
 
-drops = (
+DROPS = (
     requests.get("https://penguin-stats.io/PenguinStats/api/v2/result/matrix?show_closed_zones=true")
             .json()
             ["matrix"]
@@ -49,7 +49,11 @@ stages = (
             .json()
 )
 
-
+# handle entries that aren't stages or don't have drop info so that they can be
+# processed by json_normalize() without throwing an error
+for stage in stages:
+    if (not stage.get("dropInfos")) or stage["stageId"] == "recruit":
+        stage.update({"dropInfos": []})
 
 
 
@@ -93,7 +97,7 @@ def get_stage_ids(region: utils.Region) -> set[str]:
 
     current_stage_ids = set(
         item["stageId"] for item in current_drops
-        # GT (a001) and OF (a003) event stage IDs don't start with "act"
+        # GT (a001) and OF (a003) stage IDs don't start with "act", unlike other events
         if item["stageId"].startswith(("main", "sub", "wk", "act", "a001", "a003"))
     )
 
@@ -141,14 +145,14 @@ def calc_drop_stats(stage: tuple, drop_rate: float) -> dict[str, str|float]:
 
 
 
-stage_data = (
+STAGE_DATA = (
     pd.DataFrame(data=stages,
                  columns=["stageId", "code", "apCost", "stageType"])
       .set_index("stageId")
 )
 
-drop_data = (
-    pd.DataFrame(data=drops,
+DROP_DATA = (
+    pd.DataFrame(data=DROPS,
                  columns=["stageId", "itemId", "times", "quantity"])
       .query("times >= @MIN_RUN_THRESHOLD \
               and itemId in @ALLOWED_ITEMS")
@@ -163,19 +167,13 @@ drop_data = (
       .mean()
       .rename_axis("stageId")
       # add LMD drop info
-      .assign(lmd = stage_data["apCost"] * 12)
+      .assign(lmd = STAGE_DATA["apCost"] * 12)
       .pipe(update_lmd_stages)
       .rename(columns={"lmd": "4001"})
       .reindex(columns=ALLOWED_ITEMS)
 )
 
-# handle entries that aren't stages or don't have drop info so that they can be
-# processed by json_normalize() without throwing an error
-for stage in stages:
-    if (not stage.get("dropInfos")) or stage["stageId"] == "recruit":
-        stage.update({"dropInfos": []})
-
-main_drops = (
+MAIN_DROPS = (
     pd.json_normalize(data=stages,
                       record_path="dropInfos",
                       meta="stageId")
@@ -187,13 +185,13 @@ main_drops = (
 
 main_drops_by_stage = defaultdict(list)
 
-for entry in main_drops.itertuples(index=False):
+for entry in MAIN_DROPS.itertuples(index=False):
     main_drops_by_stage[entry.stageId].append(entry.itemId)
 
 
 
-recipe_matrix = (
-    pd.json_normalize(data=recipes,
+RECIPE_MATRIX = (
+    pd.json_normalize(data=RECIPES,
                       record_path="costs",
                       meta=["itemId", "count", "goldCost"],
                       record_prefix="ingred_")
@@ -209,8 +207,8 @@ recipe_matrix = (
       .pipe(fill_diagonal)
 )
 
-byprod_value_matrix = (
-    pd.json_normalize(data=recipes,
+BYPROD_VALUE_MATRIX = (
+    pd.json_normalize(data=RECIPES,
                       record_path="extraOutcomeGroup",
                       meta=["itemId", "extraOutcomeRate"],
                       record_prefix="byprod_")
@@ -225,7 +223,7 @@ byprod_value_matrix = (
       .pivot(index="itemId",
              columns="byprod_itemId",
              values="byprod_value")
-      .reindex(index=recipe_matrix.index.get_level_values("itemId"),
+      .reindex(index=RECIPE_MATRIX.index.get_level_values("itemId"),
                columns=ALLOWED_ITEMS)
 )
 
@@ -234,8 +232,10 @@ byprod_value_matrix = (
 # value of item = value of ingredients + (LMD cost * value of LMD) - (byproduct rate * weighted avg. of byproduct values)
 # V(item) - Σ V(ing) - n_lmd * V(lmd) + R * avg(byp) = 0
 # In the linear programming problem, A_eq = this matrix; b_eq = vector of 0s
-item_rel_matrix = recipe_matrix.to_numpy(na_value=0) \
-                  + byprod_value_matrix.to_numpy(na_value=0)
+ITEM_REL_MATRIX = (
+    RECIPE_MATRIX.to_numpy(na_value=0)
+    + BYPROD_VALUE_MATRIX.to_numpy(na_value=0)
+)
 
 
 
@@ -245,12 +245,12 @@ all_farming_stages = dict()
 for region in utils.Region:
     valid_stage_ids = get_stage_ids(region)
 
-    curr_drop_data = drop_data[drop_data.index.isin(valid_stage_ids)]
+    curr_drop_data = DROP_DATA[DROP_DATA.index.isin(valid_stage_ids)]
 
     drop_matrix = curr_drop_data.to_numpy(na_value=0)
 
     sanity_cost_vec = (
-        stage_data["apCost"]
+        STAGE_DATA["apCost"]
                   .reindex(curr_drop_data.index)
                   .to_numpy()
                   .flatten()
@@ -267,8 +267,8 @@ for region in utils.Region:
         linprog(-drop_matrix.sum(axis=0),
                 drop_matrix,
                 sanity_cost_vec,
-                item_rel_matrix,
-                zeros(item_rel_matrix.shape[0]))
+                ITEM_REL_MATRIX,
+                zeros(ITEM_REL_MATRIX.shape[0]))
         .x
     )
 
@@ -284,7 +284,7 @@ for region in utils.Region:
         pd.DataFrame(data=stage_effics,
                      columns=["effic"])
           .set_index(curr_drop_data.index)
-          .merge(stage_data, on="stageId")
+          .merge(STAGE_DATA, on="stageId")
           .reset_index()
     )
 
