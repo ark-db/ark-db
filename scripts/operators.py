@@ -121,8 +121,7 @@ for char_id, char_info in chars.items():
                             soup = get_soup(char_info["name"])
                         skill_name = SKILLS[skill_id]["levels"][0]["name"]
                         icon_url = get_prts_image_src(soup, skill_name)
-                        if not utils.save_image(icon_url, utils.Asset.SKILL, name=skill_id):
-                            raise RuntimeError(f"Could not save image of skill with ID \"{skill_id}\"")
+                        utils.save_image(icon_url, utils.Asset.SKILL, name=skill_id, warn=True)
 
                 for j, mastery in enumerate(skill["levelUpCostCond"], start=1):
                     name = f"Skill {i} Mastery {j}"
@@ -148,8 +147,7 @@ for char_id, char_info in chars.items():
                     soup = get_soup(char_info["name"])
                 module_name = module_info["uniEquipName"]
                 icon_url = get_prts_image_src(soup, module_name)
-                if not utils.save_image(icon_url, utils.Asset.MODULE, name=module_id):
-                    raise RuntimeError(f"Could not save image of module with ID \"{skill_id}\"")
+                utils.save_image(icon_url, utils.Asset.MODULE, name=module_id, warn=True)
 
             for i, cost in enumerate(module_info["itemCost"].values(), start=1):
                 name = f"{module_info['typeIcon'].upper()} Stage {i}"
@@ -167,8 +165,7 @@ for char_id, char_info in chars.items():
         icon_url = f"https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avatars/{char_id}.png"
         if not utils.save_image(icon_url, utils.Asset.CHAR, name=char_id):
             icon_url = get_prts_image_src(ALL_CHARS_SOUP, char_info["name"])
-            if not utils.save_image(icon_url, utils.Asset.CHAR, name=char_id):
-                raise RuntimeError(f"Could not save image of operator with ID \"{char_id}\"")
+            utils.save_image(icon_url, utils.Asset.CHAR, name=char_id, warn=True)
 
         all_char_data.update({char_id: char_data})
 
