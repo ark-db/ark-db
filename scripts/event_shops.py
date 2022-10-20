@@ -19,7 +19,10 @@ CN_ITEMS = (
             ["items"]
 )
 
-ITEM_NAME_TO_ID = {data["name"]: data["itemId"] for data in CN_ITEMS.values()}
+ITEM_NAME_TO_ID = {
+    data["name"]: data["itemId"]
+    for data in CN_ITEMS.values()
+}
 
 ALL_EVENTS = (
     requests.get("https://penguin-stats.io/PenguinStats/api/v2/period")
@@ -27,7 +30,8 @@ ALL_EVENTS = (
 )
 
 CN_TO_EN_EVENT_NAME = {
-    condense_str(event["label_i18n"]["zh"]): event["label_i18n"]["en"] for event in ALL_EVENTS
+    condense_str(event["label_i18n"]["zh"]): event["label_i18n"]["en"]
+    for event in ALL_EVENTS
 }
 
 EN_PERIOD_REGEX = re.compile("DURATION:")
@@ -71,8 +75,10 @@ def save_banner_img(soup: BeautifulSoup, name: str) -> None:
 
 def remove_multiindex(df: pd.DataFrame) -> pd.DataFrame:
     if df.columns.nlevels > 1:
-        return df.droplevel([i for i in range(1, df.columns.nlevels)],
-                            axis=1)
+        return df.droplevel(
+            [i for i in range(1, df.columns.nlevels)],
+            axis=1
+        )
     return df
 
 def get_shop_table(soup: BeautifulSoup) -> pd.DataFrame:
