@@ -3,6 +3,7 @@ from pathlib import Path
 import requests
 from PIL import Image
 from io import BytesIO
+import warnings
 
 
 
@@ -64,8 +65,9 @@ def format_cost(cost: Cost) -> Cost:
         return [{k: v for k, v in mat.items() if k != "type"} for mat in cost]
     return []
 
-def save_image(url: str, category: Asset, name: str) -> bool:
+def save_image(url: str, category: Asset, name: str, warn: bool = False) -> bool:
     target_path = Path(f"./static/images/{category.value}/{name}.webp")
+
     if target_path.is_file() and category is not Asset.EVENT:
         return True
     elif (res := requests.get(url)):
@@ -73,4 +75,8 @@ def save_image(url: str, category: Asset, name: str) -> bool:
              .convert("RGBA") \
              .save(target_path, "webp", quality=25)
         return True
+
+    if warn:
+        warnings.warn(f"Could not save image of {category.name.lower()} with ID \"{name}\"", RuntimeWarning)
+
     return False
