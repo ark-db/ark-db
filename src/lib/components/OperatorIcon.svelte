@@ -8,12 +8,11 @@
     const src = `${assets}/images/operators/${charId}.webp`;
     let name, rarity;
     
-    onMount(async () => fetch(`/api/operators?id=${charId}&categories=name,rarity`)
-        .then(res => res.json())
-        .then(json => {
-            ({ name, rarity } = json);
-        })
-    );
+    onMount(async () => {
+        fetch(`/api/operators?id=${charId}&categories=name,rarity`)
+            .then(res => res.json())
+            .then(json => ({ name, rarity } = json))
+    });
 </script>
 
 

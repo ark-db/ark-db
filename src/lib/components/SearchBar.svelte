@@ -6,10 +6,11 @@
 
     let data;
 
-    onMount(async () => fetch("/api/operators?categories=charId,name")
-        .then(res => res.json())
-        .then(json => data = Object.values(json))
-    );
+    onMount(async () => {
+        fetch("/api/operators?categories=charId,name")
+            .then(res => res.json())
+            .then(json => data = Object.values(json))
+    });
 
     async function getCharData(id) {
         let res = await fetch(`/api/operators?id=${id}&categories=charId,name,upgrades`);
