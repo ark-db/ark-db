@@ -10,10 +10,11 @@
     const size = 60;
     let upgradeCost = [];
 
-    onMount(async () => fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`)
-        .then(res => res.json())
-        .then(json => upgradeCost = json)
-    )
+    onMount(async () => {
+        fetch(`/api/operators/cost?id=${charId}&upgrade=${name}`)
+            .then(res => res.json())
+            .then(json => upgradeCost = json)
+    });
 </script>
 
 
