@@ -75,7 +75,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "dateparser"
-version = "1.1.1"
+version = "1.1.2"
 description = "Date parsing library designed to parse dates from HTML pages"
 category = "main"
 optional = false
@@ -466,7 +466,7 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10,<3.12"
-content-hash = "5f0630df9a1ea2dba43762af309563d58643870232c2801e8740c44fea76a510"
+content-hash = "647abb86e98297b5088d86ea6ee07634e28e0db9cfa10c1c0ba34265b2e2ad92"
 
 [metadata.files]
 async-generator = [
@@ -560,8 +560,8 @@ colorama = [
     {file = "colorama-0.4.5.tar.gz", hash = "sha256:e6c6b4334fc50988a639d9b98aa429a0b57da6e17b9a44f0451f930b6967b7a4"},
 ]
 dateparser = [
-    {file = "dateparser-1.1.1-py2.py3-none-any.whl", hash = "sha256:9600874312ff28a41f96ec7ccdc73be1d1c44435719da47fea3339d55ff5a628"},
-    {file = "dateparser-1.1.1.tar.gz", hash = "sha256:038196b1f12c7397e38aad3d61588833257f6f552baa63a1499e6987fa8d42d9"},
+    {file = "dateparser-1.1.2-py2.py3-none-any.whl", hash = "sha256:d31659dc806a7d88e2b510b2c74f68b525ae531f145c62a57a99bd616b7f90cf"},
+    {file = "dateparser-1.1.2.tar.gz", hash = "sha256:3821bf191f95b2658c4abd91571c09821ce7a2bc179bf6cefd8b4515c3ccf9ef"},
 ]
 exceptiongroup = [
     {file = "exceptiongroup-1.0.0rc9-py3-none-any.whl", hash = "sha256:2e3c3fc1538a094aab74fad52d6c33fc94de3dfee3ee01f187c0e0c72aec5337"},
