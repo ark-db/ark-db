@@ -296,6 +296,8 @@ for region in utils.Region:
           .reset_index()
     )
 
+    print(farming_stages.pipe(lambda df: df[df.stageId == "main_11-03"]))
+
     farming_stages_by_item = defaultdict(list)
 
     for stage in farming_stages.itertuples(index=False):

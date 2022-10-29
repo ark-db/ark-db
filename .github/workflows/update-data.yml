@@ -21,12 +21,12 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.11"
+        python-version: "3.10"
         cache: "poetry"
 
     - name: Set up Python environment
       run: |
-        poetry env use 3.11
+        poetry env use 3.10
         poetry install
     
     - name: Run scripts
