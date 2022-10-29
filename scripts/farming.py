@@ -176,6 +176,8 @@ DROP_DATA = (
       .pipe(update_lmd_stages)
       .rename(columns={"lmd": "4001"})
       .reindex(columns=ALLOWED_ITEMS)
+      .fillna(0)
+      .astype(float)
 )
 
 MAIN_DROPS = (
